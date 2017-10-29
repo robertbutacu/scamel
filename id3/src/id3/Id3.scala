@@ -5,6 +5,7 @@ import Math.log
 
 object Id3 {
   type Entropy = Double
+  type InformationGain = Double
 
   /**
     * Compute the entropy for each attribute
@@ -19,12 +20,12 @@ object Id3 {
     */
 
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
-    val conclusionEntropy = computeEntropy(conclusion)
+    val conclusionEntropy = computeEntropy(conclusion.data)
 
     val branches = data.map(e => (e, conclusion))
 
-    branches.foreach(e => computeProbabilities(e))
-    //println(branches)
+    val informationGains = branches.map(e => conclusionEntropy - computeDatasetEntropy(e))
+    println(informationGains)
     Node("result")
   }
 
@@ -32,23 +33,22 @@ object Id3 {
     val (packed, next) = table.span(_._1 == table.head._1)
     if(next.isEmpty) List(packed)
     else packed :: splitIntoTables(next)
-
   }
 
-  private def computeProbabilities(dataset: (Dataset, Dataset)): Entropy = {
-    val uniqueFields = dataset._1.data.toSet
+  private def computeDatasetEntropy(dataset: (Dataset, Dataset)): Entropy = {
+    val rows = dataset._1.data.indices.map(e => (dataset._1.data(e), dataset._2.data(e))).toList
 
-    var rows = dataset._1.data.indices.map(e => (dataset._1.data(e), dataset._2.data(e))).toList
+    val tables = splitIntoTables(rows.sortWith((e1, e2) => e1._1 < e2._1))
 
-    rows = rows.sortWith((e1, e2) => e1._1 < e2._1)
-    println(splitIntoTables(rows))
-
-    0.0
+    tables.map(t => entropyForTable(t)).sum
   }
 
-  private def computeEntropy(input: Dataset): Entropy = {
-    val probabilities = input.data
-      .map(e => (e, input.data.count(b => b == e).toDouble / input.data.length.toDouble)).toSet
+  private def entropyForTable(table: List[(String, String)]): Entropy =
+    computeEntropy(table.map(e => e._2))
+
+  private def computeEntropy(input: List[String]): Entropy = {
+    val probabilities = input
+      .map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
 
     val entropy = probabilities.foldRight(0.0)((curr, acc) =>
       // log(base e) x/log(base e) 2
