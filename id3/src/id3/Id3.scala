@@ -1,5 +1,7 @@
 package id3
 
+import dataset.{Dataset, Node}
+
 object Id3 {
   /**
     * Compute the entropy for each attribute
@@ -13,7 +15,7 @@ object Id3 {
     *   |S|  = number of elements in S
     */
 
-  def apply(): Unit = {
-
+  def apply(conclusion: Dataset, data: List[Dataset]): Node = {
+    Node("result")
   }
 }
