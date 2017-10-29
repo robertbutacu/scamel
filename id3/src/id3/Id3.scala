@@ -28,13 +28,20 @@ object Id3 {
     Node("result")
   }
 
+  private def splitIntoTables(table: List[(String, String)]): List[List[(String, String)]] = {
+    val (packed, next) = table.span(_._1 == table.head._1)
+    if(next.isEmpty) List(packed)
+    else packed :: splitIntoTables(next)
+
+  }
+
   private def computeProbabilities(dataset: (Dataset, Dataset)): Entropy = {
     val uniqueFields = dataset._1.data.toSet
 
-    val rows = dataset._1.data.indices map (e => (dataset._1.data(e), dataset._2.data(e)))
+    var rows = dataset._1.data.indices.map(e => (dataset._1.data(e), dataset._2.data(e))).toList
 
-    rows.sortWith((e1, e2) => e1._1 < e2._1)
-    println(rows)
+    rows = rows.sortWith((e1, e2) => e1._1 < e2._1)
+    println(splitIntoTables(rows))
 
     0.0
   }
