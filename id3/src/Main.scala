@@ -9,7 +9,7 @@ object Main extends App {
       Dataset("Car ownership",
         List("0", "1", "1", "0", "1", "0", "1", "1", "2", "2")),
       Dataset("Travel Cost",
-        List("Cheap","Cheap","Cheap","Cheap","Cheap","Standard","Standard", "Expensive", "Expensive", "Expensive")),
+        List("Cheap", "Cheap", "Cheap", "Cheap", "Cheap", "Standard", "Standard", "Expensive", "Expensive", "Expensive")),
       Dataset("Income Level",
         List("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
   ))
