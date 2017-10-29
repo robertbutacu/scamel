@@ -17,14 +17,14 @@ object Id3 {
     */
 
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
-    val conclusionEntropy = computeEntropyForConclusion(conclusion)
+    val conclusionEntropy = computeEntropy(conclusion)
     println(conclusionEntropy)
     Node("result")
   }
 
-  private def computeEntropyForConclusion(conclusion: Dataset): Double = {
-    val probabilities = conclusion.data
-      .map(e => (e, conclusion.data.count(b => b == e).toDouble / conclusion.data.length.toDouble)).toSet
+  private def computeEntropy(input: Dataset): Double = {
+    val probabilities = input.data
+      .map(e => (e, input.data.count(b => b == e).toDouble / input.data.length.toDouble)).toSet
 
     val entropy = probabilities.foldRight(0.0)((curr, acc) =>
       // log(base e) x/log(base e) 2
