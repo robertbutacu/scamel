@@ -8,6 +8,16 @@ object Id3 {
   type InformationGain = Double
 
   /**
+    * There will be a function which, for a given Dataset entry, will return a root node which will represent
+    * the decision tree.
+    * The function will call the apply function currently implemented which returns a node,
+    *   and given that node , it will call itself on all the neighbors, if any, until the dataset is empty
+    *   or wtv the stop condition is.
+    *   EDITED: the apply function ( will replace it with a name), will actually return a list of tables,
+    *     and the above function will deal with creating the node.
+    */
+
+  /**
     * Compute the entropy for each attribute
     * Split the set into subsets using the attribute for each entropy is minimum ( <=> information gain is maximal )
     * Make a decision Tree containing that attribute
