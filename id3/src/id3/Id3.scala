@@ -1,6 +1,7 @@
 package id3
 
 import dataset.{Dataset, Node}
+import Math.log
 
 object Id3 {
   /**
@@ -16,7 +17,8 @@ object Id3 {
     */
 
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
-    computeEntropyForConclusion(conclusion)
+    val conclusionEntropy = computeEntropyForConclusion(conclusion)
+    println(conclusionEntropy)
     Node("result")
   }
 
@@ -24,8 +26,13 @@ object Id3 {
     val probabilities = conclusion.data
       .map(e => (e, conclusion.data.count(b => b == e).toDouble / conclusion.data.length.toDouble)).toSet
 
-    println(probabilities)
+    val entropy = probabilities.foldRight(0.0)((curr, acc) =>
+      // log(base e) x/log(base e) 2
+      // Scala/Java doesn't have anything implemented for log of any base
+      // manual conversion needed
+      acc - curr._2 * (log(curr._2) / log(2))
+    )
 
-    0.0
+    (entropy * 10000).floor / 10000
   }
 }
