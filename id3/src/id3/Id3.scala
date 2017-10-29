@@ -4,6 +4,8 @@ import dataset.{Dataset, Node}
 import Math.log
 
 object Id3 {
+  type Entropy = Double
+
   /**
     * Compute the entropy for each attribute
     * Split the set into subsets using the attribute for each entropy is minimum ( <=> information gain is maximal )
@@ -18,11 +20,26 @@ object Id3 {
 
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
     val conclusionEntropy = computeEntropy(conclusion)
-    println(conclusionEntropy)
+
+    val branches = data.map(e => (e, conclusion))
+
+    branches.foreach(e => computeProbabilities(e))
+    //println(branches)
     Node("result")
   }
 
-  private def computeEntropy(input: Dataset): Double = {
+  private def computeProbabilities(dataset: (Dataset, Dataset)): Entropy = {
+    val uniqueFields = dataset._1.data.toSet
+
+    val rows = dataset._1.data.indices map (e => (dataset._1.data(e), dataset._2.data(e)))
+
+    rows.sortWith((e1, e2) => e1._1 < e2._1)
+    println(rows)
+
+    0.0
+  }
+
+  private def computeEntropy(input: Dataset): Entropy = {
     val probabilities = input.data
       .map(e => (e, input.data.count(b => b == e).toDouble / input.data.length.toDouble)).toSet
 
