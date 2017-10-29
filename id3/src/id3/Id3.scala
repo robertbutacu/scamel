@@ -25,7 +25,7 @@ object Id3 {
     println(conclusionEntropy)
     val branches = data.map(e => (e, conclusion))
 
-    val informationGains = branches.map(e => computeDatasetEntropy(e))
+    val informationGains = branches.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
     println(informationGains)
     Node("result")
   }
@@ -45,7 +45,7 @@ object Id3 {
   }
 
   private def entropyForSubTable(subTable: List[(String, String)], tableSize: Int): Entropy =
-    (subTable.length - 1).toDouble / tableSize.toDouble * computeEntropy(subTable.map(e => e._2))
+    subTable.length.toDouble / tableSize.toDouble * computeEntropy(subTable.map(e => e._2))
 
   private def computeEntropy(input: List[String]): Entropy = {
     val probabilities = input
