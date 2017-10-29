@@ -16,6 +16,8 @@ object Id3 {
     */
 
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
+    println(conclusion)
+    println(data)
     Node("result")
   }
 }
