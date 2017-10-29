@@ -22,16 +22,17 @@ object Id3 {
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
     val conclusionEntropy = computeEntropy(conclusion.data)
 
+    println(conclusionEntropy)
     val branches = data.map(e => (e, conclusion))
 
-    val informationGains = branches.map(e => conclusionEntropy - computeDatasetEntropy(e))
+    val informationGains = branches.map(e => computeDatasetEntropy(e))
     println(informationGains)
     Node("result")
   }
 
   private def splitIntoTables(table: List[(String, String)]): List[List[(String, String)]] = {
     val (packed, next) = table.span(_._1 == table.head._1)
-    if(next.isEmpty) List(packed)
+    if (next.isEmpty) List(packed)
     else packed :: splitIntoTables(next)
   }
 
@@ -40,11 +41,11 @@ object Id3 {
 
     val tables = splitIntoTables(rows.sortWith((e1, e2) => e1._1 < e2._1))
 
-    tables.map(t => entropyForTable(t)).sum
+    tables.map(t => entropyForSubTable(t, rows.length)).sum
   }
 
-  private def entropyForTable(table: List[(String, String)]): Entropy =
-    computeEntropy(table.map(e => e._2))
+  private def entropyForSubTable(subTable: List[(String, String)], tableSize: Int): Entropy =
+    (subTable.length - 1).toDouble / tableSize.toDouble * computeEntropy(subTable.map(e => e._2))
 
   private def computeEntropy(input: List[String]): Entropy = {
     val probabilities = input
