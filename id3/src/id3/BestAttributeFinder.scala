@@ -34,7 +34,8 @@ object BestAttributeFinder {
     Node("result")
   }
 
-  /**
+  /** Why use zipWithIndex => a value from a given dataset will need to be filtered against the value
+    *   it is wanted to create the sub-table by. To do this, the index is needed - simple as that.
     *
     * @param columnIndex - index of column which will be checked for equality, needed to filter the data
     * @param rowValue - the value of the row which will be used to filter the data
@@ -46,11 +47,11 @@ object BestAttributeFinder {
 
   def createSubtableFromRow(columnIndex: Int, rowValue: String, dataset: List[Dataset], conclusion: Dataset): (List[Dataset], Dataset) = {
     (dataset
-      .zipWithIndex
       .map { e =>
-        Dataset(e._1.attribute,
-          e._1.data
+        Dataset(e.attribute,
+          e.data
             .zipWithIndex
+            //value of the row in the columnIndex is equal to the rowValue
             .filter(r => dataset(columnIndex).data(r._2) == rowValue)
             .map(r => r._1))
       },
