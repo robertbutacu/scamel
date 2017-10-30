@@ -25,7 +25,7 @@ object BestAttributeFinder {
     val branches = data.map(e => (e, conclusion))
 
     val informationGains = branches.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
-    println(informationGains)
+    println(data(informationGains.indexOf(informationGains.max)).data.sortWith(_ < _))
     Node("result")
   }
 
