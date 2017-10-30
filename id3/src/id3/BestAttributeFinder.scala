@@ -34,20 +34,30 @@ object BestAttributeFinder {
     Node("result")
   }
 
-  def createSubtableFromRow(rowIndex: Int, rowValue: String, dataset: List[Dataset], conclusion: Dataset): (List[Dataset], Dataset) = {
+  /**
+    *
+    * @param columnIndex - index of column which will be checked for equality, needed to filter the data
+    * @param rowValue - the value of the row which will be used to filter the data
+    * @param dataset - input dataset
+    * @param conclusion - the conclusion for an input data
+    * @return a new table ( which is represented as a list of datasets ), and its inferred conclusion,
+    *         where each value of the column matching columnIndex is equal to rowValue
+    */
+
+  def createSubtableFromRow(columnIndex: Int, rowValue: String, dataset: List[Dataset], conclusion: Dataset): (List[Dataset], Dataset) = {
     (dataset
       .zipWithIndex
       .map { e =>
         Dataset(e._1.attribute,
           e._1.data
             .zipWithIndex
-            .filter(r => dataset(rowIndex).data(r._2) == rowValue)
+            .filter(r => dataset(columnIndex).data(r._2) == rowValue)
             .map(r => r._1))
       },
       Dataset(conclusion.attribute,
         conclusion.data
           .zipWithIndex
-          .filter(r => dataset(rowIndex).data(r._2) == rowValue)
+          .filter(r => dataset(columnIndex).data(r._2) == rowValue)
           .map(r => r._1)
       )
     )
