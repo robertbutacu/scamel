@@ -44,7 +44,6 @@ object BestAttributeFinder {
     * @return a new table ( which is represented as a list of datasets ), and its inferred conclusion,
     *         where each value of the column matching columnIndex is equal to rowValue
     */
-
   def createSubtableFromRow(columnIndex: Int,
                             rowValue: String,
                             dataset: List[Dataset],
@@ -66,6 +65,7 @@ object BestAttributeFinder {
       )
     )
   }
+
 
   /**
     * In order to compute information gain, it is needed for sub-tables to be created for each unique dataset value
@@ -93,6 +93,7 @@ object BestAttributeFinder {
     else packed :: splitIntoTables(next)
   }
 
+
   /**
     *
     * @param dataset - the sub-table for which an entropy is required
@@ -106,12 +107,14 @@ object BestAttributeFinder {
     tables.map(t => entropyForSubTable(t, rows.length)).sum
   }
 
+
   /**
     * Represented by - (numberOfElementsInSub-table/numberOfElementsInTable) * Entropy(Attribute)
     * The minus will be added by the apply function.
     */
   private def entropyForSubTable(subTable: List[(String, String)], tableSize: Int): Entropy =
     subTable.length.toDouble / tableSize.toDouble * computeEntropy(subTable.map(e => e._2))
+
 
   /**
     *
