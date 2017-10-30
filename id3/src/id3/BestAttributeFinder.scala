@@ -25,26 +25,51 @@ object BestAttributeFinder {
     val branches = data.map(e => (e, conclusion))
 
     val informationGains = branches.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
-    println(data(informationGains.indexOf(informationGains.max)).data.sortWith(_ < _))
+    //println(data(informationGains.indexOf(informationGains.max)).data.sortWith(_ < _))
+    println(createSubtableFromRow(informationGains.indexOf(informationGains.max),
+      data(informationGains.indexOf(informationGains.max)).data.head,
+      data,
+      conclusion
+    ))
     Node("result")
+  }
+
+  def createSubtableFromRow(rowIndex: Int, rowValue: String, dataset: List[Dataset], conclusion: Dataset): (List[Dataset], Dataset) = {
+    (dataset
+      .zipWithIndex
+      .map { e =>
+        Dataset(e._1.attribute,
+          e._1.data
+            .zipWithIndex
+            .filter(r => dataset(rowIndex).data(r._2) == rowValue)
+            .map(r => r._1))
+      },
+      Dataset(conclusion.attribute,
+        conclusion.data
+          .zipWithIndex
+          .filter(r => dataset(rowIndex).data(r._2) == rowValue)
+          .map(r => r._1)
+      )
+    )
   }
 
   /**
     * In order to compute information gain, it is needed for sub-tables to be created for each unique dataset value
     * Example:
-    *   Female Bus
-    *   Female Bus
-    *   Man    Train
-    *   Man    Car
-    *   => (
-    *         Female Bus
-    *         Female Bus
-    *      ),
-    *      (
-    *         Man    Train
-    *         Man    Car
-    *      )
-    *      This way, it is easy to compute the entropy for each value and add it up to a information gain.
+    * Female Bus
+    * Female Bus
+    * Man    Train
+    * Man    Car
+    *
+    * => (
+    * Female Bus
+    * Female Bus
+    * ),
+    * (
+    * Man    Train
+    * Man    Car
+    * )
+    * This way, it is easy to compute the entropy for each value and add it up to a information gain.
     * @param table - a sub-table
     * @return a list of tables where e._1 is unique in any of the elements
     */
@@ -78,7 +103,8 @@ object BestAttributeFinder {
     *
     * Represented by Sum( - P(i) * log2(P(i)) ).
     * Where P(i) => probability of i
-    *       i    => each unique data entry for the attribute
+    * i    => each unique data entry for the attribute
+    *
     * @return - entropy rounded to 4 decimals
     */
   private def computeEntropy(input: List[String]): Entropy = {
