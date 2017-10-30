@@ -45,7 +45,10 @@ object BestAttributeFinder {
     *         where each value of the column matching columnIndex is equal to rowValue
     */
 
-  def createSubtableFromRow(columnIndex: Int, rowValue: String, dataset: List[Dataset], conclusion: Dataset): (List[Dataset], Dataset) = {
+  def createSubtableFromRow(columnIndex: Int,
+                            rowValue: String,
+                            dataset: List[Dataset],
+                            conclusion: Dataset): (List[Dataset], Dataset) = {
     (dataset
       .map { e =>
         Dataset(e.attribute,
