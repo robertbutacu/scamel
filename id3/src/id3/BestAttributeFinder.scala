@@ -19,7 +19,7 @@ object BestAttributeFinder {
     * |S|  = number of elements in S
     */
 
-  def apply(conclusion: Dataset, data: List[Dataset]): List[(List[Dataset], Dataset)] = {
+  def apply(conclusion: Dataset, data: List[Dataset]): List[(String, List[Dataset], Dataset)] = {
     val conclusionEntropy = computeEntropy(conclusion.data)
 
     val branches = data.map(e => (e, conclusion))
@@ -32,8 +32,7 @@ object BestAttributeFinder {
       .distinct
       .map{v => createSubtableFromRow(bestAttributeIndex, v, data, conclusion)}
 
-    println(subtables)
-    List.empty
+    subtables.map(t => (t._1(bestAttributeIndex).data.head, t._1.patch(bestAttributeIndex, Nil, 1), t._2))
   }
 
   /** Why use zipWithIndex => a value from a given dataset will need to be filtered against the value
