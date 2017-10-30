@@ -19,19 +19,21 @@ object BestAttributeFinder {
     * |S|  = number of elements in S
     */
 
-  def apply(conclusion: Dataset, data: List[Dataset]): Node = {
+  def apply(conclusion: Dataset, data: List[Dataset]): List[(List[Dataset], Dataset)] = {
     val conclusionEntropy = computeEntropy(conclusion.data)
 
     val branches = data.map(e => (e, conclusion))
 
     val informationGains = branches.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
-    //println(data(informationGains.indexOf(informationGains.max)).data.sortWith(_ < _))
-    println(createSubtableFromRow(informationGains.indexOf(informationGains.max),
-      data(informationGains.indexOf(informationGains.max)).data.head,
-      data,
-      conclusion
-    ))
-    Node("result")
+
+    val bestAttributeIndex = informationGains.indexOf(informationGains.max)
+
+    val subtables = data(bestAttributeIndex).data
+      .distinct
+      .map{v => createSubtableFromRow(bestAttributeIndex, v, data, conclusion)}
+
+    println(subtables)
+    List.empty
   }
 
   /** Why use zipWithIndex => a value from a given dataset will need to be filtered against the value
