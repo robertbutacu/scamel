@@ -15,9 +15,7 @@ object Id3 {
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
     val currentBestAttribute = BestAttributeFinder(conclusion, data)
 
-    println(getLeafs(currentBestAttribute))
-    println(getNodes(currentBestAttribute))
-    Node("test")
+    Node(currentBestAttribute._1, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
   }
 
   private def getLeafs(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
@@ -29,8 +27,6 @@ object Id3 {
   private def getNodes(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
     val nodes = tables._2.filterNot(e => e._3.data.distinct.length == 1)
 
-    println(nodes)
-
-    List.empty
+    nodes.map(e => Node(e._1, List(Id3(e._3, e._2))))
   }
 }
