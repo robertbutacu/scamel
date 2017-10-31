@@ -1,7 +1,8 @@
 package id3
 
-import dataset.{Dataset, Node}
-import Math.log
+import java.lang.Math.log
+
+import dataset.Dataset
 
 object BestAttributeFinder {
   type Entropy = Double
