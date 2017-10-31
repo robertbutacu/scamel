@@ -1,6 +1,6 @@
 package id3
 
-import dataset.{Dataset, Node}
+import dataset.{Dataset, Leaf, Node, Tree}
 
 object Id3 {
   /**
@@ -15,9 +15,22 @@ object Id3 {
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
     val currentBestAttribute = BestAttributeFinder(conclusion, data)
 
-    println(currentBestAttribute)
-
+    println(getLeafs(currentBestAttribute))
+    println(getNodes(currentBestAttribute))
     Node("test")
   }
 
+  private def getLeafs(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
+    val leafs = tables._2.filter(e => e._3.data.distinct.length == 1)
+
+    leafs.map(e => Node(e._1, List.empty, List(Leaf(e._3.data.head))))
+  }
+
+  private def getNodes(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
+    val nodes = tables._2.filterNot(e => e._3.data.distinct.length == 1)
+
+    println(nodes)
+
+    List.empty
+  }
 }
