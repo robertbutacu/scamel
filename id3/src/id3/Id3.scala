@@ -6,17 +6,17 @@ object Id3 {
   /**
     *
     * @param conclusion - what it is wanted to be found
-    * @param data - input data
+    * @param trainingData - input data
     * @return - a decision tree where nodes are represented by attributes and values from data
     *         and leafs are represented by conclusion values.
     */
-  def apply(conclusion: Dataset, data: List[Dataset]): Node = {
+  def apply(conclusion: Dataset, trainingData: List[Dataset]): Node = {
     // only 1 attribute and the conclusion table has the same value everywhere
-    if (data.length == 1 && data.head.data.distinct.length == 1) {
-      solveSingleAttribute(conclusion, data.head)
+    if (trainingData.length == 1 && trainingData.head.data.distinct.length == 1) {
+      solveSingleAttribute(conclusion, trainingData.head)
     }
     else {
-      val currentBestAttribute = BestAttributeFinder(conclusion, data)
+      val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
       Node(currentBestAttribute._1, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
     }
@@ -25,11 +25,11 @@ object Id3 {
   /**
     *
     * @param conclusion - what it is wanted to be found
-    * @param data       - entry data
+    * @param trainingDataColumn       - entry data
     * @return - a procentage of the higher value found in conclusion
     *         Used when there is one attribute left and its the got the same value on any row.
     */
-  def solveSingleAttribute(conclusion: Dataset, data: Dataset): Node = {
+  def solveSingleAttribute(conclusion: Dataset, trainingDataColumn: Dataset): Node = {
     def chooseMajority(conclusion: Dataset): String = {
       val distinctValues = conclusion.data.distinct
 
@@ -42,7 +42,7 @@ object Id3 {
       s"""${leafValue._2} / ${conclusion.data.length} ${leafValue._1}"""
     }
 
-    Node(data.attribute,
+    Node(trainingDataColumn.attribute,
       List.empty,
       List(Leaf(chooseMajority(conclusion))))
   }

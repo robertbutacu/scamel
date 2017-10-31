@@ -20,52 +20,76 @@ object BestAttributeFinder {
     * |S|  = number of elements in S
     */
 
-  def apply(conclusion: Dataset, data: List[Dataset]): (String, List[(String, List[Dataset], Dataset)]) = {
+  def apply(conclusion: Dataset, trainingData: List[Dataset]): (String, List[(String, List[Dataset], Dataset)]) = {
     val conclusionEntropy = computeEntropy(conclusion.data)
 
-    val branches = data.map(e => (e, conclusion))
+    val attributes = trainingData.map(e => (e, conclusion))
 
-    val informationGains = branches.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
+    val informationGains = attributes.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
 
     val bestAttributeIndex = informationGains.indexOf(informationGains.max)
 
-    val subtables = data(bestAttributeIndex).data
+    val subtables = trainingData(bestAttributeIndex).data
       .distinct
-      .map{v => createSubtableFromRow(bestAttributeIndex, v, data, conclusion)}
+      .map{v => createSubtableFromRowValue(bestAttributeIndex, v, trainingData, conclusion)}
 
     (
-      data(bestAttributeIndex).attribute,
+      trainingData(bestAttributeIndex).attribute,
       subtables.map(t => (t._1(bestAttributeIndex).data.head, t._1.patch(bestAttributeIndex, Nil, 1), t._2))
     )
   }
+
+
+  /**
+    *
+    * Represented by Sum( - P(i) * log2(P(i)) ).
+    * Where P(i) => probability of i
+    * i    => each unique data entry for the attribute
+    *
+    * @return - entropy rounded to 4 decimals
+    */
+  private def computeEntropy(input: List[String]): Entropy = {
+    val probabilities = input
+      .map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
+
+    val entropy = probabilities.foldRight(0.0)((curr, acc) =>
+      // log(base e) x/log(base e) 2
+      // Scala/Java doesn't have anything implemented for log of custom base ( but 10 and e )
+      // manual conversion needed
+      acc - curr._2 * (log(curr._2) / log(2))
+    )
+
+    (entropy * 10000).floor / 10000
+  }
+
 
   /** Why use zipWithIndex => a value from a given dataset will need to be filtered against the value
     *   it is wanted to create the sub-table by. To do this, the index is needed - simple as that.
     *
     * @param columnIndex - index of column which will be checked for equality, needed to filter the data
     * @param rowValue - the value of the row which will be used to filter the data
-    * @param dataset - input dataset
+    * @param trainingData - input dataset
     * @param conclusion - the conclusion for an input data
     * @return a new table ( which is represented as a list of datasets ), and its inferred conclusion,
     *         where each value of the column matching columnIndex is equal to rowValue
     */
-  def createSubtableFromRow(columnIndex: Int,
-                            rowValue: String,
-                            dataset: List[Dataset],
-                            conclusion: Dataset): (List[Dataset], Dataset) = {
-    (dataset
+  def createSubtableFromRowValue(columnIndex: Int,
+                                 rowValue: String,
+                                 trainingData: List[Dataset],
+                                 conclusion: Dataset): (List[Dataset], Dataset) = {
+    (trainingData
       .map { e =>
         Dataset(e.attribute,
           e.data
             .zipWithIndex
             //value of the row in the columnIndex is equal to the rowValue
-            .filter(r => dataset(columnIndex).data(r._2) == rowValue)
+            .filter(r => trainingData(columnIndex).data(r._2) == rowValue)
             .map(r => r._1))
       },
       Dataset(conclusion.attribute,
         conclusion.data
           .zipWithIndex
-          .filter(r => dataset(columnIndex).data(r._2) == rowValue)
+          .filter(r => trainingData(columnIndex).data(r._2) == rowValue)
           .map(r => r._1)
       )
     )
@@ -101,11 +125,11 @@ object BestAttributeFinder {
 
   /**
     *
-    * @param dataset - the sub-table for which an entropy is required
+    * @param trainingData - the sub-table for which an entropy is required
     * @return the entropy for an attribute, which will be later require to compute information gain.
     */
-  private def computeDatasetEntropy(dataset: (Dataset, Dataset)): Entropy = {
-    val rows = dataset._1.data.indices.map(e => (dataset._1.data(e), dataset._2.data(e))).toList
+  private def computeDatasetEntropy(trainingData: (Dataset, Dataset)): Entropy = {
+    val rows = trainingData._1.data.indices.map(e => (trainingData._1.data(e), trainingData._2.data(e))).toList
 
     val tables = splitIntoTables(rows.sortWith((e1, e2) => e1._1 < e2._1))
 
@@ -119,27 +143,4 @@ object BestAttributeFinder {
     */
   private def entropyForSubTable(subTable: List[(String, String)], tableSize: Int): Entropy =
     subTable.length.toDouble / tableSize.toDouble * computeEntropy(subTable.map(e => e._2))
-
-
-  /**
-    *
-    * Represented by Sum( - P(i) * log2(P(i)) ).
-    * Where P(i) => probability of i
-    * i    => each unique data entry for the attribute
-    *
-    * @return - entropy rounded to 4 decimals
-    */
-  private def computeEntropy(input: List[String]): Entropy = {
-    val probabilities = input
-      .map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
-
-    val entropy = probabilities.foldRight(0.0)((curr, acc) =>
-      // log(base e) x/log(base e) 2
-      // Scala/Java doesn't have anything implemented for log of custom base ( but 10 and e )
-      // manual conversion needed
-      acc - curr._2 * (log(curr._2) / log(2))
-    )
-
-    (entropy * 10000).floor / 10000
-  }
 }
