@@ -4,7 +4,7 @@ import id3.Id3
 object Main extends App {
   def prettyPrinter(node: Node, levelOfDepth: Int = 0): Unit = {
     print("\t" * levelOfDepth)
-    println("Current node: " + node.attribute + "\n")
+    println("Current node: " + node.attribute)
 
     node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + "Leaf: " + l.attribute))
 
