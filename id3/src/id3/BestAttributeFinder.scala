@@ -113,7 +113,7 @@ object BestAttributeFinder {
 
 
   /**
-    * Represented by - (numberOfElementsInSub-table/numberOfElementsInTable) * Entropy(Attribute)
+    * Represented by - (numberOfElementsInSubtable/numberOfElementsInTable) * Entropy(Attribute)
     * The minus will be added by the apply function.
     */
   private def entropyForSubTable(subTable: List[(String, String)], tableSize: Int): Entropy =
