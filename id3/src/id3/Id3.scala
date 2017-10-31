@@ -13,9 +13,28 @@ object Id3 {
     * and the above function will deal with creating the node.
     */
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
-    val currentBestAttribute = BestAttributeFinder(conclusion, data)
+    if(data.length == 1){
+      solveSingleAttribute(conclusion, data.head)
+    }
+    else{
+      val currentBestAttribute = BestAttributeFinder(conclusion, data)
 
-    Node(currentBestAttribute._1, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
+      Node(currentBestAttribute._1, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
+    }
+  }
+
+  private def solveSingleAttribute(conclusion: Dataset, data: Dataset): Node = {
+    def chooseMajority(conclusion: Dataset): String = {
+      val distinctValues = conclusion.data.distinct
+
+      val count = distinctValues.map(e => (e, conclusion.data.count(_ == e)))
+
+      count.maxBy(e => e._2)._1
+    }
+
+    Node(data.attribute,
+      List.empty,
+      List(Leaf(chooseMajority(conclusion))))
   }
 
   private def getLeafs(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
