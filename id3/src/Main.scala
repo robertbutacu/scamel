@@ -1,8 +1,8 @@
 import dataset.Dataset
-import id3.BestAttributeFinder
+import id3.Id3
 
 object Main extends App {
-  println(BestAttributeFinder(Dataset("Transportation",
+  println(Id3(Dataset("Transportation",
     List("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
     List(Dataset("Gender",
       List("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", "Female")),
