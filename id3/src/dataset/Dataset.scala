@@ -2,11 +2,9 @@ package dataset
 
 case class Dataset(attribute: String, data: List[String])
 
-trait Tree
-
-case class Leaf(attribute: String) extends Tree
+case class Leaf(attribute: String)
 
 case class Node(attribute: String,
                 nodes: List[Node] = List.empty,
-                leafs: List[Leaf] = List.empty) extends Tree
+                leafs: List[Leaf] = List.empty)
 
