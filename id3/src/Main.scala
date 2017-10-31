@@ -22,4 +22,9 @@ object Main extends App {
       Dataset("Income Level",
         List("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
   ))
+  /*println(Id3.solveSingleAttribute(Dataset("Transportation",
+    List("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
+    Dataset("Travel Cost",
+      List("Cheap", "Cheap", "Cheap", "Cheap", "Cheap", "Standard", "Standard", "Expensive", "Expensive", "Expensive"))
+  ))*/
 }

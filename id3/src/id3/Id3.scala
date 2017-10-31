@@ -13,7 +13,7 @@ object Id3 {
     * and the above function will deal with creating the node.
     */
   def apply(conclusion: Dataset, data: List[Dataset]): Node = {
-    if(data.length == 1){
+    if(data.length == 1 && data.head.data.distinct.length == 1){
       solveSingleAttribute(conclusion, data.head)
     }
     else{
@@ -23,13 +23,15 @@ object Id3 {
     }
   }
 
-  private def solveSingleAttribute(conclusion: Dataset, data: Dataset): Node = {
+  def solveSingleAttribute(conclusion: Dataset, data: Dataset): Node = {
     def chooseMajority(conclusion: Dataset): String = {
       val distinctValues = conclusion.data.distinct
 
       val count = distinctValues.map(e => (e, conclusion.data.count(_ == e)))
 
-      count.maxBy(e => e._2)._1
+      val leafValue = count.maxBy(e => e._2)
+
+      s"""${leafValue._2} / ${conclusion.data.length} ${leafValue._1}"""
     }
 
     Node(data.attribute,
