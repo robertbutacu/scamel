@@ -2,6 +2,8 @@ package dataset
 
 case class Dataset(attribute: String, data: List[String])
 
+case class BestAttribute(attribute: String, subsets: List[Dataset], conclusion: Dataset)
+
 case class Leaf(attribute: String)
 
 case class Node(attribute: String,
