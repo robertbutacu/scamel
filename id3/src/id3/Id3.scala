@@ -1,6 +1,6 @@
 package id3
 
-import dataset.{Dataset, Leaf, Node}
+import dataset.{BestAttribute, Dataset, Leaf, Node}
 
 object Id3 {
   /**
@@ -18,7 +18,7 @@ object Id3 {
     else {
       val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
-      Node(currentBestAttribute._1, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
+      Node(currentBestAttribute.attribute, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
     }
   }
 
@@ -54,13 +54,13 @@ object Id3 {
     * @return - a list of nodes where the leafs are represented by all the subtables
     *         where the conclusion rows are the same.
     */
-  private def getLeafs(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
+  private def getLeafs(tables: BestAttribute): List[Node] = {
     // filtering for tables where the conclusion's values are the same
-    val toBeLeafs = tables._2.filter(e => e._3.data.distinct.length == 1)
+    val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.length == 1)
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => Node(e._1, List.empty, List(Leaf(e._3.data.head))))
+    toBeLeafs.map(e => Node(e.attribute, List.empty, List(Leaf(e.conclusion.data.head))))
   }
 
   /**
@@ -69,12 +69,12 @@ object Id3 {
     *               the table is split by attribute's value
     * @return - a list of nodes where the children are represented by the subtree returned by the recursive call
     */
-  private def getNodes(tables: (String, List[(String, List[Dataset], Dataset)])): List[Node] = {
+  private def getNodes(tables: BestAttribute): List[Node] = {
     // filtering all the tables where there are more possible conclusion values
-    val toBeNodes = tables._2.filterNot(e => e._3.data.distinct.length == 1)
+    val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.length == 1)
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
-    toBeNodes.map(e => Node(e._1, List(Id3(e._3, e._2))))
+    toBeNodes.map(e => Node(e.attribute, List(Id3(e.conclusion, e.table))))
   }
 }
