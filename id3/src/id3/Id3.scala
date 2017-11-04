@@ -5,7 +5,7 @@ import dataset.{BestAttribute, Dataset, Leaf, Node}
 object Id3 {
   /**
     *
-    * @param conclusion - what it is wanted to be found
+    * @param conclusion   - what it is wanted to be found
     * @param trainingData - input data
     * @return - a decision tree where nodes are represented by attributes and values from data
     *         and leafs are represented by conclusion values.
@@ -24,8 +24,8 @@ object Id3 {
 
   /**
     *
-    * @param conclusion - what it is wanted to be found
-    * @param trainingDataColumn       - entry data
+    * @param conclusion         - what it is wanted to be found
+    * @param trainingDataColumn - entry data
     * @return - a procentage of the higher value found in conclusion
     *         Used when there is one attribute left and its the got the same value on any row.
     */

@@ -31,17 +31,16 @@ object BestAttributeFinder {
 
     val subsets = trainingData(bestAttributeIndex).data
       .distinct
-      .map{v => createSubsetFromRowValue(bestAttributeIndex, v, trainingData, conclusion)}
-
-
-      BestAttribute(trainingData(bestAttributeIndex).attribute,
+      .map { v => createSubsetFromRowValue(bestAttributeIndex, v, trainingData, conclusion) }
+    
+    BestAttribute(trainingData(bestAttributeIndex).attribute,
       subsets.map(t => Subset(t._1(bestAttributeIndex).data.head, t._1.patch(bestAttributeIndex, Nil, 1), t._2)))
   }
 
 
   /** log(base e) x/log(base e) 2
-    *  Scala/Java doesn't have anything implemented for log of custom base ( but 10 and e )
-    *  manual conversion needed
+    * Scala/Java doesn't have anything implemented for log of custom base ( but 10 and e )
+    * manual conversion needed
     *
     * Represented by Sum( - P(i) * log2(P(i)) ).
     * Where P(i) => probability of i
@@ -60,12 +59,12 @@ object BestAttributeFinder {
 
 
   /** Why use zipWithIndex => a value from a given dataset will need to be filtered against the value
-    *   it is wanted to create the subset by. To do this, the index is needed - simple as that.
+    * it is wanted to create the subset by. To do this, the index is needed - simple as that.
     *
-    * @param columnIndex - index of column which will be checked for equality, needed to filter the data
-    * @param rowValue - the value of the row which will be used to filter the data
+    * @param columnIndex  - index of column which will be checked for equality, needed to filter the data
+    * @param rowValue     - the value of the row which will be used to filter the data
     * @param trainingData - input dataset
-    * @param conclusion - the conclusion for an input data
+    * @param conclusion   - the conclusion for an input data
     * @return a new table ( which is represented as a list of training data ), and its inferred conclusion,
     *         where each value of the column matching columnIndex is equal to rowValue
     */
