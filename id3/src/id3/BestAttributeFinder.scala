@@ -2,7 +2,7 @@ package id3
 
 import java.lang.Math.log
 
-import dataset.Dataset
+import dataset.{BestAttribute, Dataset, Subset}
 
 object BestAttributeFinder {
   type Entropy = Double
@@ -20,7 +20,7 @@ object BestAttributeFinder {
     * |S|  = number of elements in S
     */
 
-  def apply(conclusion: Dataset, trainingData: List[Dataset]): (String, List[(String, List[Dataset], Dataset)]) = {
+  def apply(conclusion: Dataset, trainingData: List[Dataset]): BestAttribute = {
     val conclusionEntropy = computeEntropy(conclusion.data)
 
     val attributes = trainingData.map(e => (e, conclusion))
@@ -33,10 +33,9 @@ object BestAttributeFinder {
       .distinct
       .map{v => createSubsetFromRowValue(bestAttributeIndex, v, trainingData, conclusion)}
 
-    (
-      trainingData(bestAttributeIndex).attribute,
-      subsets.map(t => (t._1(bestAttributeIndex).data.head, t._1.patch(bestAttributeIndex, Nil, 1), t._2))
-    )
+
+      BestAttribute(trainingData(bestAttributeIndex).attribute,
+      subsets.map(t => Subset(t._1(bestAttributeIndex).data.head, t._1.patch(bestAttributeIndex, Nil, 1), t._2)))
   }
 
 
