@@ -33,9 +33,11 @@ object BestAttributeFinder {
       .distinct
       .map { v => createSubsetFromRowValue(bestAttributeIndex, v, trainingData, conclusion) }
 
-    //using patch to remove the best attribute for the subset
+    //using patch to remove the best attribute column for the subset
     BestAttribute(trainingData(bestAttributeIndex).attribute,
-      subsets.map(t => Subset(t._1(bestAttributeIndex).data.head, t._1.patch(bestAttributeIndex, Nil, 1), t._2)))
+      subsets.map(t => Subset(t._1(bestAttributeIndex).data.head,//attribute name
+        t._1.patch(bestAttributeIndex, Nil, 1),//data
+        t._2)))//conclusion
   }
 
 
