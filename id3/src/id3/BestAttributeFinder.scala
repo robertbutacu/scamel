@@ -4,27 +4,25 @@ import java.lang.Math.log
 
 import dataset.{BestAttribute, Dataset, Subset}
 
+/**
+  * Compute the entropy for each attribute
+  * Split the set into subsets using the attribute for each entropy is minimum ( <=> information gain is maximal )
+  * Make a decision Tree containing that attribute
+  * Recurse on subsets using remaining attributes
+  * Entropy(S) = -p(I)log2(p(I))
+  * InformationGain(S, A) = Entropy(S) - ((|Sv| \ |S|) * Entropy(Sv))
+  * Sv = subset of S for which attribute A has value v
+  * |Sv| = number of elements in Sv
+  * |S|  = number of elements in S
+  */
 object BestAttributeFinder {
   type Entropy = Double
   type InformationGain = Double
 
   /**
-    * Compute the entropy for each attribute
-    * Split the set into subsets using the attribute for each entropy is minimum ( <=> information gain is maximal )
-    * Make a decision Tree containing that attribute
-    * Recurse on subsets using remaining attributes
-    * Entropy(S) = -p(I)log2(p(I))
-    * InformationGain(S, A) = Entropy(S) - ((|Sv| \ |S|) * Entropy(Sv))
-    * Sv = subset of S for which attribute A has value v
-    * |Sv| = number of elements in Sv
-    * |S|  = number of elements in S
-    */
-
-
-  /**
     *
-    * @param conclusion - based on the trainingData, a conclusion is wanted to be reached in case of further
-    *                   data entrances
+    * @param conclusion   - based on the trainingData, a conclusion is wanted to be reached in case of further
+    *                     data entrances
     * @param trainingData - all attributes, columns
     * @return A BestAttribute for current table with current conclusion.
     */
@@ -43,9 +41,9 @@ object BestAttributeFinder {
 
     //using patch to remove the best attribute column for the subset
     BestAttribute(trainingData(bestAttributeIndex).attribute,
-      subsets.map(t => Subset(t._1(bestAttributeIndex).data.head,//attribute name - head cause they all the same
-        t._1.patch(bestAttributeIndex, Nil, 1),//data
-        t._2)))//conclusion
+      subsets.map(t => Subset(t._1(bestAttributeIndex).data.head, //attribute name - head cause they all the same
+        t._1.patch(bestAttributeIndex, Nil, 1), //data
+        t._2))) //conclusion
   }
 
 
