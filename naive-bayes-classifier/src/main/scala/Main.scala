@@ -1,19 +1,19 @@
-import bayes.classifier.{Dataset, Input, NaiveBayes}
+import bayes.classifier._
 
 object Main extends App {
   NaiveBayes(
     List(
-      Dataset("outlook", List("sunny", "sunny", "overcast", "rainy", "rainy", "rainy", "overcast",
-        "sunny", "sunny", "rainy", "sunny", "overcast", "overcast", "rainy")),
-      Dataset("temperature", List("hot", "hot", "hot", "mild", "cool", "cool", "cool", "mild", "cool", "mild",
-        "mild", "mild", "hot", "mild")),
-      Dataset("humidity", List("high", "high", "high", "high", "normal", "normal", "normal", "high",
-        "normal", "normal", "normal", "high", "normal", "high")),
-      Dataset("windy", List("false", "true", "false", "false", "false", "true", "true", "false", "false", "false",
-        "true", "true", "false", "true"))),
+      Dataset(Outlook, List(Sunny, Sunny, Overcast, Rainy, Rainy, Rainy, Overcast,
+        Sunny, Sunny, Rainy, Sunny, Overcast, Overcast, Rainy)),
+      Dataset(Temperature, List(Hot, Hot, Hot, Mild, Cool, Cool, Cool, Mild, Cool, Mild,
+        Mild, Mild, Hot, Mild)),
+      Dataset(Humidity, List(High, High, High, High, High, High, High, High,
+        Normal, Normal, Normal, High, Normal, High)),
+      Dataset(Windy, List(False, True, False, False, False, True, True, False, False, False,
+        True, True, False, True))),
     List(
-      Input(Set("outlook", "temperature", "humidity", "wind"), Set("sunny", "cool", "high", "strong"))
+      Input(Set(Outlook, Temperature, Humidity, Windy), Set(Sunny, Cool, High, True))
     ),
-    Dataset("play", List("no", "no", "yes", "yes", "yes", "no", "yes", "no", "yes", "yes", "yes", "yes", "yes", "no"))
+    Dataset(Play, List(No, No, Yes, Yes, Yes, No, Yes, No, Yes, Yes, Yes, Yes, Yes, No))
   )
 }

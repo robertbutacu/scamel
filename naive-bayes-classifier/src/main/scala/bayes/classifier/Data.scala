@@ -12,6 +12,8 @@ case object Hot extends Data
 
 case object Mild extends Data
 
+case object Normal extends Data
+
 case object Cool extends Data
 
 case object High extends Data

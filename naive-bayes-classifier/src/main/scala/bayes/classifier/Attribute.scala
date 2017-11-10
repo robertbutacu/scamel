@@ -2,6 +2,8 @@ package bayes.classifier
 
 trait Attribute
 
+case object Play extends Attribute
+
 case object Outlook extends Attribute
 
 case object Temperature extends Attribute
