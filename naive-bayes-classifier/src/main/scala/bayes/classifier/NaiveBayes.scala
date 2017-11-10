@@ -23,5 +23,5 @@ package bayes.classifier
   *         P(X) = Product Of Probability Of An Attribute to be equal to the Input Data's Attribute Value.
   */
 object NaiveBayes {
-  def apply(trainingData: List[Dataset], toClassify: List[Dataset], classData: Dataset): Unit = {}
+  def apply(trainingData: List[Dataset], toClassify: List[Input], classData: Dataset): Unit = {}
 }
