@@ -84,8 +84,9 @@ object NaiveBayes {
 
   /**
     *
-    * @param classData
-    * @return
+    * @param classData - the outcome
+    * @return          - a list ( composed of 2 elements, ofc - (true, double), (false, double) with the probability
+    *                  of each respective boolean values.
     */
   private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
