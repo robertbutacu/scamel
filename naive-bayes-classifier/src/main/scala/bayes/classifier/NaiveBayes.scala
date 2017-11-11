@@ -1,5 +1,7 @@
 package bayes.classifier
 
+import bayes.classifier.data.{Dataset, Input}
+
 
 /**
   * Pro and Cons of Naive Bayes:

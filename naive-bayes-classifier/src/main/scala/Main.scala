@@ -1,4 +1,5 @@
 import bayes.classifier._
+import bayes.classifier.data._
 
 object Main extends App {
   NaiveBayes(

@@ -1,4 +1,4 @@
-package bayes.classifier
+package bayes.classifier.data
 
 trait Data
 
