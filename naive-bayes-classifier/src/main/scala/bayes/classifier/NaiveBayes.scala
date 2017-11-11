@@ -44,7 +44,8 @@ object NaiveBayes {
     val combinedColumns = trainingData.data.zip(classData.data)
 
     val probabilities = combinedColumns.distinct
-      .map(c => (c._1, c._2, combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble))
+      .map(c => (c._1, c._2,
+        (combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble * 1000).floor / 1000))
       .toSet
 
     IndividualProbability(trainingData.attribute, probabilities)
