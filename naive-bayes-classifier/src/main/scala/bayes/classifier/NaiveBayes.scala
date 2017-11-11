@@ -72,8 +72,12 @@ object NaiveBayes {
     val combinedColumns = trainingData.data.zip(classData.data)
 
     val probabilities = combinedColumns.distinct
-      .map(c => (c._1, c._2,
-        (combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble * 1000).floor / 1000))
+      .map(c =>
+        (
+          c._1, c._2,
+          (combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble * 1000).floor / 1000
+        )
+      )
       .toSet
 
     IndividualProbability(trainingData.attribute, probabilities)
@@ -107,8 +111,6 @@ object NaiveBayes {
   private def getEvidence(trainingData: List[Dataset],
                           input: Input,
                          ): List[Double] = {
-    //println(trainingData)
-
     val filteredTrainingData = input.data.map(i =>
       trainingData
         .flatMap(d =>
@@ -121,6 +123,4 @@ object NaiveBayes {
 
     probabilities
   }
-
-
 }
