@@ -30,13 +30,17 @@ object NaiveBayes {
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
-    val positiveOutcome = toClassify.map(c => giveData(c, individualProbabilities, isHappening = true))
+    val positiveOutcome = toClassify.flatMap(c =>
+      giveData(c, individualProbabilities, isHappening = true, classClassified))
 
-    val negativeOutcome = toClassify.map(c => giveData(c, individualProbabilities, isHappening = false))
+    val negativeOutcome = toClassify.flatMap(c =>
+      giveData(c, individualProbabilities, isHappening = false, classClassified))
 
-    println(positiveOutcome)
-    println(negativeOutcome)
+    val probPosOutcome = (positiveOutcome.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
+    val probNegOutcome = (negativeOutcome.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
 
+    println(probPosOutcome)
+    println(probNegOutcome)
     List.empty
   }
 
@@ -58,17 +62,19 @@ object NaiveBayes {
 
   /**
     * Input is of type (Attribute, Data) =>
-    *     going through individualProbabilities, only those fields where the data and the outcome match
-    *       are filtered.
+    * going through individualProbabilities, only those fields where the data and the outcome match
+    * are filtered and concatenated with the values from classData which match the isHappening variable.
     *
     * @param input                   - data for which it is wanted to find the probability of the output
     * @param individualProbabilities - every attribute's probability for each data
     * @param isHappening             - true/false depending on the wanted output
+    * @param classData               - probability of negative/positive event happening
     * @return
     */
   private def giveData(input: Input,
                        individualProbabilities: List[IndividualProbability],
-                       isHappening: Boolean): List[Double] =
+                       isHappening: Boolean,
+                       classData: List[(Boolean, Double)]): List[Double] =
     input.data.flatMap(i =>
       individualProbabilities
         .flatMap(d =>
@@ -76,6 +82,6 @@ object NaiveBayes {
             .filter(e => e._1 == i._2 && e._2 == isHappening)
             .toList
         )
-    ).toList.map(_._3)
+    ).toList.map(_._3) ::: classData.filter(e => e._1 == isHappening).map(_._2)
 
 }
