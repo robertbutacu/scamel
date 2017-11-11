@@ -30,9 +30,12 @@ object NaiveBayes {
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
-    val classified = toClassify.map(c => giveData(c, individualProbabilities, isHappening = true))
+    val positiveOutcome = toClassify.map(c => giveData(c, individualProbabilities, isHappening = true))
 
-    classified.foreach(println)
+    val negativeOutcome = toClassify.map(c => giveData(c, individualProbabilities, isHappening = false))
+
+    println(positiveOutcome)
+    println(negativeOutcome)
 
     List.empty
   }

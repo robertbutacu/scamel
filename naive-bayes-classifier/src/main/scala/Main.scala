@@ -8,7 +8,7 @@ object Main extends App {
         Sunny, Sunny, Rainy, Sunny, Overcast, Overcast, Rainy)),
       Dataset(Temperature, List(Hot, Hot, Hot, Mild, Cool, Cool, Cool, Mild, Cool, Mild,
         Mild, Mild, Hot, Mild)),
-      Dataset(Humidity, List(High, High, High, High, High, High, High, High,
+      Dataset(Humidity, List(High, High, High, High, Normal, Normal, Normal, High,
         Normal, Normal, Normal, High, Normal, High)),
       Dataset(Windy, List(False, True, False, False, False, True, True, False, False, False,
         True, True, False, True))),
