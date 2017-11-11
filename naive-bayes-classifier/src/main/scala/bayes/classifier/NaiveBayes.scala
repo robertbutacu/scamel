@@ -30,6 +30,7 @@ object NaiveBayes {
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
+    println(classClassified)
     for (elem <- individualProbabilities) {println(elem)}
 
     List.empty
@@ -38,7 +39,7 @@ object NaiveBayes {
   private def classDataClassifier(classData: Dataset): List[(Data, Double)] =
     classData.data
       .distinct
-      .map(d => (d, classData.data.count(_ == d).toDouble / classData.data.length))
+      .map(d => (d, (classData.data.count(_ == d).toDouble / classData.data.length * 1000).floor / 1000))
 
   private def trainingDataClassifier(trainingData: Dataset, classData: Dataset): IndividualProbability = {
     val combinedColumns = trainingData.data.zip(classData.data)
