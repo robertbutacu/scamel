@@ -2,7 +2,7 @@ import bayes.classifier._
 import bayes.classifier.data._
 
 object Main extends App {
-  NaiveBayes(
+  println(NaiveBayes(
     List(
       Dataset(Outlook, List(Sunny, Sunny, Overcast, Rainy, Rainy, Rainy, Overcast,
         Sunny, Sunny, Rainy, Sunny, Overcast, Overcast, Rainy)),
@@ -16,5 +16,5 @@ object Main extends App {
       Input(Set(Outlook, Temperature, Humidity, Windy), Set(Sunny, Cool, High, True))
     ),
     Dataset(Play, List(No, No, Yes, Yes, Yes, No, Yes, No, Yes, Yes, Yes, Yes, Yes, No))
-  )
+  ))
 }
