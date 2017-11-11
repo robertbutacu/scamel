@@ -28,21 +28,29 @@ object NaiveBayes {
   def apply(trainingData: List[Dataset],
             toClassify: List[Input],
             classData: ClassAttribute): List[(Input, Boolean)] = {
+    //prob for true/false
     val classClassified = classDataClassifier(classData)
 
+    //each attribute split into sub-table with respective probability
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
+    // probabilities for positiveOutcome for each input data
     val positiveOutcome = toClassify.map(c =>
       getData(c, individualProbabilities, isHappening = true, classClassified))
 
+    //probabilities for negativeOutcome for each input data
     val negativeOutcome = toClassify.map(c =>
       getData(c, individualProbabilities, isHappening = false, classClassified))
 
+    //computing overall probability for positive/negative
     val probPosOutcome = positiveOutcome.map(e => (probability(e), true))
     val probNegOutcome = negativeOutcome.map(e => (probability(e), false))
 
+    //getting evidence so the final question can be answered
+    // what is the higher probability of sth to happen?
     val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
 
+    // the final answer for a given input is max of (probNeg/evidence, probPos/evidence)
     toClassify.zipWithIndex.map(e =>
       classify(e,
         probPosOutcome(e._2)._1,
@@ -122,17 +130,19 @@ object NaiveBayes {
     * Input is of type (Attribute, Data) =>
     * going through individualProbabilities, only those fields where the data and the outcome match
     * are filtered and concatenated with the values from classData which match the isHappening variable.
+    * What is actually happening here is computing
+    *   P(X | isHappening = BooleanValue) = Product(x belongs to X) of P(X = x | isHappening) * P(isHappening)
     *
     * @param input                   - data for which it is wanted to find the probability of the output
     * @param individualProbabilities - every attribute's probability for each data
     * @param isHappening             - true/false depending on the wanted output
-    * @param classData               - probability of negative/positive event happening
+    * @param classDataProbabilities  - probability of negative/positive event happening
     * @return - a list of probabilities for every type of (RowValue, BooleanValue) to happen.
     */
   private def getData(input: Input,
                       individualProbabilities: List[IndividualProbability],
                       isHappening: Boolean,
-                      classData: List[(Boolean, Double)]): List[Double] =
+                      classDataProbabilities: List[(Boolean, Double)]): List[Double] =
     input.data.flatMap(i =>
       individualProbabilities
         .flatMap(d =>
@@ -140,7 +150,7 @@ object NaiveBayes {
             .filter(e => e._1 == i._2 && e._2 == isHappening)
             .toList
         )
-    ).toList.map(_._3) ::: classData.filter(e => e._1 == isHappening).map(_._2)
+    ).toList.map(_._3) ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
 
 
   /**
