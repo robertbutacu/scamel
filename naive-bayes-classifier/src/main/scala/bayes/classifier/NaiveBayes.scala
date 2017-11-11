@@ -136,7 +136,7 @@ object NaiveBayes {
     * going through individualProbabilities, only those fields where the data and the outcome match
     * are filtered and concatenated with the values from classData which match the isHappening variable.
     * What is actually happening here is computing
-    * P(X | isHappening = BooleanValue) = Product(x belongs to X) of P(X = x | isHappening) * P(isHappening)
+    * P(X | isHappening = BooleanValue) = (Product(x belongs to X) of P(X = x | isHappening)) * P(isHappening)
     *
     * @param input                   - data for which it is wanted to find the probability of the output
     * @param individualProbabilities - every attribute's probability for each data
@@ -147,13 +147,20 @@ object NaiveBayes {
   private def getData(input: Input,
                       individualProbabilities: List[IndividualProbability],
                       isHappening: Boolean,
-                      classDataProbabilities: List[(Boolean, Double)]): List[Double] ={
-    val probabilities = for{
-        data <- input.data.toList
-        individualProb <- individualProbabilities
-        individualProbData <- individualProb.probabilities.toList
-        if individualProbData._1 == data._2 && individualProbData._2 == isHappening
-      } yield individualProbData._3
+                      classDataProbabilities: List[(Boolean, Double)]): List[Double] = {
+    val probabilities = for {
+      //list of Attributes( think weather ) and their respective Data value ( think Sunny )
+      data <- input.data.toList
+
+      // probability of each Data value to happen (ie: Weather Sunny True 0.5, except a list )
+      individualProb <- individualProbabilities
+
+      // each individual element of that list from above
+      individualProbData <- individualProb.probabilities.toList
+
+      // match Data value and Boolean value
+      if individualProbData._1 == data._2 && individualProbData._2 == isHappening
+    } yield individualProbData._3
 
     probabilities ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
   }
