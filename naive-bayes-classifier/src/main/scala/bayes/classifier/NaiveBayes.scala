@@ -147,17 +147,16 @@ object NaiveBayes {
   private def getData(input: Input,
                       individualProbabilities: List[IndividualProbability],
                       isHappening: Boolean,
-                      classDataProbabilities: List[(Boolean, Double)]): List[Double] =
-    input.data
-      .flatMap(i =>
-        individualProbabilities
-          .flatMap(d =>
-            d.probabilities
-              .filter(e => e._1 == i._2 && e._2 == isHappening)
-              .toList
-          ))
-      .toList
-      .map(_._3) ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
+                      classDataProbabilities: List[(Boolean, Double)]): List[Double] ={
+    val probabilities = for{
+        data <- input.data.toList
+        individualProb <- individualProbabilities
+        individualProbData <- individualProb.probabilities.toList
+        if individualProbData._1 == data._2 && individualProbData._2 == isHappening
+      } yield individualProbData._3
+
+    probabilities ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
+  }
 
 
   /**
