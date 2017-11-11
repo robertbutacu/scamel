@@ -33,10 +33,10 @@ object NaiveBayes {
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
     val positiveOutcome = toClassify.map(c =>
-      giveData(c, individualProbabilities, isHappening = true, classClassified))
+      getData(c, individualProbabilities, isHappening = true, classClassified))
 
     val negativeOutcome = toClassify.map(c =>
-      giveData(c, individualProbabilities, isHappening = false, classClassified))
+      getData(c, individualProbabilities, isHappening = false, classClassified))
 
     val probPosOutcome = positiveOutcome.map(e => (probability(e), true))
     val probNegOutcome = negativeOutcome.map(e => (probability(e), false))
@@ -94,7 +94,7 @@ object NaiveBayes {
     * @param classData               - probability of negative/positive event happening
     * @return
     */
-  private def giveData(input: Input,
+  private def getData(input: Input,
                        individualProbabilities: List[IndividualProbability],
                        isHappening: Boolean,
                        classData: List[(Boolean, Double)]): List[Double] =
