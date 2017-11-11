@@ -176,17 +176,16 @@ object NaiveBayes {
   private def getEvidence(trainingData: List[Dataset],
                           input: Input,
                          ): List[Double] = {
-    // filtering only for data present in the input so the evidence can be computed.
     // Evidence is represented by the count of input.data(x) divided by the length rows in the table
     // aka probability of data Y to appear in a random selection.
-    val filteredTrainingDataCount = input.data
-      .map(i =>
-        trainingData
-          .flatMap(d =>
-            d.data.filter(e => e == i._2)))
-      .toList
-      .map(_.length.toDouble) //mapping already to not do it later
+    val appearancesOfData = for {
+      data <- input.data.toList // for each (Attribute, Data)
+      td <- trainingData // look through training data
+      probabilities <- td.data // in their respective data list
+      if probabilities == data._2 // for the appearance of the Data value from the tuple above
+    } yield data._2 // only interested in the value of Data, used later for count to apply the formula described above
 
+    val filteredTrainingDataCount = appearancesOfData.distinct.map(d => appearancesOfData.count(_ == d).toDouble)
 
     //since list wont be randomised or anything similar, it is known that for a certain input of type
     // (Outlook, Sunny), (Weather, Strong)
