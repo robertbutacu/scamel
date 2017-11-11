@@ -53,12 +53,21 @@ object NaiveBayes {
     IndividualProbability(trainingData.attribute, probabilities)
   }
 
+  /**
+    * Input is of type (Attribute, Data) =>
+    *     going through individualProbabilities, only those fields where the data and the outcome match
+    *       are filtered.
+    *
+    * @param input                   - data for which it is wanted to find the probability of the output
+    * @param individualProbabilities - every attribute's probability for each data
+    * @param isHappening             - true/false depending on the wanted output
+    * @return
+    */
   private def giveData(input: Input,
                        individualProbabilities: List[IndividualProbability],
                        isHappening: Boolean): List[Double] =
     input.data.flatMap(i =>
-      individualProbabilities.filter(
-        d => d.attribute == i._1)
+      individualProbabilities
         .flatMap(d =>
           d.probabilities
             .filter(e => e._1 == i._2 && e._2 == isHappening)
