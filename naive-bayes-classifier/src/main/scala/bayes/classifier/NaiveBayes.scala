@@ -27,7 +27,7 @@ import bayes.classifier.data._
 object NaiveBayes {
   def apply(trainingData: List[Dataset],
             toClassify: List[Input],
-            classData: ClassAttribute): List[(Input, Attribute)] = {
+            classData: ClassAttribute): List[(Input, Boolean)] = {
     val classClassified = classDataClassifier(classData)
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
@@ -43,9 +43,19 @@ object NaiveBayes {
 
     val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
 
-    println(evidence)
+    toClassify.zipWithIndex.map(e => classify(e, probPosOutcome, probNegOutcome, evidence))
+  }
 
-    List.empty
+  private def classify(input: (Input, Int),
+                       probPosOutcome: List[(Double, Boolean)],
+                       probNegOutcome: List[(Double, Boolean)],
+                       evidence: List[Double]): (Input, Boolean) = {
+    (
+      input._1,
+      if (probNegOutcome(input._2)._1 / evidence(input._2) > probPosOutcome(input._2)._1 / evidence(input._2))
+        false
+      else true
+    )
   }
 
   private def probability(input: List[Double]): Double =
@@ -95,8 +105,8 @@ object NaiveBayes {
 
 
   private def getEvidence(trainingData: List[Dataset],
-                       input: Input,
-                      ): List[Double] = {
+                          input: Input,
+                         ): List[Double] = {
     //println(trainingData)
 
     val filteredTrainingData = input.data.map(i =>
