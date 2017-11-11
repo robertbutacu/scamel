@@ -13,7 +13,7 @@ object Main extends App {
       Dataset(Windy, List(False, True, False, False, False, True, True, False, False, False,
         True, True, False, True))),
     List(
-      Input(Set(Outlook, Temperature, Humidity, Windy), Set(Sunny, Cool, High, True))
+      Input(Set((Outlook, Sunny), (Temperature, Cool), (Humidity, High), (Windy, True)))
     ),
     Dataset(Play, List(No, No, Yes, Yes, Yes, No, Yes, No, Yes, Yes, Yes, Yes, Yes, No))
   ))
