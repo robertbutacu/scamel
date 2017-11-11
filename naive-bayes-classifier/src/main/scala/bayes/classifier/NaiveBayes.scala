@@ -59,13 +59,13 @@ object NaiveBayes {
   }
 
   private def probability(input: List[Double]): Double =
-    (input.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
+    round(input.foldRight(1.0)((curr, total) => curr * total))
 
 
   private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
       .distinct
-      .map(d => (d, (classData.data.count(_ == d).toDouble / classData.data.length * 1000).floor / 1000))
+      .map(d => (d, round(classData.data.count(_ == d).toDouble / classData.data.length)))
 
 
   private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
@@ -75,7 +75,7 @@ object NaiveBayes {
       .map(c =>
         (
           c._1, c._2,
-          (combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble * 1000).floor / 1000
+          round(combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble)
         )
       )
       .toSet
@@ -119,8 +119,10 @@ object NaiveBayes {
     ).toList
 
     val probabilities = filteredTrainingData.map(f =>
-      (f.length.toDouble / trainingData.head.data.length.toDouble * 1000).floor / 1000)
+      round(f.length.toDouble / trainingData.head.data.length.toDouble))
 
     probabilities
   }
+
+  private def round(input: Double) = (input * 1000).floor / 1000
 }
