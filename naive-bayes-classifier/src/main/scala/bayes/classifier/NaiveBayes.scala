@@ -30,8 +30,9 @@ object NaiveBayes {
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
-    println(classClassified)
-    for (elem <- individualProbabilities) {println(elem)}
+    val classified = toClassify.map(c => giveData(c, individualProbabilities, isHappening = true))
+
+    classified.foreach(println)
 
     List.empty
   }
@@ -51,5 +52,18 @@ object NaiveBayes {
 
     IndividualProbability(trainingData.attribute, probabilities)
   }
+
+  private def giveData(input: Input,
+                       individualProbabilities: List[IndividualProbability],
+                       isHappening: Boolean): List[Double] =
+    input.data.flatMap(i =>
+      individualProbabilities.filter(
+        d => d.attribute == i._1)
+        .flatMap(d =>
+          d.probabilities
+            .filter(e => e._1 == i._2 && e._2 == isHappening)
+            .toList
+        )
+    ).toList.map(_._3)
 
 }
