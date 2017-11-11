@@ -43,16 +43,29 @@ object NaiveBayes {
 
     val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
 
-    toClassify.zipWithIndex.map(e => classify(e, probPosOutcome, probNegOutcome, evidence))
+    toClassify.zipWithIndex.map(e =>
+      classify(e,
+        probPosOutcome(e._2)._1,
+        probNegOutcome(e._2)._1,
+        evidence(e._2))
+    )
   }
 
+  /**
+    *
+    * @param input          - input data zipped with index
+    * @param probPosOutcome - positive outcome probability
+    * @param probNegOutcome - negative outcome probability
+    * @param evidence       - evidence for the current input data
+    * @return
+    */
   private def classify(input: (Input, Int),
-                       probPosOutcome: List[(Double, Boolean)],
-                       probNegOutcome: List[(Double, Boolean)],
-                       evidence: List[Double]): (Input, Boolean) = {
+                       probPosOutcome: Double,
+                       probNegOutcome: Double,
+                       evidence: Double): (Input, Boolean) = {
     (
       input._1,
-      if (probNegOutcome(input._2)._1 / evidence(input._2) > probPosOutcome(input._2)._1 / evidence(input._2))
+      if (probNegOutcome / evidence > probPosOutcome / evidence)
         false
       else true
     )
@@ -95,9 +108,9 @@ object NaiveBayes {
     * @return
     */
   private def getData(input: Input,
-                       individualProbabilities: List[IndividualProbability],
-                       isHappening: Boolean,
-                       classData: List[(Boolean, Double)]): List[Double] =
+                      individualProbabilities: List[IndividualProbability],
+                      isHappening: Boolean,
+                      classData: List[(Boolean, Double)]): List[Double] =
     input.data.flatMap(i =>
       individualProbabilities
         .flatMap(d =>
