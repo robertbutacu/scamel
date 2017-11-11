@@ -59,7 +59,7 @@ object NaiveBayes {
     * @param probPosOutcome - positive outcome probability
     * @param probNegOutcome - negative outcome probability
     * @param evidence       - evidence for the current input data
-    * @return               - the outcome for the current input ( dataset )
+    * @return - the outcome for the current input ( dataset )
     */
   private def classify(input: (Input, Int),
                        probPosOutcome: Double,
@@ -76,7 +76,7 @@ object NaiveBayes {
   /**
     *
     * @param input - a list of probabilities of type part/total ( so already themselves a probability )
-    * @return      - the product of all elements in the list
+    * @return - the product of all elements in the list
     */
   private def probability(input: List[Double]): Double =
     round(input.foldRight(1.0)((curr, total) => curr * total))
@@ -85,8 +85,8 @@ object NaiveBayes {
   /**
     *
     * @param classData - the outcome
-    * @return          - a list ( composed of 2 elements, ofc - (true, double), (false, double) with the probability
-    *                  of each respective boolean values.
+    * @return - a list ( composed of 2 elements, ofc - (true, double), (false, double) with the probability
+    *         of each respective boolean values.
     */
   private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
@@ -98,7 +98,7 @@ object NaiveBayes {
     *
     * @param trainingData - a dataset aka a column from the input data
     * @param classData    - the outcome column
-    * @return             - IndividualProbability for that column ( go to declaration of IP for more details )
+    * @return - IndividualProbability for that column ( go to declaration of IP for more details )
     */
   private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
     //so the probabilities can be computed easier
@@ -107,7 +107,7 @@ object NaiveBayes {
     val probabilities = combinedColumns.distinct
       .map(c =>
         (
-          c._1, c._2,//Data, Boolean Value
+          c._1, c._2, //Data, Boolean Value
           // division of favorable cases of current Data value from the dataset to happen
           // and the total number of cases where the outcome matches current row's outcome
           round(combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble)
@@ -127,7 +127,7 @@ object NaiveBayes {
     * @param individualProbabilities - every attribute's probability for each data
     * @param isHappening             - true/false depending on the wanted output
     * @param classData               - probability of negative/positive event happening
-    * @return                        - a list of probabilities for every type of (RowValue, BooleanValue) to happen.
+    * @return - a list of probabilities for every type of (RowValue, BooleanValue) to happen.
     */
   private def getData(input: Input,
                       individualProbabilities: List[IndividualProbability],
@@ -147,24 +147,34 @@ object NaiveBayes {
     *
     * @param trainingData - all training data
     * @param input        - the values for which the outcome is wanted to be known
-    * @return             - evidence for every training data
-    *                     -> used to compute the outcome of a single row from input
+    * @return - evidence for every training data
+    *         -> used to compute the outcome of a single row from input
     */
   private def getEvidence(trainingData: List[Dataset],
                           input: Input,
                          ): List[Double] = {
-    val filteredTrainingData = input.data.map(i =>
-      trainingData
-        .flatMap(d =>
-          d.data
-            .filter(e => d.attribute == i._1 && e == i._2))
-    ).toList
+    // filtering only for data present in the input so the evidence can be computed.
+    // Evidence is represented by the count of input.data(x) divided by the length rows in the table
+    // aka probability of data Y to appear in a random selection.
+    val filteredTrainingDataCount = input.data
+      .map(i =>
+        trainingData
+          .flatMap(d =>
+            d.data.filter(e => e == i._2)))
+      .toList
+      .map(_.length.toDouble)//mapping already to not do it later
 
-    val probabilities = filteredTrainingData.map(f =>
-      round(f.length.toDouble / trainingData.head.data.length.toDouble))
+
+    //since list wont be randomised or anything similar, it is known that for a certain input of type
+    // (Outlook, Sunny), (Weather, Strong)
+    // will result in filteredTrainingDataCount to look like
+    // List(List(Sunny, Sunny, Sunny), List(Strong, Strong, Strong)) - ofc, it will be mapped to List[Double] above
+    val probabilities = filteredTrainingDataCount.map(f =>
+      round(f / trainingData.head.data.length.toDouble))
 
     probabilities
   }
 
+  //to not have any doubles with 10-20 digits hehe
   private def round(input: Double) = (input * 1000).floor / 1000
 }
