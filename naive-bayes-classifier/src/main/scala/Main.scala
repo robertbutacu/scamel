@@ -15,6 +15,6 @@ object Main extends App {
     List(
       Input(Set((Outlook, Sunny), (Temperature, Cool), (Humidity, High), (Windy, True)))
     ),
-    Dataset(Play, List(No, No, Yes, Yes, Yes, No, Yes, No, Yes, Yes, Yes, Yes, Yes, No))
+    ClassAttribute(Play, List(false, false, true, true, true, false, true, false, true, true, true, true, true, false))
   ))
 }

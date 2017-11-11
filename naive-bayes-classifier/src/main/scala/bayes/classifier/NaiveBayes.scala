@@ -25,7 +25,7 @@ import bayes.classifier.data._
   * P(X) = Product Of Probability Of An Attribute to be equal to the Input Data's Attribute Value.
   */
 object NaiveBayes {
-  def apply(trainingData: List[Dataset], toClassify: List[Input], classData: Dataset): List[(Dataset, Attribute)] = {
+  def apply(trainingData: List[Dataset], toClassify: List[Input], classData: ClassAttribute): List[(Dataset, Attribute)] = {
     val classClassified = classDataClassifier(classData)
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
@@ -36,12 +36,12 @@ object NaiveBayes {
     List.empty
   }
 
-  private def classDataClassifier(classData: Dataset): List[(Data, Double)] =
+  private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
       .distinct
       .map(d => (d, (classData.data.count(_ == d).toDouble / classData.data.length * 1000).floor / 1000))
 
-  private def trainingDataClassifier(trainingData: Dataset, classData: Dataset): IndividualProbability = {
+  private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
     val combinedColumns = trainingData.data.zip(classData.data)
 
     val probabilities = combinedColumns.distinct
