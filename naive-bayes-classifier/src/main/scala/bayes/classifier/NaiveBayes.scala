@@ -52,12 +52,14 @@ object NaiveBayes {
   }
 
   /**
+    * Given a certain input( a dataset) , the function will compute whether the outcome will be positive or negative, based on
+    * the computation of max(probNeg/evidence, probPos/evidence).
     *
     * @param input          - input data zipped with index
     * @param probPosOutcome - positive outcome probability
     * @param probNegOutcome - negative outcome probability
     * @param evidence       - evidence for the current input data
-    * @return
+    * @return               - the outcome for the current input ( dataset )
     */
   private def classify(input: (Input, Int),
                        probPosOutcome: Double,
