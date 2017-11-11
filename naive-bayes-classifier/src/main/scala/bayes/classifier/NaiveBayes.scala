@@ -1,6 +1,6 @@
 package bayes.classifier
 
-import bayes.classifier.data.{Attribute, Data, Dataset, Input}
+import bayes.classifier.data._
 
 
 /**
@@ -28,7 +28,9 @@ object NaiveBayes {
   def apply(trainingData: List[Dataset], toClassify: List[Input], classData: Dataset): List[(Dataset, Attribute)] = {
     val classClassified = classDataClassifier(classData)
 
-    println(classClassified)
+    val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
+
+    for (elem <- individualProbabilities) {println(elem)}
 
     List.empty
   }
@@ -37,5 +39,15 @@ object NaiveBayes {
     classData.data
       .distinct
       .map(d => (d, classData.data.count(_ == d).toDouble / classData.data.length))
+
+  private def trainingDataClassifier(trainingData: Dataset, classData: Dataset): IndividualProbability = {
+    val combinedColumns = trainingData.data.zip(classData.data)
+
+    val probabilities = combinedColumns.distinct
+      .map(c => (c._1, c._2, combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble))
+      .toSet
+
+    IndividualProbability(trainingData.attribute, probabilities)
+  }
 
 }
