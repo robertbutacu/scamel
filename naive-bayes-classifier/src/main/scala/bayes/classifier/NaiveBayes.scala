@@ -73,10 +73,20 @@ object NaiveBayes {
     )
   }
 
+  /**
+    *
+    * @param input - a list of probabilities of type part/total ( so already themselves a probability )
+    * @return      - the product of all elements in the list
+    */
   private def probability(input: List[Double]): Double =
     round(input.foldRight(1.0)((curr, total) => curr * total))
 
 
+  /**
+    *
+    * @param classData
+    * @return
+    */
   private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
       .distinct
