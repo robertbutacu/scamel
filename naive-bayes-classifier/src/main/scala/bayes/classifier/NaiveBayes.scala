@@ -41,9 +41,9 @@ object NaiveBayes {
     val probPosOutcome = positiveOutcome.map(e => (probability(e), true))
     val probNegOutcome = negativeOutcome.map(e => (probability(e), false))
 
-    val evidencePx = toClassify.map(t => evidence(trainingData, t)).map(probability)
+    val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
 
-    println(evidencePx)
+    println(evidence)
 
     List.empty
   }
@@ -94,7 +94,7 @@ object NaiveBayes {
     ).toList.map(_._3) ::: classData.filter(e => e._1 == isHappening).map(_._2)
 
 
-  private def evidence(trainingData: List[Dataset],
+  private def getEvidence(trainingData: List[Dataset],
                        input: Input,
                       ): List[Double] = {
     //println(trainingData)
