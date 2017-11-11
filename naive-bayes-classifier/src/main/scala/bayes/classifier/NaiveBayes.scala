@@ -39,18 +39,22 @@ object NaiveBayes {
     val probPosOutcome = positiveOutcome.map(e => probability(e))
     val probNegOutcome = negativeOutcome.map(e => probability(e))
 
-    println(probPosOutcome)
-    println(probNegOutcome)
+    val evidencePx = toClassify.map(t => evidence(trainingData, t)).map(probability)
+
+    println(evidencePx)
+
     List.empty
   }
 
   private def probability(input: List[Double]): Double =
     (input.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
 
+
   private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
       .distinct
       .map(d => (d, (classData.data.count(_ == d).toDouble / classData.data.length * 1000).floor / 1000))
+
 
   private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
     val combinedColumns = trainingData.data.zip(classData.data)
@@ -86,5 +90,25 @@ object NaiveBayes {
             .toList
         )
     ).toList.map(_._3) ::: classData.filter(e => e._1 == isHappening).map(_._2)
+
+
+  private def evidence(trainingData: List[Dataset],
+                       input: Input,
+                      ): List[Double] = {
+    //println(trainingData)
+
+    val filteredTrainingData = input.data.map(i =>
+      trainingData
+        .flatMap(d =>
+          d.data
+            .filter(e => d.attribute == i._1 && e == i._2))
+    ).toList
+
+    val probabilities = filteredTrainingData.map(f =>
+      (f.length.toDouble / trainingData.head.data.length.toDouble * 1000).floor / 1000)
+
+    probabilities
+  }
+
 
 }
