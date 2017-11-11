@@ -94,6 +94,12 @@ object NaiveBayes {
       .map(d => (d, round(classData.data.count(_ == d).toDouble / classData.data.length)))
 
 
+  /**
+    *
+    * @param trainingData - a dataset aka a column from the input data
+    * @param classData    - the outcome column
+    * @return             - IndividualProbability for that column ( go to declaration of IP for more details )
+    */
   private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
     val combinedColumns = trainingData.data.zip(classData.data)
 
