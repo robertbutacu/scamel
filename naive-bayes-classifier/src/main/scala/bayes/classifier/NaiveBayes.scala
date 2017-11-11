@@ -3,7 +3,13 @@ package bayes.classifier
 import bayes.classifier.data._
 
 
-/**
+/** Some of real world examples are:
+  *
+  *   - To mark an email as spam or not spam
+  *   - Classify a news article about technology, politics, or sports
+  *   - Check a piece of text expressing positive emotions, or negative emotions?
+  *   - Used for face recognition software.
+  *
   * Pro and Cons of Naive Bayes:
   * Pro:
   *       - easy and fast to predict a class of test data set
@@ -131,7 +137,7 @@ object NaiveBayes {
     * going through individualProbabilities, only those fields where the data and the outcome match
     * are filtered and concatenated with the values from classData which match the isHappening variable.
     * What is actually happening here is computing
-    *   P(X | isHappening = BooleanValue) = Product(x belongs to X) of P(X = x | isHappening) * P(isHappening)
+    * P(X | isHappening = BooleanValue) = Product(x belongs to X) of P(X = x | isHappening) * P(isHappening)
     *
     * @param input                   - data for which it is wanted to find the probability of the output
     * @param individualProbabilities - every attribute's probability for each data
@@ -172,7 +178,7 @@ object NaiveBayes {
           .flatMap(d =>
             d.data.filter(e => e == i._2)))
       .toList
-      .map(_.length.toDouble)//mapping already to not do it later
+      .map(_.length.toDouble) //mapping already to not do it later
 
 
     //since list wont be randomised or anything similar, it is known that for a certain input of type
