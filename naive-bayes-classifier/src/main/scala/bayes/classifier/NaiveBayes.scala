@@ -78,14 +78,13 @@ object NaiveBayes {
   private def classify(input: (Input, Int),
                        probPosOutcome: Double,
                        probNegOutcome: Double,
-                       evidence: Double): (Input, Boolean) = {
+                       evidence: Double): (Input, Boolean) =
     (
       input._1,
       if (probNegOutcome / evidence > probPosOutcome / evidence)
         false
       else true
     )
-  }
 
   /**
     *
@@ -149,14 +148,16 @@ object NaiveBayes {
                       individualProbabilities: List[IndividualProbability],
                       isHappening: Boolean,
                       classDataProbabilities: List[(Boolean, Double)]): List[Double] =
-    input.data.flatMap(i =>
-      individualProbabilities
-        .flatMap(d =>
-          d.probabilities
-            .filter(e => e._1 == i._2 && e._2 == isHappening)
-            .toList
-        )
-    ).toList.map(_._3) ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
+    input.data
+      .flatMap(i =>
+        individualProbabilities
+          .flatMap(d =>
+            d.probabilities
+              .filter(e => e._1 == i._2 && e._2 == isHappening)
+              .toList
+          ))
+      .toList
+      .map(_._3) ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
 
 
   /**
