@@ -30,19 +30,22 @@ object NaiveBayes {
 
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
-    val positiveOutcome = toClassify.flatMap(c =>
+    val positiveOutcome = toClassify.map(c =>
       giveData(c, individualProbabilities, isHappening = true, classClassified))
 
-    val negativeOutcome = toClassify.flatMap(c =>
+    val negativeOutcome = toClassify.map(c =>
       giveData(c, individualProbabilities, isHappening = false, classClassified))
 
-    val probPosOutcome = (positiveOutcome.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
-    val probNegOutcome = (negativeOutcome.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
+    val probPosOutcome = positiveOutcome.map(e => probability(e))
+    val probNegOutcome = negativeOutcome.map(e => probability(e))
 
     println(probPosOutcome)
     println(probNegOutcome)
     List.empty
   }
+
+  private def probability(input: List[Double]): Double =
+    (input.foldRight(1.0)((curr, total) => curr * total) * 1000).floor / 1000
 
   private def classDataClassifier(classData: ClassAttribute): List[(Boolean, Double)] =
     classData.data
