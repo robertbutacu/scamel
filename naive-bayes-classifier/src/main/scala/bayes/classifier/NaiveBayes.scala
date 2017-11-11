@@ -101,12 +101,15 @@ object NaiveBayes {
     * @return             - IndividualProbability for that column ( go to declaration of IP for more details )
     */
   private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
+    //so the probabilities can be computed easier
     val combinedColumns = trainingData.data.zip(classData.data)
 
     val probabilities = combinedColumns.distinct
       .map(c =>
         (
-          c._1, c._2,
+          c._1, c._2,//Data, Boolean Value
+          // division of favorable cases of current Data value from the dataset to happen
+          // and the total number of cases where the outcome matches current row's outcome
           round(combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble)
         )
       )
@@ -124,7 +127,7 @@ object NaiveBayes {
     * @param individualProbabilities - every attribute's probability for each data
     * @param isHappening             - true/false depending on the wanted output
     * @param classData               - probability of negative/positive event happening
-    * @return
+    * @return                        - a list of probabilities for every type of (RowValue, BooleanValue) to happen.
     */
   private def getData(input: Input,
                       individualProbabilities: List[IndividualProbability],
@@ -140,6 +143,13 @@ object NaiveBayes {
     ).toList.map(_._3) ::: classData.filter(e => e._1 == isHappening).map(_._2)
 
 
+  /**
+    *
+    * @param trainingData - all training data
+    * @param input        - the values for which the outcome is wanted to be known
+    * @return             - evidence for every training data
+    *                     -> used to compute the outcome of a single row from input
+    */
   private def getEvidence(trainingData: List[Dataset],
                           input: Input,
                          ): List[Double] = {
