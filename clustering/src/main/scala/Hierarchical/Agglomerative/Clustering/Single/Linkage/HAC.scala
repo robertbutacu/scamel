@@ -1,5 +1,7 @@
 package Hierarchical.Agglomerative.Clustering.Single.Linkage
 
+import Hierarchical.Agglomerative.Clustering.Point
+
 /*
   Use Euclidean Distance, and draw the dendrogram.
 
@@ -18,5 +20,10 @@ package Hierarchical.Agglomerative.Clustering.Single.Linkage
  */
 
 object HAC {
+  def distance(A: Point, B: Point): Double =
+    round(Math.pow(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2), 0.5))
 
+
+  private def round(x: Double): Double =
+    ( x * 1000).floor / 1000
 }
