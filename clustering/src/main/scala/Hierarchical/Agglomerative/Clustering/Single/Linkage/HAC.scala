@@ -60,5 +60,5 @@ object HAC {
 
 
   private def round(x: Double): Double =
-    (x * 1000).floor / 1000
+    (x * 100).floor / 100
 }
