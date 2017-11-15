@@ -1,7 +1,7 @@
 package Hierarchical.Agglomerative.Clustering.Single.Linkage
 
-import Hierarchical.Agglomerative.Clustering.{Connection, Node, Point}
-
+import Hierarchical.Agglomerative.Clustering.{Node, Point}
+import math.min
 /*
   Use Euclidean Distance, and draw the dendrogram.
 
@@ -34,7 +34,7 @@ object HAC {
 
         val nextNode = distanceMatrix.minBy(_._3)
 
-        Some(Node("random", Connection(Left(Point("x", 0.0, 0.0)), Left(Point("x", 0.0, 0.0))), Point("x", 0, 0), 0))
+        Some(Node("random", List.empty, 0))
       }
     }
 
@@ -44,12 +44,12 @@ object HAC {
   private def computeDistance(from: Either[Point, Node], to: Either[Point, Node]): Double = {
     from match {
       case Left(point) => to match {
-        case Left(otherPoint) => distance(point, otherPoint)
-        case Right(node)      => distance(point, node.coordinates)
+        case Left(otherPoint) => 0.0
+        case Right(node)      => 0.0
       }
       case Right(node) => to match {
-        case Left(point)      => distance(node.coordinates, point)
-        case Right(otherNode) => distance(node.coordinates, otherNode.coordinates)
+        case Left(point)      => 0.0
+        case Right(otherNode) => 0.0
       }
     }
   }
