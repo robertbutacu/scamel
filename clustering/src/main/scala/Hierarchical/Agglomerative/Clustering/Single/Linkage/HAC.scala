@@ -1,9 +1,6 @@
 package Hierarchical.Agglomerative.Clustering.Single.Linkage
 
-import Hierarchical.Agglomerative.Clustering.{Node, Point}
-
-import math.min
-import scala.annotation.tailrec
+import Hierarchical.Agglomerative.Clustering.{Cluster, Point}
 /*
   Use Euclidean Distance, and draw the dendrogram.
 
@@ -22,14 +19,9 @@ import scala.annotation.tailrec
  */
 
 object HAC {
-  def apply(input: List[Either[Point, Node]]): Option[Node] = {
-    def go(currNode: Option[Node], points: List[Either[Point, Node]], clusteringLevel: Int = 0): Option[Node] = {
-      None
-    }
-
-    go(None, input)
+  def apply(points: List[Point]): Option[Cluster] = {
+    None
   }
-
 
   private def distance(A: Point, B: Point): Double =
     round(
