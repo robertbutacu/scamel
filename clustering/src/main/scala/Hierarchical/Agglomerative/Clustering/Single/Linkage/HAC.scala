@@ -27,8 +27,9 @@ object HAC {
       val distanceMatrix = for {
         firstPoint <- pointsWithIndex
         secondPoint <- pointsWithIndex.slice(firstPoint._2 + 1, pointsWithIndex.length)
-      } yield (firstPoint, secondPoint, computeDistance(firstPoint._1, secondPoint._1))
+      } yield (firstPoint._1, secondPoint._1, computeDistance(firstPoint._1, secondPoint._1))
 
+      distanceMatrix.foreach(println)
 
       Node("random", Connection(Left(Point("x", 0.0, 0.0)), Left(Point("x", 0.0, 0.0))), Point("x", 0, 0), 0)
     }
