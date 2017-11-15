@@ -20,23 +20,25 @@ import Hierarchical.Agglomerative.Clustering.{Connection, Node, Point}
  */
 
 object HAC {
-  def apply(input: List[Either[Point, Node]]): Node = {
-    def go(points: List[Either[Point, Node]], clusteringLevel: Int = 0): Node = {
-      val pointsWithIndex = points.zipWithIndex
+  def apply(input: List[Either[Point, Node]]): Option[Node] = {
+    def go(currNode: Option[Node], points: List[Either[Point, Node]], clusteringLevel: Int = 0): Option[Node] = {
+      if(points.isEmpty)
+        currNode
+      else{
+        val pointsWithIndex = points.zipWithIndex
 
-      val distanceMatrix = for {
-        firstPoint <- pointsWithIndex
-        secondPoint <- pointsWithIndex.slice(firstPoint._2 + 1, pointsWithIndex.length)
-      } yield (firstPoint._1, secondPoint._1, computeDistance(firstPoint._1, secondPoint._1))
+        val distanceMatrix = for {
+          firstPoint <- pointsWithIndex
+          secondPoint <- pointsWithIndex.slice(firstPoint._2 + 1, pointsWithIndex.length)
+        } yield (firstPoint._1, secondPoint._1, computeDistance(firstPoint._1, secondPoint._1))
 
-      val nextNode = distanceMatrix.minBy(_._3)
+        val nextNode = distanceMatrix.minBy(_._3)
 
-      println(nextNode)
-
-      Node("random", Connection(Left(Point("x", 0.0, 0.0)), Left(Point("x", 0.0, 0.0))), Point("x", 0, 0), 0)
+        Some(Node("random", Connection(Left(Point("x", 0.0, 0.0)), Left(Point("x", 0.0, 0.0))), Point("x", 0, 0), 0))
+      }
     }
 
-    go(input)
+    go(None, input)
   }
 
   private def computeDistance(from: Either[Point, Node], to: Either[Point, Node]): Double = {
