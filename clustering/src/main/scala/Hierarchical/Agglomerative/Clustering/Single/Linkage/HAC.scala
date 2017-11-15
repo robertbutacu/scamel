@@ -22,17 +22,42 @@ import Hierarchical.Agglomerative.Clustering.{Connection, Node, Point}
 object HAC {
   def apply(input: List[Either[Point, Node]]): Node = {
     def go(points: List[Either[Point, Node]], clusteringLevel: Int = 0): Node = {
+      val pointsWithIndex = points.zipWithIndex
 
-      Node(Connection(Left(Point("x", 0.0, 0.0)), Left(Point("x", 0.0, 0.0))), Point("x", 0, 0), 0)
+      val distanceMatrix = for {
+        firstPoint <- pointsWithIndex
+        secondPoint <- pointsWithIndex.slice(firstPoint._2 + 1, pointsWithIndex.length)
+      } yield (firstPoint, secondPoint, computeDistance(firstPoint._1, secondPoint._1))
+
+
+      Node("random", Connection(Left(Point("x", 0.0, 0.0)), Left(Point("x", 0.0, 0.0))), Point("x", 0, 0), 0)
     }
 
     go(input)
   }
 
-  def distance(A: Point, B: Point): Double =
-    round(Math.pow(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2), 0.5))
+  private def computeDistance(from: Either[Point, Node], to: Either[Point, Node]): Double = {
+    from match {
+      case Left(point) => to match {
+        case Left(otherPoint) => distance(point, otherPoint)
+        case Right(node)      => distance(point, node.coordinates)
+      }
+      case Right(node) => to match {
+        case Left(point)      => distance(node.coordinates, point)
+        case Right(otherNode) => distance(node.coordinates, otherNode.coordinates)
+      }
+    }
+  }
+
+  private def distance(A: Point, B: Point): Double =
+    round(
+      Math.pow(
+        Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2)
+        , 0.5)
+    )
+
 
 
   private def round(x: Double): Double =
-    ( x * 1000).floor / 1000
+    (x * 1000).floor / 1000
 }
