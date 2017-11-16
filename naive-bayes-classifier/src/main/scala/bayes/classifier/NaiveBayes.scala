@@ -37,7 +37,7 @@ object NaiveBayes {
     //prob for true/false
     val classClassified = classDataClassifier(classData)
 
-    //each attribute split into sub-table with respective probability
+    //each attribute split into sub-tables with respective probability
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
     // probabilities for positiveOutcome for each input data
@@ -52,8 +52,6 @@ object NaiveBayes {
     val probPosOutcome = positiveOutcome.map(e => (probability(e), true))
     val probNegOutcome = negativeOutcome.map(e => (probability(e), false))
 
-    //getting evidence so the final question can be answered
-    // what is the higher probability of sth to happen?
     val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
 
     // the final answer for a given input is max of (probNeg/evidence, probPos/evidence)
@@ -114,7 +112,6 @@ object NaiveBayes {
     * @return - IndividualProbability for that column ( go to declaration of IP for more details )
     */
   private def trainingDataClassifier(trainingData: Dataset, classData: ClassAttribute): IndividualProbability = {
-    //so the probabilities can be computed easier
     val combinedColumns = trainingData.data.zip(classData.data)
 
     val probabilities = combinedColumns.distinct
@@ -197,6 +194,6 @@ object NaiveBayes {
     probabilities
   }
 
-  //to not have any doubles with 10-20 digits hehe
+  //to not have any doubles with 10-20 decimals hehe
   private def round(input: Double) = (input * 1000).floor / 1000
 }
