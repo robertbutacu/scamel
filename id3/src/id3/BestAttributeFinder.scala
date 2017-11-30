@@ -87,13 +87,13 @@ object BestAttributeFinder {
           e.data
             .zipWithIndex
             //value of the row in the columnIndex is equal to the rowValue
-            .filter(r => trainingData(columnIndex).data(r._2) == rowValue)
+            .withFilter(r => trainingData(columnIndex).data(r._2) == rowValue)
             .map(r => r._1))
       },
       Dataset(conclusion.attribute,
         conclusion.data
           .zipWithIndex
-          .filter(r => trainingData(columnIndex).data(r._2) == rowValue)
+          .withFilter(r => trainingData(columnIndex).data(r._2) == rowValue)
           .map(r => r._1)
       )
     )
