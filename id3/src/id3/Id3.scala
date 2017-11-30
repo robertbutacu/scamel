@@ -12,7 +12,7 @@ object Id3 {
     */
   def apply(conclusion: Dataset, trainingData: List[Dataset]): Node = {
     // only 1 attribute and the conclusion table has the same value everywhere
-    if (trainingData.length == 1 && trainingData.head.data.distinct.length == 1) {
+    if (trainingData.lengthCompare(1) == 0 && trainingData.head.data.distinct.lengthCompare(1) == 0) {
       solveSingleAttribute(conclusion, trainingData.head)
     }
     else {
@@ -56,7 +56,7 @@ object Id3 {
     */
   private def getLeafs(tables: BestAttribute): List[Node] = {
     // filtering for tables where the conclusion's values are the same
-    val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.length == 1)
+    val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
@@ -71,7 +71,7 @@ object Id3 {
     */
   private def getNodes(tables: BestAttribute): List[Node] = {
     // filtering all the tables where there are more possible conclusion values
-    val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.length == 1)
+    val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
