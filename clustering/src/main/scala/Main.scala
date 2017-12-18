@@ -1,6 +1,6 @@
 import Hierarchical.Agglomerative.{Cluster, Point}
 import Hierarchical.Agglomerative.ClusteringAlgorithm._
-import Hierarchical.Agglomerative.clustering.types.SingleLinkage
+import Hierarchical.Agglomerative.clustering.types.{CompleteLinkage, SingleLinkage}
 
 object Main extends App {
   clusterize(
@@ -12,6 +12,6 @@ object Main extends App {
       Cluster(List(Point("P5", 0.08, 0.41))),
       Cluster(List(Point("P6", 0.45, 0.30)))
     ),
-    SingleLinkage
+    CompleteLinkage
   ).prettyPrinter()
 }

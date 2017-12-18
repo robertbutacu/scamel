@@ -16,7 +16,7 @@ case class Cluster(points: List[Point],
 
   def prettyPrinter(): Unit = {
     def go(curr: Cluster, tabs: Int = 0): Unit = {
-      println(s"${"\t" * tabs} Cluster number $tabs: ${curr.name}")
+      println(s"${"\t" * tabs} Cluster line $tabs: ${curr.name}")
 
       curr.leftCluster.foreach(go(_, tabs + 1))
       curr.rightCluster.foreach(go(_, tabs + 1))
