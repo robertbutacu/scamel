@@ -10,12 +10,12 @@ case object SingleLinkage extends Method {
         Math.sqrt(Math.pow(current.X - other.Y, 2) + Math.pow(current.Y - other.Y, 2))
       }
 
-      val distanceBetweenAllPoints = for {
+      val distancesBetweenAllPoints = for {
         currentPoint <- current.points
         otherPoint <- other.points
       } yield distanceBetweenPoints(currentPoint, otherPoint)
 
-      distanceBetweenAllPoints.min
+      distancesBetweenAllPoints.min
     }
 
     val shortestDistancesBetweenClusters = for {
