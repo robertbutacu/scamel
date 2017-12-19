@@ -41,7 +41,7 @@ object KMeans {
       distance <- centroids.map(c => distance(point, c))
     } yield distance
 
-    val minDistances = splitPoint(distancesToCentroids.sortBy(_._1.name)).map(e => e.minBy(_._3))
+    val minDistances = splitPoint(distancesToCentroids).map(e => e.minBy(_._3))
 
     splitIntoClusters(minDistances.sortBy(c => c._2.name)).map(c => Cluster(c.head._2, c.map(o => o._1)))
   }
