@@ -3,8 +3,6 @@ import kmeans.structures.Point
 
 object Main extends App {
 
-  //A(2, 10), B(2, 5), C(8, 4), D(5, 8), E(7, 5), F(6, 4), G(1, 2), H(4, 9).
-
   KMeans.findClusters(3,
     List(
       Point("A", 2.0, 10.0),

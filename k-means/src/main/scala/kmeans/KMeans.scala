@@ -13,6 +13,7 @@ object KMeans {
     def getMin: (Int, Int) = (points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
 
     def getMax: (Int, Int) = (points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
+
     @tailrec
     def go(currClusters: List[Cluster]): List[Cluster] = {
       val currentCentroids = currClusters.map(_.centroid)
