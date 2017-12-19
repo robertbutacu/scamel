@@ -42,25 +42,25 @@ object KMeans {
 
     val minDistances = splitPoint(distancesToCentroids.sortBy(_._1.name)).map(e => e.minBy(_._3))
 
-    splitIntoClusters(minDistances).map(c => Cluster(c.head._2, c.map(o => o._1)))
+    splitIntoClusters(minDistances.sortBy(c => c._2.name)).map(c => Cluster(c.head._2, c.map(o => o._1)))
   }
 
   private def splitIntoClusters(input: List[(Point, Centroid, Double)]): List[List[(Point, Centroid, Double)]] = {
     val (packed, next) = input.span(_._2 == input.head._2)
 
     if (next.isEmpty) List(packed)
-    else packed :: splitIntoClusters(input)
+    else packed :: splitIntoClusters(next)
   }
 
   private def splitPoint(input: List[(Point, Centroid, Double)]): List[List[(Point, Centroid, Double)]] = {
-    val (packed, next) = input.span(_._1 == input.head._1)
+    val (packed, next) = input.span(_._1.name == input.head._1.name)
 
     if (next.isEmpty) List(packed)
     else packed :: splitPoint(next)
   }
 
   private def instantiateCentroids(number: Int, min: (Int, Int), max: (Int, Int)): List[Centroid] = {
-    (0 to number)
+    (1 to number)
       .zipWithIndex
       .map { p =>
         Centroid("Centroid " + p._2,
