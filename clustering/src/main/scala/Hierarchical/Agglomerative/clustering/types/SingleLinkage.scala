@@ -5,9 +5,6 @@ import Hierarchical.Agglomerative.{Cluster, Point}
 case object SingleLinkage extends Method {
   override def formCluster(clusters: List[Cluster]): (Cluster, Cluster, Double) = {
     def shortestDistance(current: Cluster, other: Cluster): Double = {
-      def distanceBetweenPoints(current: Point, other: Point): Double = {
-        Math.sqrt(Math.pow(current.X - other.Y, 2) + Math.pow(current.Y - other.Y, 2))
-      }
 
       val distancesBetweenAllPoints = for {
         currentPoint <- current.points

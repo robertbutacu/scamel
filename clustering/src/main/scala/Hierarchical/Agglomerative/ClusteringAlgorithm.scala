@@ -8,7 +8,7 @@ object ClusteringAlgorithm {
   def clusterize(clusters: List[Cluster], method: Method): Cluster = {
     @tailrec
     def go(clusters: List[Cluster], method: Method, currentIndex: Int = 0): Cluster = {
-      if(clusters.size == 1 )
+      if (clusters.size == 1)
         clusters.head
       else {
         val next = method.formCluster(clusters)
