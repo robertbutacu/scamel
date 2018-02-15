@@ -3,7 +3,7 @@ import kmeans.structures.Point
 
 object Main extends App {
 
-  KMeans.findClusters(3,
+  KMeans.findClusters(10,
     List(
       Point("A", 2.0, 10.0),
       Point("B", 2.0, 5.0),

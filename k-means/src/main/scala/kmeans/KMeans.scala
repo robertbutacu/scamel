@@ -16,6 +16,8 @@ object KMeans {
 
     @tailrec
     def go(currClusters: List[Cluster]): List[Cluster] = {
+      //TODO kinda bad logic
+      // maybe the repositioning should be done AFTER the clusters have been updated
       val currentCentroids = currClusters.map(_.centroid)
 
       val updatedCentroids = currClusters.map(c => c.repositionCentroid())
@@ -43,7 +45,11 @@ object KMeans {
 
     val minDistances = splitPoints(distancesToCentroids).map(e => e.minBy(_._3))
 
-    splitIntoClusters(minDistances.sortBy(c => c._2.name)).map(c => Cluster(c.head._2, c.map(o => o._1)))
+    val sortedDistances = minDistances.sortBy(c => c._2.name)
+
+    //TODO create new data structure containing Point, Centroid, Double
+    //TODO some centroids are left behind
+    splitIntoClusters(sortedDistances).map(c => Cluster(c.head._2, c.map(o => o._1)))
   }
 
   private def splitIntoClusters(input: List[(Point, Centroid, Double)]): List[List[(Point, Centroid, Double)]] =
