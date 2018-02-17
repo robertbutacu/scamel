@@ -67,6 +67,8 @@ object KMeans {
   private def splitPoints(input: DistancesToCentroids): List[DistancesToCentroids] =
     (input groupBy (_.point)).values.toList
 
+
+  //TODO dont instantiate centroids randomly, instead use KMeans++
   private def instantiateCentroids(number: Int, min: Coordonate, max: Coordonate): List[Centroid] =
     (1 to number)
       .map { p =>
