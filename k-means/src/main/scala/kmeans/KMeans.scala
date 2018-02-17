@@ -12,9 +12,9 @@ object KMeans {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     def getMin: (Int, Int) = (points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
-
     def getMax: (Int, Int) = (points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
 
+    //TODO special case when a centroid is passed around between 2 values
     @tailrec
     def go(currClusters: List[Cluster], previousStateCentroids: List[Centroid]): List[Cluster] = {
       val currentCentroids = currClusters map (_.centroid)
@@ -27,11 +27,9 @@ object KMeans {
         currClusters
       else
         go(updatedClusters, updatedCentroids)
-
     }
 
     val initialCentroids = instantiateCentroids(numberOfClusters, getMin, getMax)
-
     val initialClusters = createClusters(points, initialCentroids)
 
     go(initialClusters, List.empty)
@@ -45,7 +43,7 @@ object KMeans {
     } yield distance
 
     //now obtain the shortest distance
-    val minDistances = splitPoints(distancesToCentroids).map(e => e.minBy(_.distance))
+    val minDistances = splitPoints(distancesToCentroids).map(_.minBy(_.distance))
 
     //now create clusters as the list is ordered by centroids
     /*
