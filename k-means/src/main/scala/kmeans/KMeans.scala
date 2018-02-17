@@ -7,12 +7,14 @@ import scala.util.Random
 
 object KMeans {
   type DistancesToCentroids = List[DistanceToCentroid]
+  type Coordonate = (Int, Int)
 
   def findClusters(numberOfClusters: Int, points: List[Point]): List[Cluster] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
-    def getMin: (Int, Int) = (points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
-    def getMax: (Int, Int) = (points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
+    def getMin: Coordonate = (points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
+
+    def getMax: Coordonate = (points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
 
     //TODO special case when a centroid is passed around between 2 values
     @tailrec
@@ -59,19 +61,17 @@ object KMeans {
   }
 
 
-
-  private def splitIntoClusters(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
+  private def splitIntoClusters(input: DistancesToCentroids): List[DistancesToCentroids] =
     (input groupBy (_.centroid)).values.toList
 
-  private def splitPoints(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
+  private def splitPoints(input: DistancesToCentroids): List[DistancesToCentroids] =
     (input groupBy (_.point)).values.toList
 
-  private def instantiateCentroids(number: Int, min: (Int, Int), max: (Int, Int)): List[Centroid] = {
+  private def instantiateCentroids(number: Int, min: Coordonate, max: Coordonate): List[Centroid] =
     (1 to number)
       .map { p =>
         Centroid("Centroid " + p,
           Random.nextInt(max._1 - min._1) + min._1,
           Random.nextInt(max._2 - min._2) + min._2)
       }.toList
-  }
 }
