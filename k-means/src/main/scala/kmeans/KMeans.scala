@@ -1,11 +1,12 @@
 package kmeans
 
-import kmeans.structures.{Centroid, Cluster, DistanceToCluster, Point}
+import kmeans.structures.{Centroid, Cluster, DistanceToCentroid, Point}
 
 import scala.annotation.tailrec
 import scala.util.Random
 
 object KMeans {
+  type DistancesToCentroids = List[DistanceToCentroid]
 
   def findClusters(numberOfClusters: Int, points: List[Point]): List[Cluster] = {
     require(numberOfClusters > 0 && points.nonEmpty)
@@ -34,8 +35,8 @@ object KMeans {
   }
 
   private def createClusters(points: List[Point], centroids: List[Centroid]): List[Cluster] = {
-    def distance(point: Point, centroid: Centroid): DistanceToCluster =
-      DistanceToCluster(point, centroid)
+    def distance(point: Point, centroid: Centroid): DistanceToCentroid =
+      DistanceToCentroid(point, centroid)
 
 
     val distancesToCentroids = for {
@@ -51,10 +52,10 @@ object KMeans {
     splitIntoClusters(sortedDistances).map(c => Cluster(c.head.centroid, c.map(o => o.point)))
   }
 
-  private def splitIntoClusters(input: List[DistanceToCluster]): List[List[DistanceToCluster]] =
+  private def splitIntoClusters(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
     (input groupBy (_.centroid)).values.toList
 
-  private def splitPoints(input: List[DistanceToCluster]): List[List[DistanceToCluster]] =
+  private def splitPoints(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
     (input groupBy (_.point.name)).values.toList
 
   private def instantiateCentroids(number: Int, min: (Int, Int), max: (Int, Int)): List[Centroid] = {
