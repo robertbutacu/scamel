@@ -16,23 +16,25 @@ object KMeans {
     def getMax: (Int, Int) = (points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
 
     @tailrec
-    def go(currClusters: List[Cluster]): List[Cluster] = {
-      //TODO kinda bad logic
-      // maybe the repositioning should be done AFTER the clusters have been updated
-      //to achieve this, compute centroids in the createClusters function
-      val currentCentroids = currClusters.map(_.centroid)
+    def go(currClusters: List[Cluster], previousStateCentroids: List[Centroid]): List[Cluster] = {
+      val currentCentroids = currClusters map (_.centroid)
 
-      val updatedCentroids = currClusters.map(c => c.repositionCentroid())
+      val updatedClusters = createClusters(points, currentCentroids)
+
+      val updatedCentroids = updatedClusters map (_.centroid)
 
       if (currentCentroids == updatedCentroids)
         currClusters
-      else {
-        val updatedClusters = createClusters(points, updatedCentroids)
-        go(updatedClusters)
-      }
+      else
+        go(updatedClusters, updatedCentroids)
+
     }
 
-    go(createClusters(points, instantiateCentroids(numberOfClusters, getMin, getMax)))
+    val initialCentroids = instantiateCentroids(numberOfClusters, getMin, getMax)
+
+    val initialClusters = createClusters(points, initialCentroids)
+
+    go(initialClusters, List.empty)
   }
 
   private def createClusters(points: List[Point], centroids: List[Centroid]): List[Cluster] = {
@@ -45,9 +47,6 @@ object KMeans {
     //now obtain the shortest distance
     val minDistances = splitPoints(distancesToCentroids).map(e => e.minBy(_.distance))
 
-    //sorting by centroids' names so it's easier to group
-    val sortedDistances = minDistances.sortBy(c => c.centroid.name)
-
     //now create clusters as the list is ordered by centroids
     /*
       For example, this:
@@ -58,7 +57,7 @@ object KMeans {
       will become 2 clusters
      */
     //TODO some centroids are left behind
-    splitIntoClusters(sortedDistances).map(c => Cluster(c.head.centroid, c.map(o => o.point)))
+    splitIntoClusters(minDistances).map(c => Cluster(c.head.centroid, c.map(o => o.point)))
   }
 
   private def splitIntoClusters(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
