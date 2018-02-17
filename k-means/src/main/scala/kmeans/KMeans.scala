@@ -55,8 +55,10 @@ object KMeans {
       will become 2 clusters
      */
     //TODO some centroids are left behind
-    splitIntoClusters(minDistances).map(c => Cluster(c.head.centroid, c.map(o => o.point)))
+    splitIntoClusters(minDistances).map(Cluster(_))
   }
+
+
 
   private def splitIntoClusters(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
     (input groupBy (_.centroid)).values.toList
