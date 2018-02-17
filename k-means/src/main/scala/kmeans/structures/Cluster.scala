@@ -5,9 +5,8 @@ import kmeans.KMeans.DistancesToCentroids
 case class Cluster(centroid: Centroid, points: List[Point])
 
 object Cluster {
-  def apply(centroid: Centroid, points: List[Point]): Cluster = {
+  def apply(centroid: Centroid, points: List[Point]): Cluster =
     new Cluster(repositionCentroid(centroid, points), points)
-  }
 
   def apply(distancesToCentroids: DistancesToCentroids): Cluster =
     Cluster(distancesToCentroids.head.centroid, distancesToCentroids.map(o => o.point))
