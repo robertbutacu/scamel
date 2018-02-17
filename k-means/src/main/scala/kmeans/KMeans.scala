@@ -59,9 +59,8 @@ object KMeans {
 
   private def instantiateCentroids(number: Int, min: (Int, Int), max: (Int, Int)): List[Centroid] = {
     (1 to number)
-      .zipWithIndex
       .map { p =>
-        Centroid("Centroid " + p._2,
+        Centroid("Centroid " + p,
           Random.nextInt(max._1 - min._1) + min._1,
           Random.nextInt(max._2 - min._2) + min._2)
       }.toList
