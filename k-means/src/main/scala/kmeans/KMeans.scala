@@ -35,13 +35,9 @@ object KMeans {
   }
 
   private def createClusters(points: List[Point], centroids: List[Centroid]): List[Cluster] = {
-    def distance(point: Point, centroid: Centroid): DistanceToCentroid =
-      DistanceToCentroid(point, centroid)
-
-
     val distancesToCentroids = for {
       point <- points
-      distance <- centroids.map(c => distance(point, c))
+      distance <- centroids.map(c => DistanceToCentroid(point, c))
     } yield distance
 
     val minDistances = splitPoints(distancesToCentroids).map(e => e.minBy(_.distance))
