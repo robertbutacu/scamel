@@ -19,6 +19,7 @@ object KMeans {
     def go(currClusters: List[Cluster]): List[Cluster] = {
       //TODO kinda bad logic
       // maybe the repositioning should be done AFTER the clusters have been updated
+      //to achieve this, compute centroids in the createClusters function
       val currentCentroids = currClusters.map(_.centroid)
 
       val updatedCentroids = currClusters.map(c => c.repositionCentroid())
@@ -64,7 +65,7 @@ object KMeans {
     (input groupBy (_.centroid)).values.toList
 
   private def splitPoints(input: List[DistanceToCentroid]): List[DistancesToCentroids] =
-    (input groupBy (_.point.name)).values.toList
+    (input groupBy (_.point)).values.toList
 
   private def instantiateCentroids(number: Int, min: (Int, Int), max: (Int, Int)): List[Centroid] = {
     (1 to number)
