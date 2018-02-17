@@ -1,6 +1,6 @@
 package kmeans
 
-import kmeans.structures.{Centroid, Cluster, Point}
+import kmeans.structures.{Centroid, Cluster, DistanceToCluster, Point}
 
 import scala.annotation.tailrec
 import scala.util.Random
@@ -30,12 +30,12 @@ object KMeans {
       }
     }
 
-    go(createClusters(points, instantiateCentroids(numberOfClusters, getMin , getMax)))
+    go(createClusters(points, instantiateCentroids(numberOfClusters, getMin, getMax)))
   }
 
   private def createClusters(points: List[Point], centroids: List[Centroid]): List[Cluster] = {
-    def distance(point: Point, centroid: Centroid): (Point, Centroid, Double) =
-      (point, centroid, Math.sqrt(Math.pow(point.X - centroid.X, 2) + Math.pow(point.Y - centroid.Y, 2)))
+    def distance(point: Point, centroid: Centroid): DistanceToCluster =
+      DistanceToCluster(point, centroid)
 
 
     val distancesToCentroids = for {
@@ -43,20 +43,19 @@ object KMeans {
       distance <- centroids.map(c => distance(point, c))
     } yield distance
 
-    val minDistances = splitPoints(distancesToCentroids).map(e => e.minBy(_._3))
+    val minDistances = splitPoints(distancesToCentroids).map(e => e.minBy(_.distance))
 
-    val sortedDistances = minDistances.sortBy(c => c._2.name)
+    val sortedDistances = minDistances.sortBy(c => c.centroid.name)
 
-    //TODO create new data structure containing Point, Centroid, Double
     //TODO some centroids are left behind
-    splitIntoClusters(sortedDistances).map(c => Cluster(c.head._2, c.map(o => o._1)))
+    splitIntoClusters(sortedDistances).map(c => Cluster(c.head.centroid, c.map(o => o.point)))
   }
 
-  private def splitIntoClusters(input: List[(Point, Centroid, Double)]): List[List[(Point, Centroid, Double)]] =
-    (input groupBy(_._2)).values.toList
+  private def splitIntoClusters(input: List[DistanceToCluster]): List[List[DistanceToCluster]] =
+    (input groupBy (_.centroid)).values.toList
 
-  private def splitPoints(input: List[(Point, Centroid, Double)]): List[List[(Point, Centroid, Double)]] =
-    (input groupBy (_._1.name)).values.toList
+  private def splitPoints(input: List[DistanceToCluster]): List[List[DistanceToCluster]] =
+    (input groupBy (_.point.name)).values.toList
 
   private def instantiateCentroids(number: Int, min: (Int, Int), max: (Int, Int)): List[Centroid] = {
     (1 to number)
