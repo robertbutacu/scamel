@@ -12,10 +12,12 @@ object Main extends App {
     node.nodes.foreach(n => prettyPrinter(n, levelOfDepth + 1))
   }
 
-  val result = Id3(Dataset("Transportation",
-    List("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
-    List(Dataset("Gender",
-      List("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", "Female")),
+  val result = Id3(
+    Dataset("Transportation",
+      List("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
+    List(
+      Dataset("Gender",
+        List("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", "Female")),
       Dataset("Car ownership",
         List("0", "1", "1", "0", "1", "0", "1", "1", "2", "2")),
       Dataset("Travel Cost",
