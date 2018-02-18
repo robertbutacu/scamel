@@ -1,4 +1,5 @@
-import dataset.{Dataset, Node}
+import dataset.data.Dataset
+import dataset.data.tree.Node
 import id3.Id3
 
 object Main extends App {
@@ -11,7 +12,7 @@ object Main extends App {
     node.nodes.foreach(n => prettyPrinter(n, levelOfDepth + 1))
   }
 
-  prettyPrinter(Id3(Dataset("Transportation",
+  val result = Id3(Dataset("Transportation",
     List("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
     List(Dataset("Gender",
       List("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", "Female")),
@@ -21,5 +22,7 @@ object Main extends App {
         List("Cheap", "Cheap", "Cheap", "Cheap", "Cheap", "Standard", "Standard", "Expensive", "Expensive", "Expensive")),
       Dataset("Income Level",
         List("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
-  ))
+  )
+
+  prettyPrinter(result)
 }

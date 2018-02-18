@@ -1,6 +1,7 @@
 package id3
 
-import dataset.{BestAttribute, Dataset, Leaf, Node}
+import dataset.data.{BestAttribute, Dataset}
+import dataset.data.tree.{Leaf, Node}
 
 object Id3 {
   /**
