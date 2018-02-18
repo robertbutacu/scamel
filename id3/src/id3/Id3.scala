@@ -1,6 +1,6 @@
 package id3
 
-import dataset.data.tree.{Leaf, Node}
+import dataset.data.tree.{Connection, Leaf, Node}
 import dataset.data.{BestAttribute, Dataset}
 
 object Id3 {
@@ -22,12 +22,18 @@ object Id3 {
     * @return - a decision tree where nodes are represented by attributes and values from data
     *         and leafs are represented by conclusion values.
     */
-  def go[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): List[(A, Node[A, B])] = {
+  def go[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): List[Connection[A, B]] = {
     // only 1 attribute and the conclusion table has the same value everywhere
     val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
     currentBestAttribute.subsets.map(e =>
-      (e.attribute, Node(currentBestAttribute.attribute, getNodes(currentBestAttribute), getLeafs(currentBestAttribute))))
+      Connection(
+        e.attribute,
+        Node(currentBestAttribute.attribute,
+          getNodes(currentBestAttribute),
+          getLeafs(currentBestAttribute))
+      )
+    )
   }
 
   /**
@@ -77,16 +83,13 @@ object Id3 {
     *               the table is split by attribute's value
     * @return - a list of nodes where the children are represented by the subtree returned by the recursive call
     */
-  private def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[(A, Node[A, B])] = {
+  private def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[Connection[A, B]] = {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
-    toBeNodes.foreach(println)
-
-    println("\n\n")
-
+    toBeNodes.foreach(e => println(e.attribute))
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
-    toBeNodes.map(e => (e.attribute, Node(tables.attribute, Id3.go(e.conclusion, e.table))))
+    toBeNodes.map(e => Connection(e.attribute, Node(tables.attribute, Id3.go(e.conclusion, e.table))))
   }
 }

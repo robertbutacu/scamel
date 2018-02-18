@@ -8,7 +8,7 @@ object Main extends App {
 
     node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + l._1 + " arc to " + l._2))
 
-    node.nodes.foreach { n => print("\t" * (levelOfDepth + 1) + node.attribute + " arc to "); prettyPrinter(n._2, levelOfDepth + 1) }
+    node.nodes.foreach { n => print("\t" * (levelOfDepth + 1) + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1) }
   }
 
   val result = Id3(
