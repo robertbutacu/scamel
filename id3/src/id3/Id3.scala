@@ -1,7 +1,7 @@
 package id3
 
-import dataset.data.{BestAttribute, Dataset}
 import dataset.data.tree.{Leaf, Node}
+import dataset.data.{BestAttribute, Dataset}
 
 object Id3 {
   /**
@@ -19,7 +19,7 @@ object Id3 {
     else {
       val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
-      Node(currentBestAttribute.attribute, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
+      Node(currentBestAttribute.attribute, getNodes(currentBestAttribute), getLeafs(currentBestAttribute)))
     }
   }
 
@@ -31,7 +31,7 @@ object Id3 {
     *         Used when there is one attribute left and its the got the same value on any row.
     */
   def solveSingleAttribute[A <: Ordering[A], B](conclusion: Dataset[A, B], trainingDataColumn: Dataset[A, B]): Node[A, B] = {
-    def chooseMajority(conclusion: Dataset[A, B]): A = {
+    def chooseMajority(): A = {
       val distinctValues = conclusion.data.distinct
 
       // finding out their count, kept in a tuple of (value, count)
@@ -43,9 +43,9 @@ object Id3 {
       leafValue._1
     }
 
-    Node(trainingDataColumn.attribute,
+    new Node(trainingDataColumn.attribute,
       List.empty,
-      List(Leaf(chooseMajority(conclusion))))
+      List(Leaf(chooseMajority())))
   }
 
   /**
@@ -55,13 +55,13 @@ object Id3 {
     * @return - a list of nodes where the leafs are represented by all the subtables
     *         where the conclusion rows are the same.
     */
-  private def getLeafs[A <: Ordering[A], B](tables: BestAttribute[A, B]): List[Node[A, B]] = {
+  private def getLeafs[A <: Ordering[A], B](tables: BestAttribute[A, B]): List[Leaf[A]] = {
     // filtering for tables where the conclusion's values are the same
     val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => Node(e.attribute, List.empty, List(Leaf(e.conclusion.data.head))))
+    toBeLeafs.map(e => Leaf(e.attribute))
   }
 
   /**
@@ -70,12 +70,12 @@ object Id3 {
     *               the table is split by attribute's value
     * @return - a list of nodes where the children are represented by the subtree returned by the recursive call
     */
-  private def getNodes[A <: Ordering[A], B](tables: BestAttribute[A, B]): List[Node[A, B]] = {
+  private def getNodes[A <: Ordering[A], B](tables: BestAttribute[A, B]): List[(B, Node[A, B])] = {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
-    toBeNodes.map(e => Node(e.attribute, List(Id3(e.conclusion, e.table))))
+    toBeNodes.map(e => (tables.attribute, Node(tables.attribute, List(Id3(e.conclusion, e.table)))))
   }
 }
