@@ -7,11 +7,11 @@ object Main extends App {
     println(node.attribute)
 
     node.leafs.foreach { l =>
-      println("\t" * (levelOfDepth + 1) + l.arc + " arc to " + l.to + " probability: " + l.probability)
+      println("\t" * (levelOfDepth + 1) + "[Leaf] " + l.arc + " arc to " + l.to + " probability: " + l.probability)
     }
 
     node.nodes.foreach {
-      n => print("\t" * (levelOfDepth + 1) + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1)
+      n => print("\t" * (levelOfDepth + 1) + "[Node] " + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1)
     }
   }
 
