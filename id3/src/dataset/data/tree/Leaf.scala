@@ -1,4 +1,4 @@
 package dataset.data.tree
 
-case class Leaf(attribute: String)
+case class Leaf[A <: Ordering[A]](attribute: A)
 

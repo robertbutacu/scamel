@@ -1,4 +1,4 @@
 package dataset.data
 
-case class Dataset(attribute: String,
-                   data: List[String])
+case class Dataset[A <: Ordering[A], B](attribute: B,
+                   data: List[A])
