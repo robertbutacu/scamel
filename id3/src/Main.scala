@@ -3,14 +3,14 @@ import dataset.data.tree.Node
 import id3.Id3
 
 object Main extends App {
-  /*def prettyPrinter[A : Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
+  def prettyPrinter[A: Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
     print("\t" * levelOfDepth)
     println("Current node: " + node.attribute)
 
     node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + "Leaf: " + l.attribute))
 
-    node.nodes.foreach(n => prettyPrinter(n, levelOfDepth + 1))
-  }*/
+    node.nodes.foreach { n => println("\t" * (levelOfDepth + 2) + " Going to" + n._1); prettyPrinter(n._2, levelOfDepth + 1) }
+  }
 
   val result = Id3(
     Dataset[String, String]("Transportation",
@@ -26,5 +26,5 @@ object Main extends App {
         List[String]("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
   )
 
-  println(result)
+  prettyPrinter(result)
 }

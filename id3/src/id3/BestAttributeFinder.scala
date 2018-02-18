@@ -60,7 +60,7 @@ object BestAttributeFinder {
     *
     * @return - entropy rounded to 4 decimals
     */
-  private def computeEntropy[A: Ordering](input: List[A]): Entropy = {
+  private def computeEntropy[A](input: List[A]): Entropy = {
     val probabilities = input
       .map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
 
@@ -123,7 +123,7 @@ object BestAttributeFinder {
     * @param trainingData - a sub-table
     * @return a list of subsets where e._1 is unique in any of the elements
     */
-  private def splitIntoSubsets[A: Ordering](trainingData: List[(A, A)]): List[List[(A, A)]] =
+  private def splitIntoSubsets[A: Ordering](trainingData: List[(A, A)])(implicit ord: Ordering[A]): List[List[(A, A)]] =
    trainingData.groupBy(_._1).values.toList
 
   /**
@@ -131,11 +131,10 @@ object BestAttributeFinder {
     * @param trainingData - the subset for which an entropy is required
     * @return the entropy for an attribute, which will be later require to compute information gain.
     */
-  private def computeDatasetEntropy[A: Ordering, B](trainingData: (Dataset[A, B], Dataset[A, B]))
-                                                        (implicit ord: Ordering[A]): Entropy = {
+  private def computeDatasetEntropy[A: Ordering, B](trainingData: (Dataset[A, B], Dataset[A, B])): Entropy = {
     val rows = trainingData._1.data.indices.map(e => (trainingData._1.data(e), trainingData._2.data(e))).toList
 
-    val tables = splitIntoSubsets(rows.sortWith((e1, e2) => ord.lt(e1._1, e2._1)))
+    val tables = splitIntoSubsets(rows)
 
     tables.map(t => entropyForSubset(t, rows.length)).sum
   }
@@ -145,6 +144,6 @@ object BestAttributeFinder {
     * Represented by - (numberOfElementsInSubtable/numberOfElementsInTable) * Entropy(Attribute)
     * The minus will be added by the apply function.
     */
-  private def entropyForSubset[A : Ordering](subset: List[(A, A)], tableSize: Int): Entropy =
+  private def entropyForSubset[A: Ordering](subset: List[(A, A)], tableSize: Int): Entropy =
     subset.length.toDouble / tableSize.toDouble * computeEntropy(subset.map(e => e._2))
 }
