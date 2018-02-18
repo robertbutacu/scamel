@@ -40,9 +40,9 @@ object BestAttributeFinder {
       .distinct
       .map { v => createSubsetFromRowValue(bestAttributeIndex, v, trainingData, conclusion) }
 
-    val table =  subsets.map(t => Subset(t._1(bestAttributeIndex).data.head, //attribute name - head cause they all the same
+    val table = subsets.map(t => Subset(t._1(bestAttributeIndex).data.head, //attribute name - head cause they all the same
       t._1.patch(bestAttributeIndex, Nil, 1), //data
-      t._2))//conclusion
+      t._2)) //conclusion
 
     //using patch to remove the best attribute column for the subset
     BestAttribute(trainingData(bestAttributeIndex).attribute,
@@ -81,9 +81,9 @@ object BestAttributeFinder {
     *         where each value of the column matching columnIndex is equal to rowValue
     */
   def createSubsetFromRowValue[A: Ordering, B](columnIndex: Int,
-                               rowValue: A,
-                               trainingData: List[Dataset[A, B]],
-                               conclusion: Dataset[A, B]): (List[Dataset[A, B]], Dataset[A, B]) = {
+                                               rowValue: A,
+                                               trainingData: List[Dataset[A, B]],
+                                               conclusion: Dataset[A, B]): (List[Dataset[A, B]], Dataset[A, B]) = {
     (trainingData
       .map { e =>
         Dataset(e.attribute,
@@ -124,7 +124,7 @@ object BestAttributeFinder {
     * @return a list of subsets where e._1 is unique in any of the elements
     */
   private def splitIntoSubsets[A: Ordering](trainingData: List[(A, A)])(implicit ord: Ordering[A]): List[List[(A, A)]] =
-   trainingData.groupBy(_._1).values.toList
+    trainingData.groupBy(_._1).values.toList
 
   /**
     *

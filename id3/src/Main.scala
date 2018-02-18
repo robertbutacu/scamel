@@ -4,12 +4,11 @@ import id3.Id3
 
 object Main extends App {
   def prettyPrinter[A: Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
-    print("\t" * levelOfDepth)
-    println("Current node: " + node.attribute)
+    println(node.attribute)
 
     node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + l._1 + " arc to " + l._2))
 
-    node.nodes.foreach { n => prettyPrinter(n._2, levelOfDepth + 1) }
+    node.nodes.foreach { n => print("\t" * (levelOfDepth + 1) + n._1 + " arc to "); prettyPrinter(n._2, levelOfDepth + 1) }
   }
 
   val result = Id3(
