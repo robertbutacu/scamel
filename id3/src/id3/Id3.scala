@@ -81,8 +81,6 @@ object Id3 {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
-    println(toBeNodes + "\n\n")
-
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
     toBeNodes.map(e => (e.attribute, Node(tables.attribute, Id3.go(e.conclusion, e.table))))
