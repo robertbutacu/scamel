@@ -3,6 +3,7 @@ package id3
 import java.lang.Math.log
 
 import dataset.data.{BestAttribute, Dataset, Subset}
+import scala.math.Ordering.Implicits
 
 /**
   * Compute the entropy for each attribute
@@ -26,12 +27,12 @@ object BestAttributeFinder {
     * @param trainingData - all attributes, columns
     * @return A BestAttribute for current table with current conclusion.
     */
-  def apply[A <: Ordering[A], B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): BestAttribute[A, B] = {
+  def apply[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): BestAttribute[A, B] = {
     val conclusionEntropy = computeEntropy(conclusion.data)
 
     val attributes = trainingData.map(e => (e, conclusion))
 
-    val informationGains = attributes.map(e => ((conclusionEntropy - computeDatasetEntropy(e)) * 1000).floor / 1000)
+    val informationGains = attributes.map(e => ((conclusionEntropy - computeDatasetEntropy[A, B](e)) * 1000).floor / 1000)
 
     val bestAttributeIndex = informationGains.indexOf(informationGains.max)
 
@@ -59,7 +60,7 @@ object BestAttributeFinder {
     *
     * @return - entropy rounded to 4 decimals
     */
-  private def computeEntropy[A <: Ordering[A]](input: List[A]): Entropy = {
+  private def computeEntropy[A: Ordering](input: List[A]): Entropy = {
     val probabilities = input
       .map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
 
@@ -79,7 +80,7 @@ object BestAttributeFinder {
     * @return a new table ( which is represented as a list of training data ), and its inferred conclusion,
     *         where each value of the column matching columnIndex is equal to rowValue
     */
-  def createSubsetFromRowValue[A <: Ordering[A], B](columnIndex: Int,
+  def createSubsetFromRowValue[A: Ordering, B](columnIndex: Int,
                                rowValue: A,
                                trainingData: List[Dataset[A, B]],
                                conclusion: Dataset[A, B]): (List[Dataset[A, B]], Dataset[A, B]) = {
@@ -122,7 +123,7 @@ object BestAttributeFinder {
     * @param trainingData - a sub-table
     * @return a list of subsets where e._1 is unique in any of the elements
     */
-  private def splitIntoSubsets[A <: Ordering[A]](trainingData: List[(A, A)]): List[List[(A, A)]] =
+  private def splitIntoSubsets[A: Ordering](trainingData: List[(A, A)]): List[List[(A, A)]] =
    trainingData.groupBy(_._1).values.toList
 
   /**
@@ -130,7 +131,7 @@ object BestAttributeFinder {
     * @param trainingData - the subset for which an entropy is required
     * @return the entropy for an attribute, which will be later require to compute information gain.
     */
-  private def computeDatasetEntropy[A <: Ordering[A], B](trainingData: (Dataset[A, B], Dataset[A, B]))
+  private def computeDatasetEntropy[A: Ordering, B](trainingData: (Dataset[A, B], Dataset[A, B]))
                                                         (implicit ord: Ordering[A]): Entropy = {
     val rows = trainingData._1.data.indices.map(e => (trainingData._1.data(e), trainingData._2.data(e))).toList
 
@@ -144,6 +145,6 @@ object BestAttributeFinder {
     * Represented by - (numberOfElementsInSubtable/numberOfElementsInTable) * Entropy(Attribute)
     * The minus will be added by the apply function.
     */
-  private def entropyForSubset[A <: Ordering[A]](subset: List[(A, A)], tableSize: Int): Entropy =
+  private def entropyForSubset[A : Ordering](subset: List[(A, A)], tableSize: Int): Entropy =
     subset.length.toDouble / tableSize.toDouble * computeEntropy(subset.map(e => e._2))
 }

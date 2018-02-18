@@ -3,28 +3,28 @@ import dataset.data.tree.Node
 import id3.Id3
 
 object Main extends App {
-  def prettyPrinter(node: Node, levelOfDepth: Int = 0): Unit = {
+  /*def prettyPrinter[A : Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
     print("\t" * levelOfDepth)
     println("Current node: " + node.attribute)
 
     node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + "Leaf: " + l.attribute))
 
     node.nodes.foreach(n => prettyPrinter(n, levelOfDepth + 1))
-  }
+  }*/
 
   val result = Id3(
-    Dataset("Transportation",
-      List("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
+    Dataset[String, String]("Transportation",
+      List[String]("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
     List(
-      Dataset("Gender",
-        List("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", "Female")),
-      Dataset("Car ownership",
-        List("0", "1", "1", "0", "1", "0", "1", "1", "2", "2")),
-      Dataset("Travel Cost",
-        List("Cheap", "Cheap", "Cheap", "Cheap", "Cheap", "Standard", "Standard", "Expensive", "Expensive", "Expensive")),
-      Dataset("Income Level",
-        List("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
+      Dataset[String, String]("Gender",
+        List[String]("Male", "Male", "Female", "Female", "Male", "Male", "Female", "Female", "Male", "Female")),
+      Dataset[String, String]("Car ownership",
+        List[String]("0", "1", "1", "0", "1", "0", "1", "1", "2", "2")),
+      Dataset[String, String]("Travel Cost",
+        List[String]("Cheap", "Cheap", "Cheap", "Cheap", "Cheap", "Standard", "Standard", "Expensive", "Expensive", "Expensive")),
+      Dataset[String, String]("Income Level",
+        List[String]("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
   )
 
-  prettyPrinter(result)
+  println(result)
 }
