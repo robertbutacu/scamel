@@ -52,7 +52,7 @@ object Id3 {
 
     new Node(trainingDataColumn.attribute,
       List.empty,
-      List(Leaf(chooseMajority())))
+      List((chooseMajority(), Leaf(chooseMajority()))))
   }
 
   /**
@@ -62,13 +62,13 @@ object Id3 {
     * @return - a list of nodes where the leafs are represented by all the subtables
     *         where the conclusion rows are the same.
     */
-  private def getLeafs[A : Ordering, B](tables: BestAttribute[A, B]): List[Leaf[A]] = {
+  private def getLeafs[A : Ordering, B](tables: BestAttribute[A, B]): List[(A, Leaf[A])] = {
     // filtering for tables where the conclusion's values are the same
     val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => Leaf(e.attribute))
+    toBeLeafs.map(e => (e.attribute, Leaf(e.conclusion.data.head)))
   }
 
   /**
@@ -80,6 +80,8 @@ object Id3 {
   private def getNodes[A : Ordering, B](tables: BestAttribute[A, B]): List[(A, Node[A, B])] = {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
+
+    println(toBeNodes + "\n\n")
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently

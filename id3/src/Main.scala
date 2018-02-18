@@ -7,9 +7,9 @@ object Main extends App {
     print("\t" * levelOfDepth)
     println("Current node: " + node.attribute)
 
-    node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + "Leaf: " + l.attribute))
+    node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + l._1 + " arc to " + l._2))
 
-    node.nodes.foreach { n => println("\t" * (levelOfDepth + 2) + " Going to" + n._1); prettyPrinter(n._2, levelOfDepth + 1) }
+    node.nodes.foreach { n => prettyPrinter(n._2, levelOfDepth + 1) }
   }
 
   val result = Id3(
@@ -26,5 +26,6 @@ object Main extends App {
         List[String]("Low", "Medium", "Medium", "Low", "Medium", "Medium", "Medium", "High", "Medium", "High")))
   )
 
+  //println(result)
   prettyPrinter(result)
 }
