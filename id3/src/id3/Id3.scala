@@ -1,6 +1,6 @@
 package id3
 
-import dataset.data.tree.{Connection, Leaf, Node}
+import dataset.data.tree.{NodeConnection, Leaf, LeafConnection, Node}
 import dataset.data.{BestAttribute, Dataset}
 
 object Id3 {
@@ -22,12 +22,12 @@ object Id3 {
     * @return - a decision tree where nodes are represented by attributes and values from data
     *         and leafs are represented by conclusion values.
     */
-  def go[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): List[Connection[A, B]] = {
+  def go[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): List[NodeConnection[A, B]] = {
     // only 1 attribute and the conclusion table has the same value everywhere
     val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
     currentBestAttribute.subsets.map(e =>
-      Connection(
+      NodeConnection(
         e.attribute,
         Node(currentBestAttribute.attribute,
           getNodes(currentBestAttribute),
@@ -44,7 +44,7 @@ object Id3 {
     *         Used when there is one attribute left and its the got the same value on any row.
     */
   def solveSingleAttribute[A: Ordering, B](conclusion: Dataset[A, B], trainingDataColumn: Dataset[A, B]): Node[A, B] = {
-    def chooseMajority(): A = {
+    def chooseMajority(): (A, Double) = {
       val distinctValues = conclusion.data.distinct
 
       // finding out their count, kept in a tuple of (value, count)
@@ -53,12 +53,14 @@ object Id3 {
 
       val leafValue = count.maxBy(_._2)
 
-      leafValue._1
+      (leafValue._1, leafValue._2 / count.length )
     }
+
+    val majority = chooseMajority()
 
     new Node(trainingDataColumn.attribute,
       List.empty,
-      List((chooseMajority(), Leaf(chooseMajority()))))
+      List(LeafConnection(majority._1, Leaf(majority._1), majority._2)))
   }
 
   /**
@@ -68,13 +70,13 @@ object Id3 {
     * @return - a list of nodes where the leafs are represented by all the subtables
     *         where the conclusion rows are the same.
     */
-  private def getLeafs[A: Ordering, B](tables: BestAttribute[A, B]): List[(A, Leaf[A])] = {
+  private def getLeafs[A: Ordering, B](tables: BestAttribute[A, B]): List[LeafConnection[A]] = {
     // filtering for tables where the conclusion's values are the same
     val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => (e.attribute, Leaf(e.conclusion.data.head)))
+    toBeLeafs.map(e => LeafConnection(e.attribute, Leaf(e.conclusion.data.head)))
   }
 
   /**
@@ -83,13 +85,13 @@ object Id3 {
     *               the table is split by attribute's value
     * @return - a list of nodes where the children are represented by the subtree returned by the recursive call
     */
-  private def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[Connection[A, B]] = {
+  private def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[NodeConnection[A, B]] = {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
     toBeNodes.foreach(e => println(e.attribute))
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
-    toBeNodes.map(e => Connection(e.attribute, Node(tables.attribute, Id3.go(e.conclusion, e.table))))
+    toBeNodes.map(e => NodeConnection(e.attribute, Node(tables.attribute, Id3.go(e.conclusion, e.table))))
   }
 }

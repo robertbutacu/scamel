@@ -6,9 +6,13 @@ object Main extends App {
   def prettyPrinter[A: Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
     println(node.attribute)
 
-    node.leafs.foreach(l => println("\t" * (levelOfDepth + 1) + l._1 + " arc to " + l._2))
+    node.leafs.foreach { l =>
+      println("\t" * (levelOfDepth + 1) + l.arc + " arc to " + l.to + " probability: " + l.probability)
+    }
 
-    node.nodes.foreach { n => print("\t" * (levelOfDepth + 1) + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1) }
+    node.nodes.foreach {
+      n => print("\t" * (levelOfDepth + 1) + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1)
+    }
   }
 
   val result = Id3(
