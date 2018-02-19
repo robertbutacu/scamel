@@ -1,25 +1,21 @@
-package id3
+package id3.algorithm
 
-import dataset.data.{BestAttribute, Dataset}
-import dataset.data.tree.{Leaf, Node}
+import id3.data.tree.{Leaf, LeafConnection, Node, NodeConnection}
+import id3.data.{BestAttribute, Dataset, Subset}
 
 object Id3 {
-  /**
-    *
-    * @param conclusion   - what it is wanted to be found
-    * @param trainingData - input data
-    * @return - a decision tree where nodes are represented by attributes and values from data
-    *         and leafs are represented by conclusion values.
-    */
-  def apply(conclusion: Dataset, trainingData: List[Dataset]): Node = {
-    // only 1 attribute and the conclusion table has the same value everywhere
+  def apply[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): Node[A, B] = {
     if (trainingData.lengthCompare(1) == 0 && trainingData.head.data.distinct.lengthCompare(1) == 0) {
       solveSingleAttribute(conclusion, trainingData.head)
     }
     else {
       val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
-      Node(currentBestAttribute.attribute, getNodes(currentBestAttribute) ::: getLeafs(currentBestAttribute))
+      Node(
+        currentBestAttribute.attribute,
+        getNodes(currentBestAttribute),
+        getLeafs(currentBestAttribute)
+      )
     }
   }
 
@@ -30,8 +26,9 @@ object Id3 {
     * @return - a procentage of the higher value found in conclusion
     *         Used when there is one attribute left and its the got the same value on any row.
     */
-  def solveSingleAttribute(conclusion: Dataset, trainingDataColumn: Dataset): Node = {
-    def chooseMajority(conclusion: Dataset): String = {
+  def solveSingleAttribute[A: Ordering, B](conclusion: Dataset[A, B],
+                                           trainingDataColumn: Dataset[A, B]): Node[A, B] = {
+    def chooseMajority(): (A, Double) = {
       val distinctValues = conclusion.data.distinct
 
       // finding out their count, kept in a tuple of (value, count)
@@ -40,12 +37,14 @@ object Id3 {
 
       val leafValue = count.maxBy(_._2)
 
-      s"""${leafValue._2} / ${conclusion.data.length} ${leafValue._1}"""
+      (leafValue._1, leafValue._2 / count.length)
     }
 
-    Node(trainingDataColumn.attribute,
+    val majority = chooseMajority()
+
+    new Node(trainingDataColumn.attribute,
       List.empty,
-      List(Leaf(chooseMajority(conclusion))))
+      List(LeafConnection(majority._1, Leaf(majority._1), majority._2)))
   }
 
   /**
@@ -55,13 +54,13 @@ object Id3 {
     * @return - a list of nodes where the leafs are represented by all the subtables
     *         where the conclusion rows are the same.
     */
-  private def getLeafs(tables: BestAttribute): List[Node] = {
+  protected[id3] def getLeafs[A: Ordering, B](tables: BestAttribute[A, B]): List[LeafConnection[A]] = {
     // filtering for tables where the conclusion's values are the same
-    val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
+    val toBeLeafs = tables.subsets.filter(e => Subset.isUniqueConclusion(e))
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => Node(e.attribute, List.empty, List(Leaf(e.conclusion.data.head))))
+    toBeLeafs.map(e => LeafConnection(e))
   }
 
   /**
@@ -70,12 +69,15 @@ object Id3 {
     *               the table is split by attribute's value
     * @return - a list of nodes where the children are represented by the subtree returned by the recursive call
     */
-  private def getNodes(tables: BestAttribute): List[Node] = {
+  protected[id3] def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[NodeConnection[A, B]] = {
     // filtering all the tables where there are more possible conclusion values
-    val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
+    val toBeNodes = tables.subsets.filterNot(e => Dataset.isUniqueData(e.conclusion))
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
-    toBeNodes.map(e => Node(e.attribute, List(Id3(e.conclusion, e.table))))
+    toBeNodes.map { e =>
+      val nextBestAttribute = BestAttributeFinder(e.conclusion, e.table)
+      NodeConnection(e.attribute, Node(nextBestAttribute))
+    }
   }
 }
