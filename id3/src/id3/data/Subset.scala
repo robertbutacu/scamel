@@ -1,4 +1,4 @@
-package dataset.data
+package id3.data
 
 
 //From a best attribute, form a node with BestAttribute's attribute value, and the nodes represented by

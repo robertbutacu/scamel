@@ -1,8 +1,8 @@
-package id3
+package id3.algorithm
 
 import java.lang.Math.log
 
-import dataset.data.{BestAttribute, Dataset, Subset}
+import id3.data.{BestAttribute, Dataset, Subset}
 
 /**
   * Compute the entropy for each attribute

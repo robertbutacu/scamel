@@ -1,3 +1,3 @@
-package dataset.data.tree
+package id3.data.tree
 
 case class LeafConnection[A: Ordering](arc: A, to: Leaf[A], probability: Double = 1.0)

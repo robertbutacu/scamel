@@ -1,7 +1,7 @@
-package id3
+package id3.algorithm
 
-import dataset.data.tree.{LeafConnection, Leaf, Node, NodeConnection}
-import dataset.data.{BestAttribute, Dataset}
+import id3.data.tree.{Leaf, LeafConnection, Node, NodeConnection}
+import id3.data.{BestAttribute, Dataset}
 
 object Id3 {
   def apply[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): Node[A, B] = {
@@ -71,7 +71,7 @@ object Id3 {
     * @return - a list of nodes where the leafs are represented by all the subtables
     *         where the conclusion rows are the same.
     */
-  private def getLeafs[A: Ordering, B](tables: BestAttribute[A, B]): List[LeafConnection[A]] = {
+  protected[id3] def getLeafs[A: Ordering, B](tables: BestAttribute[A, B]): List[LeafConnection[A]] = {
     // filtering for tables where the conclusion's values are the same
     val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
@@ -86,7 +86,7 @@ object Id3 {
     *               the table is split by attribute's value
     * @return - a list of nodes where the children are represented by the subtree returned by the recursive call
     */
-  private def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[NodeConnection[A, B]] = {
+  protected[id3] def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[NodeConnection[A, B]] = {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
@@ -94,7 +94,7 @@ object Id3 {
     // and where the children are represented by a recursive call holding each sub-table independently
     toBeNodes.map { e =>
       val nextBestAttribute = BestAttributeFinder.apply(e.conclusion, e.table)
-      NodeConnection(e.attribute, Node(nextBestAttribute.attribute, getNodes(nextBestAttribute), getLeafs(nextBestAttribute)))
+      NodeConnection(e.attribute, Node(nextBestAttribute))
     }
   }
 }

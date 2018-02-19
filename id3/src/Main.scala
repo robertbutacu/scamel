@@ -1,6 +1,6 @@
-import dataset.data.Dataset
-import dataset.data.tree.Node
-import id3.Id3
+import id3.algorithm.Id3
+import id3.data.Dataset
+import id3.data.tree.Node
 
 object Main extends App {
   def prettyPrinter[A: Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
