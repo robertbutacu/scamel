@@ -17,27 +17,6 @@ object Id3 {
 
   /**
     *
-    * @param conclusion   - what it is wanted to be found
-    * @param trainingData - input data
-    * @return - a decision tree where nodes are represented by attributes and values from data
-    *         and leafs are represented by conclusion values.
-    */
-  def go[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): List[NodeConnection[A, B]] = {
-    // only 1 attribute and the conclusion table has the same value everywhere
-    val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
-
-    currentBestAttribute.subsets.map(e =>
-      NodeConnection(
-        e.attribute,
-        Node(currentBestAttribute.attribute,
-          getNodes(currentBestAttribute),
-          getLeafs(currentBestAttribute))
-      )
-    )
-  }
-
-  /**
-    *
     * @param conclusion         - what it is wanted to be found
     * @param trainingDataColumn - entry data
     * @return - a procentage of the higher value found in conclusion
