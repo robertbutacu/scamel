@@ -18,7 +18,7 @@ import id3.data.{BestAttribute, Dataset, Subset}
 object BestAttributeFinder {
   type Entropy = Double
   type InformationGain = Double
-  type DatasetPair[A: Ordering, B] = (Dataset[A, B], Dataset[A, B])
+  type DatasetPair[A, B] = (Dataset[A, B], Dataset[A, B])
 
   /**
     *

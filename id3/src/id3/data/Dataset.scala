@@ -5,6 +5,6 @@ case class Dataset[A: Ordering, B](attribute: B,
 
 
 object Dataset {
-  def isUnique[A: Ordering, B](dataset: Dataset[A, B]): Boolean =
+  def isUniqueData[A: Ordering, B](dataset: Dataset[A, B]): Boolean =
     dataset.data.distinct.lengthCompare(1) == 0
 }

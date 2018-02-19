@@ -1,7 +1,7 @@
 package id3.algorithm
 
 import id3.data.tree.{Leaf, LeafConnection, Node, NodeConnection}
-import id3.data.{BestAttribute, Dataset}
+import id3.data.{BestAttribute, Dataset, Subset}
 
 object Id3 {
   def apply[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): Node[A, B] = {
@@ -52,11 +52,11 @@ object Id3 {
     */
   protected[id3] def getLeafs[A: Ordering, B](tables: BestAttribute[A, B]): List[LeafConnection[A]] = {
     // filtering for tables where the conclusion's values are the same
-    val toBeLeafs = tables.subsets.filter(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
+    val toBeLeafs = tables.subsets.filter(e => Subset.isUniqueConclusion(e))
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => LeafConnection(e.attribute, Leaf(e.conclusion.data.head)))
+    toBeLeafs.map(e => LeafConnection(e.attribute, Leaf(e)))
   }
 
   /**
@@ -67,7 +67,7 @@ object Id3 {
     */
   protected[id3] def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[NodeConnection[A, B]] = {
     // filtering all the tables where there are more possible conclusion values
-    val toBeNodes = tables.subsets.filterNot(e => Dataset.isUnique(e.conclusion))
+    val toBeNodes = tables.subsets.filterNot(e => Dataset.isUniqueData(e.conclusion))
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
