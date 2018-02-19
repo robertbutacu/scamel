@@ -11,7 +11,11 @@ object Id3 {
     else {
       val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
-      Node(currentBestAttribute.attribute, getNodes(currentBestAttribute), getLeafs(currentBestAttribute))
+      Node(
+        currentBestAttribute.attribute,
+        getNodes(currentBestAttribute),
+        getLeafs(currentBestAttribute)
+      )
     }
   }
 

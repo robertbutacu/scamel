@@ -27,7 +27,9 @@ object BestAttributeFinder {
     * @param trainingData - all attributes, columns
     * @return A BestAttribute for current table with current conclusion.
     */
-  def apply[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): BestAttribute[A, B] = {
+  def apply[A: Ordering, B](conclusion: Dataset[A, B],
+                            trainingData: List[Dataset[A, B]]): BestAttribute[A, B] = {
+
     def informationGain(e: DatasetPair[A, B], conclusionEntropy: Entropy): Entropy =
       ((conclusionEntropy - computeDatasetEntropy[A, B](e)) * 1000).floor / 1000
 
