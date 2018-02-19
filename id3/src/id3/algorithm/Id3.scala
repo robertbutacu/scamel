@@ -67,12 +67,12 @@ object Id3 {
     */
   protected[id3] def getNodes[A: Ordering, B](tables: BestAttribute[A, B]): List[NodeConnection[A, B]] = {
     // filtering all the tables where there are more possible conclusion values
-    val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
+    val toBeNodes = tables.subsets.filterNot(e => Dataset.isUnique(e.conclusion))
 
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
     toBeNodes.map { e =>
-      val nextBestAttribute = BestAttributeFinder.apply(e.conclusion, e.table)
+      val nextBestAttribute = BestAttributeFinder(e.conclusion, e.table)
       NodeConnection(e.attribute, Node(nextBestAttribute))
     }
   }
