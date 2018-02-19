@@ -1,6 +1,6 @@
 package id3
 
-import dataset.data.tree.{NodeConnection, Leaf, LeafConnection, Node}
+import dataset.data.tree.{LeafConnection, Leaf, Node, NodeConnection}
 import dataset.data.{BestAttribute, Dataset}
 
 object Id3 {
@@ -43,7 +43,8 @@ object Id3 {
     * @return - a procentage of the higher value found in conclusion
     *         Used when there is one attribute left and its the got the same value on any row.
     */
-  def solveSingleAttribute[A: Ordering, B](conclusion: Dataset[A, B], trainingDataColumn: Dataset[A, B]): Node[A, B] = {
+  def solveSingleAttribute[A: Ordering, B](conclusion: Dataset[A, B],
+                                           trainingDataColumn: Dataset[A, B]): Node[A, B] = {
     def chooseMajority(): (A, Double) = {
       val distinctValues = conclusion.data.distinct
 
@@ -53,7 +54,7 @@ object Id3 {
 
       val leafValue = count.maxBy(_._2)
 
-      (leafValue._1, leafValue._2 / count.length )
+      (leafValue._1, leafValue._2 / count.length)
     }
 
     val majority = chooseMajority()
@@ -89,9 +90,11 @@ object Id3 {
     // filtering all the tables where there are more possible conclusion values
     val toBeNodes = tables.subsets.filterNot(e => e.conclusion.data.distinct.lengthCompare(1) == 0)
 
-    toBeNodes.foreach(e => println(e.attribute))
     // creating the node with the name of the attribute,
     // and where the children are represented by a recursive call holding each sub-table independently
-    toBeNodes.map(e => NodeConnection(e.attribute, Node(tables.attribute, Id3.go(e.conclusion, e.table))))
+    toBeNodes.map { e =>
+      val nextBestAttribute = BestAttributeFinder.apply(e.conclusion, e.table)
+      NodeConnection(e.attribute, Node(nextBestAttribute.attribute, getNodes(nextBestAttribute), getLeafs(nextBestAttribute)))
+    }
   }
 }

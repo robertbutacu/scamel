@@ -3,7 +3,6 @@ package id3
 import java.lang.Math.log
 
 import dataset.data.{BestAttribute, Dataset, Subset}
-import scala.math.Ordering.Implicits
 
 /**
   * Compute the entropy for each attribute
