@@ -56,7 +56,7 @@ object Id3 {
 
     // creating nodes which carry the name of the attribute
     // with leafs represented by that singular value from the conclusion column
-    toBeLeafs.map(e => LeafConnection(e.attribute, Leaf(e)))
+    toBeLeafs.map(e => LeafConnection(e))
   }
 
   /**
