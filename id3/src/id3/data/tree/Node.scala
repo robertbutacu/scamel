@@ -23,10 +23,10 @@ object Node {
 
     def tryToFitIntoLeafs(): Option[Tree] =
       node.leafs.find(l => l.arc == value) match {
-        case None => tryToFitIntoNodes()
+        case None => None
         case Some(connection) => Some(connection.to)
       }
 
-    tryToFitIntoLeafs()
+    tryToFitIntoLeafs().orElse(tryToFitIntoNodes())
   }
 }
