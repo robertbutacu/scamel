@@ -8,12 +8,6 @@ case class Cluster(points: List[Point],
                    rightCluster: Option[Cluster] = None) {
   val name: String = points.foldLeft("")((res, p) => res + " " + p.name)
 
-  def createCluster(other: Cluster, creationIndex: Int): Cluster =
-    Cluster(this.points ++ other.points,
-      creationIndex,
-      Some(this),
-      Some(other))
-
   def prettyPrinter(): Unit = {
     def go(curr: Cluster, tabs: Int = 0): Unit = {
       println(s"${"\t" * tabs} Cluster line $tabs: ${curr.name}")

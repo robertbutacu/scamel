@@ -1,6 +1,6 @@
-import Hierarchical.Agglomerative.{Cluster, Point}
-import Hierarchical.Agglomerative.ClusteringAlgorithm._
+import Hierarchical.Agglomerative.clustering.distances.DistanceImplicits
 import Hierarchical.Agglomerative.clustering.types.{AverageLinkage, CompleteLinkage, SingleLinkage}
+import Hierarchical.Agglomerative.{Cluster, ClusteringAlgorithm, Point}
 
 object Main extends App {
 
@@ -14,15 +14,23 @@ object Main extends App {
   )
 
   println("Average linkage result")
-  clusterize(points, AverageLinkage)
+  ClusteringAlgorithm.clusterize(points, AverageLinkage)(DistanceImplicits.euclideanDistance)
     .prettyPrinter()
 
+  ClusteringAlgorithm.clusterize(points, AverageLinkage)(DistanceImplicits.manhattanDistance)
+    .prettyPrinter()
 
   println("Single linkage result")
-  clusterize(points, SingleLinkage)
+  ClusteringAlgorithm.clusterize(points, SingleLinkage)(DistanceImplicits.euclideanDistance)
+    .prettyPrinter()
+  println()
+  ClusteringAlgorithm.clusterize(points, SingleLinkage)(DistanceImplicits.manhattanDistance)
     .prettyPrinter()
 
   println("Complete linkage result")
-  clusterize(points, CompleteLinkage)
+  ClusteringAlgorithm.clusterize(points, CompleteLinkage)(DistanceImplicits.euclideanDistance)
+    .prettyPrinter()
+  println()
+  ClusteringAlgorithm.clusterize(points, CompleteLinkage)(DistanceImplicits.manhattanDistance)
     .prettyPrinter()
 }
