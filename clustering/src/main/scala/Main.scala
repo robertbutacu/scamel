@@ -1,7 +1,6 @@
-package Hierarchical.Agglomerative.main
-
-import Hierarchical.Agglomerative.clustering.dimensions.{DistanceCalculator, UnidimensionalPoint}
 import Hierarchical.Agglomerative.{Cluster, Point}
+import Hierarchical.Agglomerative.clustering.dimensions.{Dimension, DistanceCalculator, UnidimensionalPoint}
+import Hierarchical.Agglomerative.clustering.dimensions.Dimension.unidimensionalImplicit
 
 object Main extends App {
 
@@ -34,6 +33,7 @@ object Main extends App {
   println()
   ClusteringAlgorithm.clusterize(points, CompleteLinkage)(DistanceImplicits.manhattanDistance)
     .prettyPrinter()*/
+  implicit val unidimension: Dimension[Int, UnidimensionalPoint] = Dimension.unidimensionalImplicit[Int]
 
   println(DistanceCalculator.computeDistance(UnidimensionalPoint(4), UnidimensionalPoint(5)))
 }

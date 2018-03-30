@@ -1,7 +1,7 @@
 package Hierarchical.Agglomerative.clustering.dimensions
 
 object DistanceCalculator {
-  def computeDistance[A](from: Point[A], to: Point[A])(implicit dimension: Dimension[A, Point]): A = {
+  def computeDistance[A: Numeric, B[_]: Point[A]](from: B[A], to: B[A])(implicit dimension: Dimension[A, B]): A = {
     dimension.computeDistance(from, to)
   }
 }
