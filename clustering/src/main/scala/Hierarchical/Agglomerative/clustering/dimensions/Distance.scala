@@ -46,18 +46,23 @@ object Distance {
       Math.abs(A.X - B.Y) + Math.abs(A.Y - B.Y) + Math.abs(A.Z - B.Z)
     }
 
+  /**
+    Chebyshev distance is given by the formula:
+      Max from | Ai - Bi |
+    */
+
   implicit def chebyshev1D: Distance[Double, UnidimensionalPoint, ChebyshevDistance.type] =
     (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: ChebyshevDistance.type) => {
-      implicitly[Numeric[Double]].zero
+      Math.abs(A.X - B.X)
     }
 
   implicit def chebyshev2D: Distance[Double, BidimensionalPoint, ChebyshevDistance.type] =
     (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: ChebyshevDistance.type) => {
-      Math.abs(A.X - B.X)
+      Math.max(Math.abs(A.X - B.X), Math.abs(A.Y - B.Y))
     }
 
-  implicit def chebyshev3D[Double]: Distance[Double, TridimensionalPoint, ChebyshevDistance.type] =
+  implicit def chebyshev3D: Distance[Double, TridimensionalPoint, ChebyshevDistance.type] =
     (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: ChebyshevDistance.type) => {
-      implicitly[Numeric[Double]].zero
+      List(Math.abs(A.X - B.X), Math.abs(A.Y - B.Y), Math.abs(A.Z - B.Z)).max
     }
 }
