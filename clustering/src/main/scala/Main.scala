@@ -33,5 +33,5 @@ object Main extends App {
   ClusteringAlgorithm.clusterize(points, CompleteLinkage)(DistanceImplicits.manhattanDistance)
     .prettyPrinter()*/
 
-  println(DistanceCalculator.computeDistance(BidimensionalPoint(4, 5), BidimensionalPoint(5, 5), EuclideanDistance))
+  println(Calculator.computeDistance(BidimensionalPoint(4, 5), BidimensionalPoint(5, 5), EuclideanDistance))
 }
