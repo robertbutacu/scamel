@@ -26,9 +26,14 @@ object Distance {
       Math.sqrt(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2) + Math.pow(A.Z - B.Z, 2))
     }
 
+  /**
+    Manhattan distance is given by the formula:
+    Sum by i in Abs(Ai - Bi)
+    */
+
   implicit def manhattan1D: Distance[Double, UnidimensionalPoint, ManhattanDistance.type] =
     (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: ManhattanDistance.type) => {
-      implicitly[Numeric[Double]].zero
+      Math.abs(A.X - B.X)
     }
 
   implicit def manhattan2D: Distance[Double, BidimensionalPoint, ManhattanDistance.type] =
@@ -38,7 +43,7 @@ object Distance {
 
   implicit def manhattan3D: Distance[Double, TridimensionalPoint, ManhattanDistance.type] =
     (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: ManhattanDistance.type) => {
-      implicitly[Numeric[Double]].zero
+      Math.abs(A.X - B.Y) + Math.abs(A.Y - B.Y) + Math.abs(A.Z - B.Z)
     }
 
   implicit def chebyshev1D: Distance[Double, UnidimensionalPoint, ChebyshevDistance.type] =
