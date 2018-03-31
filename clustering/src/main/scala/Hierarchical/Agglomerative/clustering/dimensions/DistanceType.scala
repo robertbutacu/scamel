@@ -22,7 +22,7 @@ object DistanceType {
       num.zero
     }
 
-  implicit def euclidena3D[A: Numeric]: DistanceType[A, TridimensionalPoint] =
+  implicit def euclidean3D[A: Numeric]: DistanceType[A, TridimensionalPoint] =
     (from: TridimensionalPoint[A], to: TridimensionalPoint[A]) => {
     implicitly[Numeric[A]].zero
   }
