@@ -5,6 +5,12 @@ trait Distance[A, P[_], D <: DistanceType] {
 }
 
 object Distance {
+
+  /**
+    Euclidean distance is represented by the formula:
+      Sqrt of sum by i ( Math.pow(Ai - Bi, 2))
+   */
+
   implicit def euclidean1D: Distance[Double, UnidimensionalPoint, EuclideanDistance.type] =
     (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: EuclideanDistance.type) => {
       Math.sqrt(Math.pow(A.X - B.X, 2))
