@@ -7,8 +7,7 @@ trait Distance[A, P[_], D <: DistanceType] {
 object Distance {
   implicit def euclidean1D: Distance[Double, UnidimensionalPoint, EuclideanDistance.type] =
     (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: EuclideanDistance.type) => {
-      // | |X| - |Y| |
-      Math.abs(Math.abs(A.X) - Math.abs(B.X))
+      Math.sqrt(Math.pow(A.X - B.X, 2))
     }
 
   implicit def euclidean2D: Distance[Double, BidimensionalPoint, EuclideanDistance.type] =
@@ -18,7 +17,7 @@ object Distance {
 
   implicit def euclidean3D: Distance[Double, TridimensionalPoint, EuclideanDistance.type] =
     (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: EuclideanDistance.type) => {
-      implicitly[Numeric[Double]].zero
+      Math.sqrt(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2) + Math.pow(A.Z - B.Z, 2))
     }
 
   implicit def manhattan1D: Distance[Double, UnidimensionalPoint, ManhattanDistance.type] =
