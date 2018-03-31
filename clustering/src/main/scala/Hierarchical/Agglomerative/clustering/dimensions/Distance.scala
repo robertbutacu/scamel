@@ -13,8 +13,6 @@ object Distance {
 
   implicit def euclidean2D: Distance[Double, BidimensionalPoint, EuclideanDistance.type] =
     (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: EuclideanDistance.type) => {
-      val num = implicitly[Numeric[Double]]
-
       Math.sqrt(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2))
     }
 
@@ -30,7 +28,7 @@ object Distance {
 
   implicit def manhattan2D: Distance[Double, BidimensionalPoint, ManhattanDistance.type] =
     (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: ManhattanDistance.type) => {
-      implicitly[Numeric[Double]].zero
+      Math.abs(A.X - B.X) + Math.abs(A.Y - B.Y)
     }
 
   implicit def manhattan3D: Distance[Double, TridimensionalPoint, ManhattanDistance.type] =
@@ -43,13 +41,13 @@ object Distance {
       implicitly[Numeric[Double]].zero
     }
 
-  implicit def chebyshev2D[A: Numeric]: Distance[A, BidimensionalPoint, ChebyshevDistance.type] =
-    (A: BidimensionalPoint[A], B: BidimensionalPoint[A], _: ChebyshevDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def chebyshev2D: Distance[Double, BidimensionalPoint, ChebyshevDistance.type] =
+    (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: ChebyshevDistance.type) => {
+      Math.abs(A.X - B.X)
     }
 
-  implicit def chebyshev3D[A: Numeric]: Distance[A, TridimensionalPoint, ChebyshevDistance.type] =
-    (A: TridimensionalPoint[A], B: TridimensionalPoint[A], _: ChebyshevDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def chebyshev3D[Double]: Distance[Double, TridimensionalPoint, ChebyshevDistance.type] =
+    (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: ChebyshevDistance.type) => {
+      implicitly[Numeric[Double]].zero
     }
 }
