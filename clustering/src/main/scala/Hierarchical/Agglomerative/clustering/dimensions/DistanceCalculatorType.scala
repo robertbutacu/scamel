@@ -1,0 +1,7 @@
+package Hierarchical.Agglomerative.clustering.dimensions
+
+trait DistanceCalculatorType
+
+case object EuclideanDistance extends DistanceCalculatorType
+case object ChebyshevDistance extends DistanceCalculatorType
+case object ManhattanDistance extends DistanceCalculatorType

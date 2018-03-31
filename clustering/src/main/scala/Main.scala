@@ -1,7 +1,5 @@
-import Hierarchical.Agglomerative.{Cluster, Point}
 import Hierarchical.Agglomerative.clustering.dimensions._
-import Hierarchical.Agglomerative.clustering.dimensions.Dimension.unidimensionalImplicit
-import Hierarchical.Agglomerative.clustering.dimensions.DistanceType
+import Hierarchical.Agglomerative.{Cluster, Point}
 
 object Main extends App {
 
@@ -35,5 +33,5 @@ object Main extends App {
   ClusteringAlgorithm.clusterize(points, CompleteLinkage)(DistanceImplicits.manhattanDistance)
     .prettyPrinter()*/
 
-  println(DistanceCalculator.computeDistance(BidimensionalPoint(4, 5), BidimensionalPoint(5, 5)))
+  println(DistanceCalculator.computeDistance(BidimensionalPoint(4, 5), BidimensionalPoint(5, 5), EuclideanDistance))
 }
