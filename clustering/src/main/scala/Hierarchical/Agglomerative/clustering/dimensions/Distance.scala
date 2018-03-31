@@ -5,47 +5,47 @@ trait Distance[A, P[_], D <: DistanceType] {
 }
 
 object Distance {
-  implicit def euclidean1D[A: Numeric]: Distance[A, UnidimensionalPoint, EuclideanDistance.type] =
-    (from: UnidimensionalPoint[A], to: UnidimensionalPoint[A], _: EuclideanDistance.type) => {
+  implicit def euclidean1D: Distance[Double, UnidimensionalPoint, EuclideanDistance.type] =
+    (from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double], _: EuclideanDistance.type) => {
       //distance.computeDistance(from, to)
       //for now, just the euclidean distance
-      val num = implicitly[Numeric[A]]
+
 
       // | |X| - |Y| |
-      num.abs(num.minus(num.abs(from.X), num.abs(to.X)))
+      0.0
     }
 
-  implicit def euclidean2D[A: Numeric]: Distance[A, BidimensionalPoint, EuclideanDistance.type] =
-    (from: BidimensionalPoint[A], to: BidimensionalPoint[A], _: EuclideanDistance.type) => {
-      val num = implicitly[Numeric[A]]
+  implicit def euclidean2D: Distance[Double, BidimensionalPoint, EuclideanDistance.type] =
+    (from: BidimensionalPoint[Double], to: BidimensionalPoint[Double], _: EuclideanDistance.type) => {
+      val num = implicitly[Numeric[Double]]
 
       //Math.sqrt(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2))
       num.zero
     }
 
-  implicit def euclidean3D[A: Numeric]: Distance[A, TridimensionalPoint, EuclideanDistance.type] =
-    (from: TridimensionalPoint[A], to: TridimensionalPoint[A], _: EuclideanDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def euclidean3D: Distance[Double, TridimensionalPoint, EuclideanDistance.type] =
+    (from: TridimensionalPoint[Double], to: TridimensionalPoint[Double], _: EuclideanDistance.type) => {
+      implicitly[Numeric[Double]].zero
     }
 
-  implicit def manhattan1D[A: Numeric]: Distance[A, UnidimensionalPoint, ManhattanDistance.type] =
-    (from: UnidimensionalPoint[A], to: UnidimensionalPoint[A], _: ManhattanDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def manhattan1D: Distance[Double, UnidimensionalPoint, ManhattanDistance.type] =
+    (from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double], _: ManhattanDistance.type) => {
+      implicitly[Numeric[Double]].zero
     }
 
-  implicit def manhattan2D[A: Numeric]: Distance[A, BidimensionalPoint, ManhattanDistance.type] =
-    (from: BidimensionalPoint[A], to: BidimensionalPoint[A], _: ManhattanDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def manhattan2D: Distance[Double, BidimensionalPoint, ManhattanDistance.type] =
+    (from: BidimensionalPoint[Double], to: BidimensionalPoint[Double], _: ManhattanDistance.type) => {
+      implicitly[Numeric[Double]].zero
     }
 
-  implicit def manhattan3D[A: Numeric]: Distance[A, TridimensionalPoint, ManhattanDistance.type] =
-    (from: TridimensionalPoint[A], to: TridimensionalPoint[A], _: ManhattanDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def manhattan3D: Distance[Double, TridimensionalPoint, ManhattanDistance.type] =
+    (from: TridimensionalPoint[Double], to: TridimensionalPoint[Double], _: ManhattanDistance.type) => {
+      implicitly[Numeric[Double]].zero
     }
 
-  implicit def chebyshev1D[A: Numeric]: Distance[A, UnidimensionalPoint, ChebyshevDistance.type] =
-    (from: UnidimensionalPoint[A], to: UnidimensionalPoint[A], _: ChebyshevDistance.type) => {
-      implicitly[Numeric[A]].zero
+  implicit def chebyshev1D: Distance[Double, UnidimensionalPoint, ChebyshevDistance.type] =
+    (from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double], _: ChebyshevDistance.type) => {
+      implicitly[Numeric[Double]].zero
     }
 
   implicit def chebyshev2D[A: Numeric]: Distance[A, BidimensionalPoint, ChebyshevDistance.type] =
