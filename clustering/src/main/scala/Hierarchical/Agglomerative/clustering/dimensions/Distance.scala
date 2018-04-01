@@ -1,6 +1,6 @@
 package Hierarchical.Agglomerative.clustering.dimensions
 
-trait Distance[A, P[_], D <: DistanceType] {
+trait Distance[A, P[_] <: Point[_], D <: DistanceType] {
   def computeDistance(A: P[A], B: P[A], distanceType: D): A
 }
 
