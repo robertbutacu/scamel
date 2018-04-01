@@ -1,6 +1,7 @@
 package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
+import Hierarchical.Agglomerative.clustering.dimensions.Point
 import Hierarchical.Agglomerative.clustering.distances.Distance
 
 
@@ -12,8 +13,8 @@ import Hierarchical.Agglomerative.clustering.distances.Distance
  */
 
 case object CompleteLinkage extends Method {
-  override def formCluster(clusters: List[Cluster])(implicit distance: Distance): NewCluster = {
-    def shortestDistance(current: Cluster, other: Cluster): Double = {
+  override def formCluster[A: Numeric, P[_]: Point[_]](clusters: List[Cluster[A, P]]): NewCluster[A, P] = {
+    def shortestDistance(current: Cluster[A, P], other: Cluster[A, P]): A = {
 
       val distancesBetweenAllPoints = for {
         currentPoint <- current.points
