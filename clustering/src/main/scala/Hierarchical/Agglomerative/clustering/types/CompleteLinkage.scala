@@ -2,7 +2,6 @@ package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
 import Hierarchical.Agglomerative.clustering.dimensions.Point
-import Hierarchical.Agglomerative.clustering.distances.Distance
 
 
 /*

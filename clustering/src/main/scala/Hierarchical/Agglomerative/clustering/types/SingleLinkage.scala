@@ -2,7 +2,6 @@ package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
 import Hierarchical.Agglomerative.clustering.dimensions.Point
-import Hierarchical.Agglomerative.clustering.distances.Distance
 
 case object SingleLinkage extends Method {
   override def formCluster[A: Numeric, P[_] <: Point[_]](clusters: List[Cluster[A, P]]): NewCluster[A, P] = {
