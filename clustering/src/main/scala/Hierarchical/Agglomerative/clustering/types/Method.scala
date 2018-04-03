@@ -11,9 +11,4 @@ trait Method {
                                                                   (implicit distance: Distance[A, P, D],
                                                                    centroidCalculator: ClusterCentroid[A, P]): NewCluster[A, P]
 
-/*  final def distanceBetweenPoints[A: Numeric, P[_] <: Point[_]](current: P[A],
-                                                                other: P[A])
-                                                               (implicit distanceType: DistanceType): A = {
-    Calculator.computeDistance(current, other, distanceType)
-  }*/
 }
