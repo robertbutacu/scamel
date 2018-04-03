@@ -8,9 +8,11 @@ import Hierarchical.Agglomerative.clustering.types.{Method, NewCluster}
 import scala.annotation.tailrec
 
 object ClusteringAlgorithm {
-  def clusterize[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]], distanceType: D,
-                                               method: Method)(implicit distance: Distance[A, P, D],
-                                                               centroidCalculator: ClusterCentroid[A, P]): Cluster[A, P] = {
+  def clusterize[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]],
+                                                                  distanceType: D,
+                                                                  method: Method)
+                                                                 (implicit distance: Distance[A, P, D],
+                                                                  centroidCalculator: ClusterCentroid[A, P]): Cluster[A, P] = {
     @tailrec
     def go(clusters: List[Cluster[A, P]],
            method: Method,

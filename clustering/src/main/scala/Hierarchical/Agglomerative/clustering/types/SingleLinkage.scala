@@ -15,8 +15,7 @@ case object SingleLinkage extends Method {
         otherPoint <- other.points
       } yield distance.computeDistance(currentPoint, otherPoint, distanceType)
 
-      //distancesBetweenAllPoints.min
-      implicitly[Numeric[A]].zero
+      distancesBetweenAllPoints.minBy(d => d)
     }
 
     val shortestDistancesBetweenClusters = for {
