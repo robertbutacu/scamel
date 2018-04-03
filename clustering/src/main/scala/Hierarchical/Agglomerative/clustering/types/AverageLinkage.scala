@@ -2,7 +2,7 @@ package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
 import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
-import Hierarchical.Agglomerative.clustering.dimensions.{Calculator, Distance, DistanceType}
+import Hierarchical.Agglomerative.clustering.dimensions.{Distance, DistanceType}
 import Hierarchical.Agglomerative.clustering.dimensions.points.Point
 
 case object AverageLinkage extends Method {
@@ -16,7 +16,7 @@ case object AverageLinkage extends Method {
     def computeDistance(from: (Cluster[A, P], P[A]),
                         to: (Cluster[A, P], P[A]))
                        (implicit distance: Distance[A, P, D]): A =
-      Calculator.computeDistance(from._2, to._2, distanceType)
+      distance.computeDistance(from._2, to._2, distanceType)
 
     val clustersWithCentroids = clusters zip (clusters map createCentroid)
 

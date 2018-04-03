@@ -3,7 +3,7 @@ package Hierarchical.Agglomerative.clustering.types
 import Hierarchical.Agglomerative.Cluster
 import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
 import Hierarchical.Agglomerative.clustering.dimensions.points.Point
-import Hierarchical.Agglomerative.clustering.dimensions.{Calculator, Distance, DistanceType}
+import Hierarchical.Agglomerative.clustering.dimensions.{Distance, DistanceType}
 
 
 /*
@@ -22,7 +22,7 @@ case object CompleteLinkage extends Method {
       val distancesBetweenAllPoints = for {
         currentPoint <- current.points
         otherPoint <- other.points
-      } yield Calculator.computeDistance(currentPoint, otherPoint, distanceType)
+      } yield distance.computeDistance(currentPoint, otherPoint, distanceType)
 
       distancesBetweenAllPoints.max
     }

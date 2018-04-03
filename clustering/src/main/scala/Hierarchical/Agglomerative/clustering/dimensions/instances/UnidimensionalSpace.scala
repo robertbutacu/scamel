@@ -1,6 +1,9 @@
 package Hierarchical.Agglomerative.clustering.dimensions.instances
 
-import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, Point, TridimensionalPoint, UnidimensionalPoint}
+import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint,
+  Point,
+  TridimensionalPoint,
+  UnidimensionalPoint}
 
 trait Space[A, P[_] <: Point[_]] {
   def points: List[P[A]]
