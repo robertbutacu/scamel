@@ -1,4 +1,4 @@
-import Hierarchical.Agglomerative.clustering.dimensions.EuclideanDistance
+import Hierarchical.Agglomerative.clustering.dimensions.{ChebyshevDistance, EuclideanDistance}
 import Hierarchical.Agglomerative.{Cluster, ClusteringAlgorithm}
 import Hierarchical.Agglomerative.clustering.dimensions.points.BidimensionalPoint
 import Hierarchical.Agglomerative.clustering.types.{AverageLinkage, CompleteLinkage, SingleLinkage}
@@ -23,7 +23,7 @@ object Main extends App {
   )
 
   println("Average linkage result")
-  ClusteringAlgorithm.clusterize(points, EuclideanDistance, AverageLinkage)
+  ClusteringAlgorithm.clusterize(points, ChebyshevDistance, AverageLinkage)
     .prettyPrinter()
 
   ClusteringAlgorithm.clusterize(points, EuclideanDistance, AverageLinkage)

@@ -1,7 +1,10 @@
 package Hierarchical.Agglomerative.clustering.dimensions.clusters
 
 import Hierarchical.Agglomerative.Cluster
-import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, Point, TridimensionalPoint, UnidimensionalPoint}
+import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint,
+  Point,
+  TridimensionalPoint,
+  UnidimensionalPoint}
 
 trait ClusterCentroid[A, P[_] <: Point[_]] {
   def computeCentroid(cluster: Cluster[A, P]): P[A]
