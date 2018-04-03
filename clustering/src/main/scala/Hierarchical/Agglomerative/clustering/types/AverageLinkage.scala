@@ -1,20 +1,22 @@
 package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
-import Hierarchical.Agglomerative.clustering.dimensions.{Calculator, EuclideanDistance, Point, UnidimensionalPoint}
+import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
+import Hierarchical.Agglomerative.clustering.dimensions.{Calculator, Distance, DistanceType}
+import Hierarchical.Agglomerative.clustering.dimensions.points.Point
 
 case object AverageLinkage extends Method {
-  override def formCluster[A: Numeric, P[_] <: Point[_]](clusters: List[Cluster[A, P]]): NewCluster[A, P] = {
-    def createCentroid(cluster: Cluster[A, P]): P[A] = {
-     // val XAxisSum = cluster.points.foldRight(0.0) { (curr, acc) => acc + curr.X }
-     // val YAxisSum = cluster.points.foldRight(0.0) { (curr, acc) => acc + curr.Y }
-
-     // Point("Centroid " + cluster.name, XAxisSum / cluster.points.length, YAxisSum / cluster.points.length)
-      new UnidimensionalPoint[A]("a", implicitly[Numeric[A]].zero)
+  override def formCluster[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]], distanceType: D)
+                                                        (implicit distance: Distance[A, P, D],
+                                                         centroidCalculator: ClusterCentroid[A, P]): NewCluster[A, P] = {
+    def createCentroid(cluster: Cluster[A, P])(implicit centroidCalculator: ClusterCentroid[A, P]): P[A] = {
+     centroidCalculator.computeCentroid(cluster)
     }
 
-    def computeDistance(from: (Cluster[A, P], P[A]), to: (Cluster[A, P], P[A])): A =
-      Calculator.computeDistance(from._2, to._2, EuclideanDistance)
+    def computeDistance(from: (Cluster[A, P], P[A]),
+                        to: (Cluster[A, P], P[A]))
+                       (implicit distance: Distance[A, P, D]): A =
+      Calculator.computeDistance(from._2, to._2, distanceType)
 
     val clustersWithCentroids = clusters zip (clusters map createCentroid)
 

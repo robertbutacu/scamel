@@ -1,12 +1,14 @@
 package Hierarchical.Agglomerative.clustering.dimensions
 
+import Hierarchical.Agglomerative.clustering.dimensions.points.Point
+
 object Calculator {
   def computeDistance[A: Numeric,
-                      B[_] <: Point[_],
-                      D <: DistanceType](from: B[A],
-                                         to: B[A],
+                      P[_] <: Point[_],
+                      D <: DistanceType](from: P[A],
+                                         to: P[A],
                                          distanceCalculatorType: D)
-                                        (implicit distanceType: Distance[A, B, D]): A = {
+                                        (implicit distanceType: Distance[A, P, D]): A = {
     distanceType.computeDistance(from, to, distanceCalculatorType)
   }
 }

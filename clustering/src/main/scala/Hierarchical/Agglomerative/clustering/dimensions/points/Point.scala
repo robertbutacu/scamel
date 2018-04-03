@@ -1,4 +1,4 @@
-package Hierarchical.Agglomerative.clustering.dimensions
+package Hierarchical.Agglomerative.clustering.dimensions.points
 
 trait Point[A] {
   def name: String

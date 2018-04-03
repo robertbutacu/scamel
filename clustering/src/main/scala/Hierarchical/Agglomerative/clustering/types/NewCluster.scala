@@ -1,7 +1,7 @@
 package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
-import Hierarchical.Agglomerative.clustering.dimensions.Point
+import Hierarchical.Agglomerative.clustering.dimensions.points.Point
 
 case class NewCluster[A: Numeric, P[_] <: Point[_]](first: Cluster[A, P], second: Cluster[A, P], distanceBetween: A)
 

@@ -1,5 +1,7 @@
 package Hierarchical.Agglomerative.clustering.dimensions
 
+import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, Point, TridimensionalPoint, UnidimensionalPoint}
+
 trait Distance[A, P[_] <: Point[_], D <: DistanceType] {
   def computeDistance(A: P[A], B: P[A], distanceType: D): A
 }
