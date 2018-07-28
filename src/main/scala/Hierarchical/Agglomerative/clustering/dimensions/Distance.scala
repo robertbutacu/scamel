@@ -3,7 +3,7 @@ package Hierarchical.Agglomerative.clustering.dimensions
 import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, Point, TridimensionalPoint, UnidimensionalPoint}
 
 trait Distance[A, P[_] <: Point[_], D <: DistanceType] {
-  def computeDistance(A: P[A], B: P[A], distanceType: D): A
+  def computeDistance(from: P[A], to: P[A], distanceType: D): A
 }
 
 object Distance {
@@ -14,18 +14,18 @@ object Distance {
    */
 
   implicit def euclidean1D: Distance[Double, UnidimensionalPoint, EuclideanDistance.type] =
-    (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: EuclideanDistance.type) => {
-      Math.sqrt(Math.pow(A.X - B.X, 2))
+    (from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double], _: EuclideanDistance.type) => {
+      Math.sqrt(Math.pow(from.X - to.X, 2))
     }
 
   implicit def euclidean2D: Distance[Double, BidimensionalPoint, EuclideanDistance.type] =
-    (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: EuclideanDistance.type) => {
-      Math.sqrt(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2))
+    (from: BidimensionalPoint[Double], to: BidimensionalPoint[Double], _: EuclideanDistance.type) => {
+      Math.sqrt(Math.pow(from.X - to.X, 2) + Math.pow(from.Y - to.Y, 2))
     }
 
   implicit def euclidean3D: Distance[Double, TridimensionalPoint, EuclideanDistance.type] =
-    (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: EuclideanDistance.type) => {
-      Math.sqrt(Math.pow(A.X - B.X, 2) + Math.pow(A.Y - B.Y, 2) + Math.pow(A.Z - B.Z, 2))
+    (from: TridimensionalPoint[Double], to: TridimensionalPoint[Double], _: EuclideanDistance.type) => {
+      Math.sqrt(Math.pow(from.X - to.X, 2) + Math.pow(from.Y - to.Y, 2) + Math.pow(from.Z - to.Z, 2))
     }
 
   /**
@@ -34,18 +34,18 @@ object Distance {
     */
 
   implicit def manhattan1D: Distance[Double, UnidimensionalPoint, ManhattanDistance.type] =
-    (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: ManhattanDistance.type) => {
-      Math.abs(A.X - B.X)
+    (from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double], _: ManhattanDistance.type) => {
+      Math.abs(from.X - to.X)
     }
 
   implicit def manhattan2D: Distance[Double, BidimensionalPoint, ManhattanDistance.type] =
-    (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: ManhattanDistance.type) => {
-      Math.abs(A.X - B.X) + Math.abs(A.Y - B.Y)
+    (from: BidimensionalPoint[Double], to: BidimensionalPoint[Double], _: ManhattanDistance.type) => {
+      Math.abs(from.X - to.X) + Math.abs(from.Y - to.Y)
     }
 
   implicit def manhattan3D: Distance[Double, TridimensionalPoint, ManhattanDistance.type] =
-    (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: ManhattanDistance.type) => {
-      Math.abs(A.X - B.Y) + Math.abs(A.Y - B.Y) + Math.abs(A.Z - B.Z)
+    (from: TridimensionalPoint[Double], to: TridimensionalPoint[Double], _: ManhattanDistance.type) => {
+      Math.abs(from.X - to.Y) + Math.abs(from.Y - to.Y) + Math.abs(from.Z - to.Z)
     }
 
   /**
@@ -54,17 +54,17 @@ object Distance {
     */
 
   implicit def chebyshev1D: Distance[Double, UnidimensionalPoint, ChebyshevDistance.type] =
-    (A: UnidimensionalPoint[Double], B: UnidimensionalPoint[Double], _: ChebyshevDistance.type) => {
-      Math.abs(A.X - B.X)
+    (from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double], _: ChebyshevDistance.type) => {
+      Math.abs(from.X - to.X)
     }
 
   implicit def chebyshev2D: Distance[Double, BidimensionalPoint, ChebyshevDistance.type] =
-    (A: BidimensionalPoint[Double], B: BidimensionalPoint[Double], _: ChebyshevDistance.type) => {
-      Math.max(Math.abs(A.X - B.X), Math.abs(A.Y - B.Y))
+    (from: BidimensionalPoint[Double], to: BidimensionalPoint[Double], _: ChebyshevDistance.type) => {
+      Math.max(Math.abs(from.X - to.X), Math.abs(from.Y - to.Y))
     }
 
   implicit def chebyshev3D: Distance[Double, TridimensionalPoint, ChebyshevDistance.type] =
-    (A: TridimensionalPoint[Double], B: TridimensionalPoint[Double], _: ChebyshevDistance.type) => {
-      List(Math.abs(A.X - B.X), Math.abs(A.Y - B.Y), Math.abs(A.Z - B.Z)).max
+    (from: TridimensionalPoint[Double], to: TridimensionalPoint[Double], _: ChebyshevDistance.type) => {
+      List(Math.abs(from.X - to.X), Math.abs(from.Y - to.Y), Math.abs(from.Z - to.Z)).max
     }
 }
