@@ -20,7 +20,7 @@ object ClusterCentroid {
 
   implicit def bidimensionalPointsCentroid: ClusterCentroid[Double, BidimensionalPoint] =
     (cluster: Cluster[Double, BidimensionalPoint]) => {
-      val sum = cluster.points.foldRight((0.0, 0.0))((curr, acc) => (acc._1 + curr.X, acc._2 + curr.Y))
+      val sum = cluster.points.foldRight((0.0, 0.0)){case (curr, (x, y)) => (x + curr.X, y + curr.Y)}
 
       val numberOfPoints = cluster.points.length
       BidimensionalPoint("Point " + cluster.name, sum._1 / numberOfPoints, sum._2 / numberOfPoints)
@@ -29,8 +29,8 @@ object ClusterCentroid {
   implicit def tridimensionalPointsCentroid: ClusterCentroid[Double, TridimensionalPoint] =
     (cluster: Cluster[Double, TridimensionalPoint]) => {
       val sum = cluster.points.foldRight((0.0, 0.0, 0.0)) {
-        (curr, acc) =>
-          (acc._1 + curr.X, acc._2 + curr.Y, acc._3 + curr.Z)
+        case (curr, (x, y, z)) =>
+          (x + curr.X, y + curr.Y, z + curr.Z)
       }
 
       val numberOfPoints = cluster.points.length
