@@ -8,8 +8,10 @@ object Cluster {
   def apply(centroid: Centroid, points: List[Point]): Cluster =
     new Cluster(repositionCentroid(centroid, points), points)
 
-  def apply(distancesToCentroids: DistancesToCentroids): Cluster =
+  def apply(distancesToCentroids: DistancesToCentroids): Cluster = {
+    require(distancesToCentroids.headOption.nonEmpty)
     Cluster(distancesToCentroids.head.centroid, distancesToCentroids.map(o => o.point))
+  }
 
   def repositionCentroid(centroid: Centroid, points: List[Point]): Centroid = {
     val XAxisSum = points.foldRight(0.0)((p, sum) => p.X + sum)
