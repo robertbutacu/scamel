@@ -1,5 +1,0 @@
-package kmeans
-
-class KMeansTest {
-
-}
