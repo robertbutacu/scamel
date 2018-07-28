@@ -18,7 +18,9 @@ import id3.data.{BestAttribute, Dataset, Subset}
 object BestAttributeFinder {
   type Entropy = Double
   type InformationGain = Double
-  type DatasetPair[A, B] = (Dataset[A, B], Dataset[A, B])
+
+  //TODO better naming
+  case class DatasetPair[A, B](first: Dataset[A, B], second: Dataset[A, B])
 
   /**
     *
@@ -37,7 +39,7 @@ object BestAttributeFinder {
 
     val attributes = trainingData.map(e => (e, conclusion))
 
-    val informationGains = attributes.map(e => informationGain(e, conclusionEntropy))
+    val informationGains = attributes.map { case (first, second) => informationGain(DatasetPair(first, second), conclusionEntropy) }
 
     val bestAttributeIndex = informationGains.indexOf(informationGains.max)
 
@@ -98,14 +100,14 @@ object BestAttributeFinder {
           e.data
             .zipWithIndex
             //value of the row in the columnIndex is equal to the rowValue
-            .withFilter(r => trainingData(columnIndex).data(r._2) == rowValue)
-            .map(r => r._1))
+            .withFilter { case (_, index) => trainingData(columnIndex).data(index) == rowValue }
+            .map { case (data, _) => data })
       },
       Dataset(conclusion.attribute,
         conclusion.data
           .zipWithIndex
-          .withFilter(r => trainingData(columnIndex).data(r._2) == rowValue)
-          .map(r => r._1)
+          .withFilter { case (_, index) => trainingData(columnIndex).data(index) == rowValue }
+          .map { case (data, _) => data }
       )
     )
   }
@@ -133,7 +135,7 @@ object BestAttributeFinder {
     */
   private def splitIntoSubsets[A: Ordering](trainingData: List[(A, A)])
                                            (implicit ord: Ordering[A]): List[List[(A, A)]] =
-    trainingData.groupBy(_._1).values.toList
+    trainingData.groupBy { case (data, _) => data }.values.toList
 
   /**
     *
@@ -141,7 +143,7 @@ object BestAttributeFinder {
     * @return the entropy for an attribute, which will be later require to compute information gain.
     */
   private def computeDatasetEntropy[A: Ordering, B](trainingData: DatasetPair[A, B]): Entropy = {
-    val rows = trainingData._1.data.indices.map(e => (trainingData._1.data(e), trainingData._2.data(e))).toList
+    val rows = trainingData.first.data.indices.map(e => (trainingData.first.data(e), trainingData.second.data(e))).toList
 
     val tables = splitIntoSubsets(rows)
 
@@ -154,5 +156,5 @@ object BestAttributeFinder {
     * The minus will be added by the apply function.
     */
   private def entropyForSubset[A: Ordering](subset: List[(A, A)], tableSize: Int): Entropy =
-    subset.length.toDouble / tableSize.toDouble * computeEntropy(subset.map(e => e._2))
+    subset.length.toDouble / tableSize.toDouble * computeEntropy(subset.map { case (_, data) => data })
 }
