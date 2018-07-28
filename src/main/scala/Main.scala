@@ -39,11 +39,4 @@ object Main extends App {
     "Income Level" -> "High",
     "Travel Cost" -> "Cheap"
   )))
-
-  /*
-    A venit mazilu la prezentare la .net si spunea ca a folosit algoritmi de ML la proiect.
-    Ca a folosit ID3 => el de fapt a hardcodat un arbore si a parsat pe el.
-    ADICAAA
-
-   */
 }

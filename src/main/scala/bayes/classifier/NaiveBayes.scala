@@ -48,19 +48,21 @@ object NaiveBayes {
     val negativeOutcome = toClassify.map(c =>
       getData(c, individualProbabilities, isHappening = false, classClassified))
 
+    case class Outcome(probability: Double, isTrue: Boolean)
+
     //computing overall probability for positive/negative
-    val probPosOutcome = positiveOutcome.map(e => (probability(e), true))
-    val probNegOutcome = negativeOutcome.map(e => (probability(e), false))
+    val probPosOutcome = positiveOutcome.map(e => Outcome(probability(e), isTrue = true))
+    val probNegOutcome = negativeOutcome.map(e => Outcome(probability(e), isTrue = false))
 
     val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
 
     // the final answer for a given input is max of (probNeg/evidence, probPos/evidence)
-    toClassify.zipWithIndex.map(e =>
-      classify(e,
-        probPosOutcome(e._2)._1,
-        probNegOutcome(e._2)._1,
-        evidence(e._2))
-    )
+    toClassify.zipWithIndex.map { case (classifier, index) =>
+      classify((classifier, index),
+        probPosOutcome(index).probability,
+        probNegOutcome(index).probability,
+        evidence(index))
+    }
   }
 
   /**
@@ -115,14 +117,14 @@ object NaiveBayes {
     val combinedColumns = trainingData.data.zip(classData.data)
 
     val probabilities = combinedColumns.distinct
-      .map(c =>
+      .map { case (trainingDataEntry, data) =>
         (
-          c._1, c._2, //Data, Boolean Value
+          trainingDataEntry, data, //Data, Boolean Value
           // division of favorable cases of current Data value from the dataset to happen
           // and the total number of cases where the outcome matches current row's outcome
-          round(combinedColumns.count(_ == c).toDouble / classData.data.count(_ == c._2).toDouble)
+          round(combinedColumns.count(_ == (trainingDataEntry, data)).toDouble / classData.data.count(_ == data).toDouble)
         )
-      )
+      }
       .toSet
 
     IndividualProbability(trainingData.attribute, probabilities)
@@ -147,19 +149,20 @@ object NaiveBayes {
                       classDataProbabilities: List[(Boolean, Double)]): List[Double] = {
     val probabilities = for {
       //list of Attributes( think weather ) and their respective Data value ( think Sunny )
-      data <- input.data.toList
+      (_, data) <- input.data.toList
 
       // probability of each Data value to happen (ie: Weather Sunny True 0.5, except a list )
       individualProb <- individualProbabilities
 
       // each individual element of that list from above
-      individualProbData <- individualProb.probabilities.toList
+      (individualData, isHappeningPrediction, probability) <- individualProb.probabilities.toList
 
       // match Data value and Boolean value
-      if individualProbData._1 == data._2 && individualProbData._2 == isHappening
-    } yield individualProbData._3
+      if individualData == data && isHappeningPrediction == isHappening
+    } yield probability
 
-    probabilities ::: classDataProbabilities.filter(e => e._1 == isHappening).map(_._2)
+    probabilities ::: classDataProbabilities.filter { case (isToHappen, _) => isToHappen == isHappening }
+      .map { case (_, probability) => probability }
   }
 
 
@@ -176,11 +179,11 @@ object NaiveBayes {
     // Evidence is represented by the count of input.data(x) divided by the length rows in the table
     // aka probability of data Y to appear in a random selection.
     val appearancesOfData = for {
-      data <- input.data.toList // for each (Attribute, Data)
+      (_, data) <- input.data.toList // for each (Attribute, Data)
       td <- trainingData // look through training data
       probabilities <- td.data // in their respective data list
-      if probabilities == data._2 // for the appearance of the Data value from the tuple above
-    } yield data._2 // only interested in the value of Data, used later for count to apply the formula described above
+      if probabilities == data // for the appearance of the Data value from the tuple above
+    } yield data // only interested in the value of Data, used later for count to apply the formula described above
 
     val filteredTrainingDataCount = appearancesOfData.distinct.map(d => appearancesOfData.count(_ == d).toDouble)
 
