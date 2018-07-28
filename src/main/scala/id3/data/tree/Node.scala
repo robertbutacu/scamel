@@ -12,8 +12,7 @@ object Node {
   def apply[A: Ordering, B](bestAttribute: BestAttribute[A, B]): Node[A, B] =
     Node(bestAttribute.attribute, getNodes(bestAttribute), getLeafs(bestAttribute))
 
-  //TODO rename inner functions
-  def tryToFit[A: Ordering, B](node: Node[A, B], value:  A): Option[Tree] = {
+  def tryToFit[A: Ordering, B](node: Node[A, B], value: A): Option[Tree] = {
     def tryToFitIntoNodes(): Option[Tree] =
       node.nodes.find(nc => nc.arc == value) match {
         case None => None

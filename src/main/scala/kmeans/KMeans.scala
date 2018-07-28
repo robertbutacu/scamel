@@ -6,15 +6,17 @@ import scala.annotation.tailrec
 import scala.util.Random
 
 object KMeans {
+  //TODO extend to N dimensions
   type DistancesToCentroids = List[DistanceToCentroid]
-  type Coordonate = (Int, Int)
+  case class Coordinate(X: Int, Y: Int)
 
-  def findClusters(numberOfClusters: Int, points: List[Point]): List[Cluster] = {
+  def findClusters(numberOfClusters: Int, points: List[Point],
+                   initialization: MethodInitialization = RandomInitialization): List[Cluster] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
-    def getMin: Coordonate = (points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
+    def getMin: Coordinate = Coordinate(points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
 
-    def getMax: Coordonate = (points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
+    def getMax: Coordinate = Coordinate(points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
 
     //TODO special case when a centroid is passed around between 2 values
     @tailrec
@@ -69,11 +71,11 @@ object KMeans {
 
 
   //TODO dont instantiate centroids randomly, instead use KMeans++
-  private def instantiateCentroids(number: Int, min: Coordonate, max: Coordonate): List[Centroid] =
+  private def instantiateCentroids(number: Int, min: Coordinate, max: Coordinate): List[Centroid] =
     (1 to number)
       .map { p =>
         Centroid("Centroid " + p,
-          Random.nextInt(max._1 - min._1) + min._1,
-          Random.nextInt(max._2 - min._2) + min._2)
+          Random.nextInt(max.X - min.X) + min.X,
+          Random.nextInt(max.Y - min.Y) + min.Y)
       }.toList
 }

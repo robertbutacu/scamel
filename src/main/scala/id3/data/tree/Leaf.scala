@@ -5,7 +5,9 @@ import id3.data.Subset
 case class Leaf[A: Ordering](attribute: A) extends Tree
 
 object Leaf {
-  def apply[A: Ordering, B](subset: Subset[A, B]) =
+  def apply[A: Ordering, B](subset: Subset[A, B]) = {
+    require(subset.conclusion.data.headOption.nonEmpty)
     new Leaf(subset.conclusion.data.head)
+  }
 }
 

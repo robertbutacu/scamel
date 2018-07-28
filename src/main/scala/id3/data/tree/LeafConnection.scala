@@ -6,5 +6,5 @@ case class LeafConnection[A: Ordering](arc: A, to: Leaf[A], probability: Double 
 
 object LeafConnection {
   def apply[A: Ordering, B](subset: Subset[A, B]): LeafConnection[A] =
-    new LeafConnection(subset.attribute, Leaf(subset))
+    LeafConnection(subset.attribute, Leaf(subset))
 }

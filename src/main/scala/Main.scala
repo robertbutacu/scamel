@@ -30,13 +30,14 @@ object Main extends App {
   )
 
   //println(result)
-  prettyPrinter(result)
+  result.foreach(n => prettyPrinter(n))
 
   println("\n\nClassifying")
-  println(Id3Classifier.classify(result, Map(
+
+  result.foreach(n => println(Id3Classifier.classify(n, Map(
     "Gender" -> "Male",
     "Car ownership" -> "0",
     "Income Level" -> "High",
     "Travel Cost" -> "Cheap"
-  )))
+  ))))
 }
