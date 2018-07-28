@@ -1,21 +1,27 @@
 package id3.algorithm
 
+import errors.{DatasetEmpty, MLError}
 import id3.data.tree.{Leaf, LeafConnection, Node, NodeConnection}
 import id3.data.{BestAttribute, Dataset, Subset}
 
 object Id3 {
-  def apply[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]]): Node[A, B] = {
-    if (trainingData.lengthCompare(1) == 0 && trainingData.head.data.distinct.lengthCompare(1) == 0) {
-      solveSingleAttribute(conclusion, trainingData.head)
-    }
-    else {
-      val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
+  def apply[A: Ordering, B](conclusion: Dataset[A, B],
+                            trainingData: List[Dataset[A, B]]): Either[MLError, Node[A, B]] = {
+    trainingData.headOption.map { head =>
+      if (head.data.distinct.lengthCompare(1) == 0)
+        solveSingleAttribute(conclusion, head)
+      else {
+        val currentBestAttribute = BestAttributeFinder(conclusion, trainingData)
 
-      Node(
-        currentBestAttribute.attribute,
-        getNodes(currentBestAttribute),
-        getLeafs(currentBestAttribute)
-      )
+        Node(
+          currentBestAttribute.attribute,
+          getNodes(currentBestAttribute),
+          getLeafs(currentBestAttribute)
+        )
+      }
+    } match {
+      case Some(node) => Right(node)
+      case None => Left(DatasetEmpty("The dataset is empty!"))
     }
   }
 
@@ -33,18 +39,18 @@ object Id3 {
 
       // finding out their count, kept in a tuple of (value, count)
       // so the max count can be found
-      val count = distinctValues.map(e => (e, conclusion.data.count(_ == e)))
+      val dataCounted = distinctValues.map(e => (e, conclusion.data.count(_ == e)))
 
-      val leafValue = count.maxBy(_._2)
+      val (data, counter) = dataCounted.maxBy { case (_, count) => count }
 
-      (leafValue._1, leafValue._2 / count.length)
+      (data, counter / dataCounted.length)
     }
 
-    val majority = chooseMajority()
+    val (data, probability) = chooseMajority()
 
     new Node(trainingDataColumn.attribute,
       List.empty,
-      List(LeafConnection(majority._1, Leaf(majority._1), majority._2)))
+      List(LeafConnection(data, Leaf(data), probability)))
   }
 
   /**
