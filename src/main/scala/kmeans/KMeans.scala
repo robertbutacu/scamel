@@ -10,13 +10,9 @@ object KMeans {
   type DistancesToCentroids = List[DistanceToCentroid]
   case class Coordinate(X: Int, Y: Int)
 
-  def findClusters(numberOfClusters: Int, points: List[Point],
-                   initialization: MethodInitialization = RandomInitialization): List[Cluster] = {
+  def findClusters(numberOfClusters: Int, points: List[Point])
+                  (initialization: MethodInitialization = RandomInitialization): List[Cluster] = {
     require(numberOfClusters > 0 && points.nonEmpty)
-
-    def getMin: Coordinate = Coordinate(points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
-
-    def getMax: Coordinate = Coordinate(points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
 
     //TODO special case when a centroid is passed around between 2 values
     @tailrec
@@ -33,7 +29,7 @@ object KMeans {
         go(updatedClusters, updatedCentroids)
     }
 
-    val initialCentroids = instantiateCentroids(numberOfClusters, getMin, getMax)
+    val initialCentroids = initialization.initialize(numberOfClusters, points)
     val initialClusters = createClusters(points, initialCentroids)
 
     go(initialClusters, List.empty)
@@ -68,14 +64,4 @@ object KMeans {
 
   private def splitPoints(input: DistancesToCentroids): List[DistancesToCentroids] =
     (input groupBy (_.point)).values.toList
-
-
-  //TODO dont instantiate centroids randomly, instead use KMeans++
-  private def instantiateCentroids(number: Int, min: Coordinate, max: Coordinate): List[Centroid] =
-    (1 to number)
-      .map { p =>
-        Centroid("Centroid " + p,
-          Random.nextInt(max.X - min.X) + min.X,
-          Random.nextInt(max.Y - min.Y) + min.Y)
-      }.toList
 }
