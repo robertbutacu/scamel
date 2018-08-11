@@ -6,6 +6,7 @@ import Hierarchical.Agglomerative.clustering.dimensions.points.Point
 import Hierarchical.Agglomerative.clustering.types.{Method, NewCluster}
 
 import scala.annotation.tailrec
+import scala.language.higherKinds
 
 object ClusteringAlgorithm {
   def clusterize[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]],
@@ -17,6 +18,7 @@ object ClusteringAlgorithm {
     def go(clusters: List[Cluster[A, P]],
            method: Method,
            currentIndex: Int = 0)(implicit distance: Distance[A, P, D]): Cluster[A, P] = {
+      require(clusters.nonEmpty)
       if (clusters.size == 1)
         clusters.head
       else {
