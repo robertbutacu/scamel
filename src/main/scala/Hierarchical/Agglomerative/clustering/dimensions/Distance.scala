@@ -1,8 +1,10 @@
 package Hierarchical.Agglomerative.clustering.dimensions
 
-import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, Point, TridimensionalPoint, UnidimensionalPoint}
+import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, TridimensionalPoint, UnidimensionalPoint}
 
-trait Distance[A, P[_] <: Point[_], D <: DistanceType] {
+import scala.language.higherKinds
+
+trait Distance[A, P[_], D] {
   def computeDistance(from: P[A], to: P[A], distanceType: D): A
 }
 
