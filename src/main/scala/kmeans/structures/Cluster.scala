@@ -14,9 +14,8 @@ object Cluster {
   }
 
   def repositionCentroid(centroid: Centroid, points: List[Point]): Centroid = {
-    val XAxisSum = points.foldRight(0.0)((p, sum) => p.X + sum)
-    val YAxisSum = points.foldRight(0.0)((p, sum) => p.Y + sum)
+    val centroidCoordinates = points.reduce((p, c) => Point(centroid.name, p.X + c.X, p.Y + c.Y))
 
-    Centroid(centroid.name, XAxisSum / points.length, YAxisSum / points.length)
+    Centroid(centroid.name, centroidCoordinates.X / points.length, centroidCoordinates.Y / points.length)
   }
 }
