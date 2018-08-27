@@ -40,21 +40,25 @@ object NaiveBayes {
     //each attribute split into sub-tables with respective probability
     val individualProbabilities = trainingData.map(t => trainingDataClassifier(t, classData))
 
-    // probabilities for positiveOutcome for each input data
-    val positiveOutcome = toClassify.map(c =>
-      getData(c, individualProbabilities, isHappening = true, classClassified))
-
-    //probabilities for negativeOutcome for each input data
-    val negativeOutcome = toClassify.map(c =>
-      getData(c, individualProbabilities, isHappening = false, classClassified))
-
     case class Outcome(probability: Double, isTrue: Boolean)
 
     //computing overall probability for positive/negative
-    val probPosOutcome = positiveOutcome.map(e => Outcome(probability(e), isTrue = true))
-    val probNegOutcome = negativeOutcome.map(e => Outcome(probability(e), isTrue = false))
+    val probPosOutcome = for {
+      inputData <- toClassify
+      // probabilities for positiveOutcome for each input data
+      positiveOutcome = getData(inputData, individualProbabilities, isHappening = true, classClassified)
+    } yield Outcome(probability(positiveOutcome), isTrue = true)
 
-    val evidence = toClassify.map(t => getEvidence(trainingData, t)).map(probability)
+    val probNegOutcome = for {
+      inputData <- toClassify
+      //probabilities for negativeOutcome for each input data
+      positiveOutcome = getData(inputData, individualProbabilities, isHappening = false, classClassified)
+    } yield Outcome(probability(positiveOutcome), isTrue = false)
+
+    val evidence = for {
+      inputData <- toClassify
+      evidence = getEvidence(trainingData, inputData)
+    } yield probability(evidence)
 
     // the final answer for a given input is max of (probNeg/evidence, probPos/evidence)
     toClassify.zipWithIndex.map { case (classifier, index) =>
@@ -81,8 +85,7 @@ object NaiveBayes {
                        evidence: Double): (Input, Boolean) =
     (
       input._1,
-      if (probNegOutcome / evidence > probPosOutcome / evidence)
-        false
+      if (probNegOutcome / evidence > probPosOutcome / evidence) false
       else true
     )
 
