@@ -8,6 +8,7 @@ import scala.util.Random
 object KMeans {
   //TODO extend to N dimensions
   type DistancesToCentroids = List[DistanceToCentroid]
+
   case class Coordinate(X: Int, Y: Int)
 
   def findClusters(numberOfClusters: Int, points: List[Point])
@@ -23,10 +24,8 @@ object KMeans {
 
       val updatedCentroids = updatedClusters map (_.centroid)
 
-      if (currentCentroids == updatedCentroids)
-        currClusters
-      else
-        go(updatedClusters, updatedCentroids)
+      if (currentCentroids == updatedCentroids) currClusters
+      else                                      go(updatedClusters, updatedCentroids)
     }
 
     val initialCentroids = initialization.initialize(numberOfClusters, points)
@@ -38,7 +37,7 @@ object KMeans {
   private def createClusters(points: List[Point], centroids: List[Centroid]): List[Cluster] = {
     //compute , for each point, the distance to each centroid
     val distancesToCentroids = for {
-      point <- points
+      point    <- points
       distance <- centroids.map(c => DistanceToCentroid(point, c))
     } yield distance
 
