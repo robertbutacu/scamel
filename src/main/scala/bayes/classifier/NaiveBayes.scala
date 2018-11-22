@@ -44,20 +44,20 @@ object NaiveBayes {
 
     //computing overall probability for positive/negative
     val probPosOutcome = for {
-      inputData <- toClassify
+      inputData      <- toClassify
       // probabilities for positiveOutcome for each input data
       positiveOutcome = getData(inputData, individualProbabilities, isHappening = true, classClassified)
     } yield Outcome(probability(positiveOutcome), isTrue = true)
 
     val probNegOutcome = for {
-      inputData <- toClassify
+      inputData      <- toClassify
       //probabilities for negativeOutcome for each input data
       positiveOutcome = getData(inputData, individualProbabilities, isHappening = false, classClassified)
     } yield Outcome(probability(positiveOutcome), isTrue = false)
 
     val evidence = for {
       inputData <- toClassify
-      evidence = getEvidence(trainingData, inputData)
+      evidence   = getEvidence(trainingData, inputData)
     } yield probability(evidence)
 
     // the final answer for a given input is max of (probNeg/evidence, probPos/evidence)
@@ -83,11 +83,7 @@ object NaiveBayes {
                        probPosOutcome: Double,
                        probNegOutcome: Double,
                        evidence: Double): (Input, Boolean) =
-    (
-      input._1,
-      if (probNegOutcome / evidence > probPosOutcome / evidence) false
-      else true
-    )
+    (input._1, probNegOutcome / evidence <= probPosOutcome / evidence)
 
   /**
     *
@@ -121,8 +117,7 @@ object NaiveBayes {
 
     val probabilities = combinedColumns.distinct
       .map { case (trainingDataEntry, data) =>
-        (
-          trainingDataEntry, data, //Data, Boolean Value
+        Probability(trainingDataEntry, data, //Data, Boolean Value
           // division of favorable cases of current Data value from the dataset to happen
           // and the total number of cases where the outcome matches current row's outcome
           round(combinedColumns.count(_ == (trainingDataEntry, data)).toDouble / classData.data.count(_ == data).toDouble)
@@ -152,17 +147,17 @@ object NaiveBayes {
                       classDataProbabilities: List[(Boolean, Double)]): List[Double] = {
     val probabilities = for {
       //list of Attributes( think weather ) and their respective Data value ( think Sunny )
-      (_, data) <- input.data.toList
+      (_, data)      <- input.data.toList
 
       // probability of each Data value to happen (ie: Weather Sunny True 0.5, except a list )
       individualProb <- individualProbabilities
 
       // each individual element of that list from above
-      (individualData, isHappeningPrediction, probability) <- individualProb.probabilities.toList
+      probability <- individualProb.probabilities.toList
 
       // match Data value and Boolean value
-      if individualData == data && isHappeningPrediction == isHappening
-    } yield probability
+      if probability.data == data && probability.isHappening == isHappening
+    } yield probability.probability
 
     probabilities ::: classDataProbabilities.filter { case (isToHappen, _) => isToHappen == isHappening }
       .map { case (_, probability) => probability }

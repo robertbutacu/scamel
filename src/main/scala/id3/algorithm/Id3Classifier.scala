@@ -8,7 +8,7 @@ object Id3Classifier {
       value      <- toClassify.get(id3Tree.attribute)
       fitValue   <- Node.tryToFit(id3Tree, value)
       classified <- fitValue match {
-        case l: Leaf[A] => Some(l.attribute)
+        case l: Leaf[A]    => Some(l.attribute)
         case t: Node[A, B] => classify(t, toClassify)
       }
     } yield classified

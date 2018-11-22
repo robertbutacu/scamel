@@ -25,4 +25,6 @@ case class Input(data: Set[(Attribute, Data)])
   *                       (Overcast, False, 2/3)
   *                      )
   */
-case class IndividualProbability(attribute: Attribute, probabilities: Set[(Data, Boolean, Double)])
+case class IndividualProbability(attribute: Attribute, probabilities: Set[Probability])
+
+case class Probability(data: Data, isHappening: Boolean, probability: Double)
