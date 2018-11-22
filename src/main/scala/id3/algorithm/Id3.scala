@@ -21,7 +21,7 @@ object Id3 {
       }
     } match {
       case Some(node) => Right(node)
-      case None => Left(DatasetEmpty("The dataset is empty!"))
+      case None       => Left(DatasetEmpty("The dataset is empty!"))
     }
   }
 

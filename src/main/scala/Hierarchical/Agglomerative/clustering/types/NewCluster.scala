@@ -1,8 +1,6 @@
 package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
-import Hierarchical.Agglomerative.clustering.dimensions.points.Point
-
 import scala.language.higherKinds
 
 case class NewCluster[A, P[_]](first: Cluster[A, P], second: Cluster[A, P], distanceBetween: A)

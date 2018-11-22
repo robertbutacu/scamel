@@ -1,7 +1,6 @@
 package id3.algorithm
 
 import java.lang.Math.log
-
 import id3.data.{BestAttribute, Dataset, Subset}
 
 /**
