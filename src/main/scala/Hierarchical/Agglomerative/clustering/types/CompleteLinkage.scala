@@ -5,6 +5,8 @@ import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
 import Hierarchical.Agglomerative.clustering.dimensions.points.Point
 import Hierarchical.Agglomerative.clustering.dimensions.{Distance, DistanceType}
 
+import scala.language.higherKinds
+
 
 /*
   Difference between SingleLinkage and CompleteLinkage is the following:
@@ -14,14 +16,15 @@ import Hierarchical.Agglomerative.clustering.dimensions.{Distance, DistanceType}
  */
 
 case object CompleteLinkage extends Method {
-  override def formCluster[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]], distanceType: D)
+  override def formCluster[A, P[_], D](clusters: List[Cluster[A, P]], distanceType: D)
                                                       (implicit distance: Distance[A, P, D],
-                                                       centroidCalculator: ClusterCentroid[A, P]): NewCluster[A, P] = {
+                                                       centroidCalculator: ClusterCentroid[A, P],
+                                                       ord: Ordering[A]): NewCluster[A, P] = {
     def shortestDistance(current: Cluster[A, P], other: Cluster[A, P]): A = {
 
       val distancesBetweenAllPoints = for {
         currentPoint <- current.points
-        otherPoint <- other.points
+        otherPoint   <- other.points
       } yield distance.computeDistance(currentPoint, otherPoint, distanceType)
 
       distancesBetweenAllPoints.max

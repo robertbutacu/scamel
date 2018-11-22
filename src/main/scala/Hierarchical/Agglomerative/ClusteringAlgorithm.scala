@@ -9,11 +9,11 @@ import scala.annotation.tailrec
 import scala.language.higherKinds
 
 object ClusteringAlgorithm {
-  def clusterize[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]],
-                                                                  distanceType: D,
-                                                                  method: Method)
-                                                                 (implicit distance: Distance[A, P, D],
-                                                                  centroidCalculator: ClusterCentroid[A, P]): Cluster[A, P] = {
+  def clusterize[A, P[_], D](clusters: List[Cluster[A, P]],
+                             distanceType: D, method: Method)
+                            (implicit distance: Distance[A, P, D],
+                             centroidCalculator: ClusterCentroid[A, P],
+                             ord: Ordering[A]): Cluster[A, P] = {
     @tailrec
     def go(clusters: List[Cluster[A, P]],
            method: Method,

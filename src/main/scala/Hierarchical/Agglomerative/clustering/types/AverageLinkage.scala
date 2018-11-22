@@ -1,14 +1,16 @@
 package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
+import Hierarchical.Agglomerative.clustering.dimensions.Distance
 import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
-import Hierarchical.Agglomerative.clustering.dimensions.{Distance, DistanceType}
-import Hierarchical.Agglomerative.clustering.dimensions.points.Point
+
+import scala.language.higherKinds
 
 case object AverageLinkage extends Method {
-  override def formCluster[A: Numeric, P[_] <: Point[_], D <: DistanceType](clusters: List[Cluster[A, P]], distanceType: D)
+  override def formCluster[A, P[_], D](clusters: List[Cluster[A, P]], distanceType: D)
                                                         (implicit distance: Distance[A, P, D],
-                                                         centroidCalculator: ClusterCentroid[A, P]): NewCluster[A, P] = {
+                                                         centroidCalculator: ClusterCentroid[A, P],
+                                                         ord: Ordering[A]): NewCluster[A, P] = {
     def createCentroid(cluster: Cluster[A, P])(implicit centroidCalculator: ClusterCentroid[A, P]): P[A] = {
      centroidCalculator.computeCentroid(cluster)
     }
@@ -22,7 +24,7 @@ case object AverageLinkage extends Method {
 
     val possibleClusters = for {
       from <- clustersWithCentroids
-      to <- clustersWithCentroids filterNot (_ == from)
+      to   <- clustersWithCentroids filterNot (_ == from)
     } yield (from, to, computeDistance(from, to))
 
     val nextCluster = possibleClusters.minBy(_._3)

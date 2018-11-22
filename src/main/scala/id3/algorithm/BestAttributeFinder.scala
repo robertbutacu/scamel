@@ -68,8 +68,7 @@ object BestAttributeFinder {
     * @return - entropy rounded to 4 decimals
     */
   private def computeEntropy[A](input: List[A]): Entropy = {
-    val probabilities = input
-      .map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
+    val probabilities = input.map(e => (e, input.count(b => b == e).toDouble / input.length.toDouble)).toSet
 
     val entropy = probabilities.foldRight(0.0) {
       (curr, acc) =>
@@ -94,7 +93,7 @@ object BestAttributeFinder {
                                                rowValue: A,
                                                trainingData: List[Dataset[A, B]],
                                                conclusion: Dataset[A, B]): (List[Dataset[A, B]], Dataset[A, B]) = {
-    (trainingData
+    val newTable = trainingData
       .map { e =>
         Dataset(e.attribute,
           e.data
@@ -102,14 +101,16 @@ object BestAttributeFinder {
             //value of the row in the columnIndex is equal to the rowValue
             .withFilter { case (_, index) => trainingData(columnIndex).data(index) == rowValue }
             .map { case (data, _) => data })
-      },
-      Dataset(conclusion.attribute,
-        conclusion.data
-          .zipWithIndex
-          .withFilter { case (_, index) => trainingData(columnIndex).data(index) == rowValue }
-          .map { case (data, _) => data }
-      )
+      }
+
+    val newConclusion = Dataset(conclusion.attribute,
+      conclusion.data
+        .zipWithIndex
+        .withFilter { case (_, index) => trainingData(columnIndex).data(index) == rowValue }
+        .map { case (data, _) => data }
     )
+
+    (newTable, newConclusion)
   }
 
 
@@ -133,8 +134,7 @@ object BestAttributeFinder {
     * @param trainingData - a sub-table
     * @return a list of subsets where e._1 is unique in any of the elements
     */
-  private def splitIntoSubsets[A: Ordering](trainingData: List[(A, A)])
-                                           (implicit ord: Ordering[A]): List[List[(A, A)]] =
+  private def splitIntoSubsets[A](trainingData: List[(A, A)])(implicit ord: Ordering[A]): List[List[(A, A)]] =
     trainingData.groupBy { case (data, _) => data }.values.toList
 
   /**
