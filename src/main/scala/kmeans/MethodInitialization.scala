@@ -1,35 +1,25 @@
 package kmeans
 
+import common.data.Point
 import kmeans.KMeans.Coordinate
-import kmeans.structures.{Centroid, Point}
+import kmeans.structures.Centroid
 
-import scala.annotation.tailrec
 import scala.util.Random
 
 trait MethodInitialization {
-  def initialize(number: Int,
-                 points: List[Point]): List[Centroid]
+  def initialize[P[_], A](number: Int, points: List[P[A]])(implicit methodInitializer: CentroidInitializer[P]): List[Centroid[P, A]]
 }
 
 case object RandomInitialization extends MethodInitialization {
-  override def initialize(number: Int, points: List[Point]): List[Centroid] = {
-    val min: Coordinate = Coordinate(points.minBy(_.X).X.toInt, points.minBy(_.Y).Y.toInt)
-
-    val max: Coordinate = Coordinate(points.maxBy(_.X).X.toInt, points.maxBy(_.Y).Y.toInt)
-
-    (1 to number)
-      .map { p =>
-        Centroid("Centroid " + p,
-          Random.nextInt(max.X - min.X) + min.X,
-          Random.nextInt(max.Y - min.Y) + min.Y)
-      }.toList
-  }
+  override def initialize[P[_], A](number: Int, points: List[P[A]])
+                                  (implicit methodInitializer: CentroidInitializer[P]): List[Centroid[P, A]] =
+    methodInitializer.initialize(points, number)
 }
 
 case object KMeansPlusPlus extends MethodInitialization {
-  override def initialize(number: Int, points: List[Point]): List[Centroid] = {
+  override def initialize[P[_], A](number: Int, points: List[P[A]])(implicit methodInitialization: CentroidInitializer[P]): List[Centroid[P, A]] = {
     //@tailrec
-    def go(centroids: List[Centroid], points: List[Point], remainingCentroids: Int): List[Centroid] = {
+    def go(centroids: List[Centroid[P, A]], points: List[P[A]], remainingCentroids: Int): List[Centroid[P, A]] = {
       if(remainingCentroids == 0)
         centroids
       else {

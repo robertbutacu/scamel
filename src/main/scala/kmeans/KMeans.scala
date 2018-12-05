@@ -1,23 +1,21 @@
 package kmeans
 
-import kmeans.structures.{Centroid, Cluster, DistanceToCentroid, Point}
+import Hierarchical.Agglomerative.clustering.dimensions.{Distance, EuclideanDistance}
+import kmeans.structures.{Centroid, Cluster, DistanceToCentroid}
 
 import scala.annotation.tailrec
-import scala.util.Random
 
 object KMeans {
-  //TODO extend to N dimensions
-  type DistancesToCentroids = List[DistanceToCentroid]
+  type DistancesToCentroids[P[_], A] = List[DistanceToCentroid[P, A]]
+  case class Coordinate[A](X: A, Y: A)
 
-  case class Coordinate(X: Int, Y: Int)
-
-  def findClusters(numberOfClusters: Int, points: List[Point])
-                  (initialization: MethodInitialization = RandomInitialization): List[Cluster] = {
+  def findClusters[P[_], A](numberOfClusters: Int, points: List[P[A]])(initialization: MethodInitialization = RandomInitialization)
+                           (implicit distance: Distance[A, P, EuclideanDistance.type]): List[Cluster[P, A]] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     //TODO special case when a centroid is passed around between 2 values
     @tailrec
-    def go(currClusters: List[Cluster], previousStateCentroids: List[Centroid]): List[Cluster] = {
+    def go(currClusters: List[Cluster[P, A]], previousStateCentroids: List[Centroid[P, A]]): List[Cluster[P, A]] = {
       val currentCentroids = currClusters map (_.centroid)
 
       val updatedClusters = createClusters(points, currentCentroids)
@@ -34,11 +32,13 @@ object KMeans {
     go(initialClusters, List.empty)
   }
 
-  private def createClusters(points: List[Point], centroids: List[Centroid]): List[Cluster] = {
+  private def createClusters[P[_], A](points: List[P[A]],
+                                      centroids: List[Centroid[P, A]])
+                                     (implicit distance: Distance[A, P, EuclideanDistance.type ]): List[Cluster[P, A]] = {
     //compute , for each point, the distance to each centroid
     val distancesToCentroids = for {
       point    <- points
-      distance <- centroids.map(c => DistanceToCentroid(point, c))
+      distance <- centroids.map(c => DistanceToCentroid.createCentroid(point, c))
     } yield distance
 
     //now obtain the shortest distance
@@ -58,9 +58,9 @@ object KMeans {
   }
 
 
-  private def splitIntoClusters(input: DistancesToCentroids): List[DistancesToCentroids] =
+  private def splitIntoClusters[P[_], A](input: DistancesToCentroids[P, A]): List[DistancesToCentroids[P, A]] =
     (input groupBy (_.centroid)).values.toList
 
-  private def splitPoints(input: DistancesToCentroids): List[DistancesToCentroids] =
+  private def splitPoints[P[_], A](input: DistancesToCentroids[P, A]): List[DistancesToCentroids[P, A]] =
     (input groupBy (_.point)).values.toList
 }

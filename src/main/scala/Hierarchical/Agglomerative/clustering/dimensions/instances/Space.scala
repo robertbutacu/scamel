@@ -1,6 +1,6 @@
 package Hierarchical.Agglomerative.clustering.dimensions.instances
 
-import Hierarchical.Agglomerative.clustering.dimensions.points.{BidimensionalPoint, Point, TridimensionalPoint, UnidimensionalPoint}
+import common.data.{BidimensionalPoint, TridimensionalPoint, UnidimensionalPoint}
 
 import scala.language.higherKinds
 
