@@ -9,7 +9,7 @@ object KMeans {
   type DistancesToCentroids[P[_], A] = List[DistanceToCentroid[P, A]]
   case class Coordinate[A](X: A, Y: A)
 
-  def findClusters[P[_], A](numberOfClusters: Int, points: List[P[A]])(initialization: MethodInitialization = RandomInitialization)
+  def findClusters[P[_], A](numberOfClusters: Int, points: List[P[A]])(initialization: CentroidInitializer[P])
                            (implicit distance: Distance[A, P, EuclideanDistance.type]): List[Cluster[P, A]] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
@@ -26,7 +26,7 @@ object KMeans {
       else                                      go(updatedClusters, updatedCentroids)
     }
 
-    val initialCentroids = initialization.initialize(numberOfClusters, points)
+    val initialCentroids = initialization.initialize(points, numberOfClusters)
     val initialClusters = createClusters(points, initialCentroids)
 
     go(initialClusters, List.empty)
