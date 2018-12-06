@@ -15,15 +15,15 @@ Scamel is a small Scala library which features some essential machine learning a
   In order to use the algorithm, the user needs to input some `Dataset`s, which is composed of an `Attribute` and a list of data.
   
   
-  The library provides a function which, given a node representing the root of an Id3Tree, and a Map of data from A to B representing the characteristics of the entity which is to be classified, it will try to do that based on that tree and give an answer if that is possible.
+  The library provides a function `Id3Classifier.classify[A: Ordering, B](id3Tree: Node[A, B], toClassify: Map[B, A]): Option[A]` which, given a node representing the root of an Id3Tree, and a Map of data from A to B representing the characteristics of the entity which is to be classified, it will try to do that based on that tree and give an answer if that is possible. 
   
   
-  The algorithm takes 2 parameters: 
-    - the conclusion: a dataset representing what the actual goal of the classifying is
+  The algorithm `Id3[A: Ordering, B](conclusion: Dataset[A, B], trainingData: List[Dataset[A, B]])` takes 2 parameters: 
+    - the conclusion: a dataset representing what the actual goal of the classifying is, the attribute to classify
     - the data      : a list of datasets which represents a characteristic of the corresponding index of the conclusion data.
     
   
-  To note that the order of the list is relevant and is not to be taken lightly, as it may give out different results.
+  To note that the order of the elements in the list is relevant and is not to be taken lightly, as it may give out different results - through this arrangement, it is tried to simulate a table, where every single row is data entry with a list of characteristics and a final attribute that it is inferred.
   
 
 - Clustering
