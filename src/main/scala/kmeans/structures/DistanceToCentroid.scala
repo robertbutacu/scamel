@@ -1,6 +1,6 @@
 package kmeans.structures
 
-import Hierarchical.Agglomerative.clustering.dimensions.{Distance, EuclideanDistance}
+import hierarchical.agglomerative.clustering.dimensions.{Distance, EuclideanDistance}
 
 case class DistanceToCentroid[P[_], A](point: P[A], centroid: Centroid[P, A], distance: A)
 

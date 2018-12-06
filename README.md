@@ -10,7 +10,7 @@ Scamel is a small Scala library which features some essential machine learning a
 
 - Naive Bayes Classifier
 
-- Id3 - the algorithm's result is a Tree where the nodes/leafs are classified data and there is also the notion of the arc, which represents the exact value necessary to move down the tree.
+- Id3 - the algorithm's result is a Tree where the nodes are attributes which classify data, the leafs are the conclusion based on the characteristics and the arc between 2 nodes represents the condition necessary to move down the tree.
 
   In order to use the algorithm, the user needs to input some `Dataset`s, which is composed of an `Attribute` and a list of data.
   
@@ -25,11 +25,12 @@ Scamel is a small Scala library which features some essential machine learning a
   
   To note that the order of the elements in the list is relevant and is not to be taken lightly, as it may give out different results - through this arrangement, it is tried to simulate a table, where every single row is data entry with a list of characteristics and a final attribute that it is inferred.
   
+  To see a prettyPrinter() version of a result tree, there is a `Id3.prettyPrinter(node: Node[A, B])` function which does that.
 
 - Clustering
   Both clustering algorithms are generic, being agnostic of the number of the dimensions each point has.
   The Hierarchical clustering also is agnostic of the distance calculator between points as well.
-  This makes the algorithms extremely extensible and customizable, given that the appropiate implicits are defined.
+  This makes the algorithms extremely extensible and customizable, given that the appropriate implicits are defined.
   
   - Hierarchical, Top-down
   

@@ -25,6 +25,18 @@ object Id3 {
     }
   }
 
+  def prettyPrinter[A: Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
+    println(node.attribute)
+
+    node.leafs.foreach { l =>
+      println("\t" * (levelOfDepth + 1) + "[Leaf] " + l.arc + " arc to " + l.to + " probability: " + l.probability)
+    }
+
+    node.nodes.foreach {
+      n => print("\t" * (levelOfDepth + 1) + "[Node] " + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1)
+    }
+  }
+
   /**
     *
     * @param conclusion         - what it is wanted to be found
@@ -32,7 +44,7 @@ object Id3 {
     * @return - a procentage of the higher value found in conclusion
     *         Used when there is one attribute left and its the got the same value on any row.
     */
-  def solveSingleAttribute[A: Ordering, B](conclusion: Dataset[A, B],
+  private def solveSingleAttribute[A: Ordering, B](conclusion: Dataset[A, B],
                                            trainingDataColumn: Dataset[A, B]): Node[A, B] = {
     def chooseMajority(): (A, Double) = {
       val distinctValues = conclusion.data.distinct

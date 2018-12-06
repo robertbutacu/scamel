@@ -1,6 +1,6 @@
 package kmeans
 
-import Hierarchical.Agglomerative.clustering.dimensions.{Distance, EuclideanDistance}
+import hierarchical.agglomerative.clustering.dimensions.{Distance, EuclideanDistance}
 import kmeans.structures.{Centroid, Cluster, DistanceToCentroid}
 
 import scala.annotation.tailrec

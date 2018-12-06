@@ -3,18 +3,6 @@ import id3.data.Dataset
 import id3.data.tree.Node
 
 object Main extends App {
-  def prettyPrinter[A: Ordering, B](node: Node[A, B], levelOfDepth: Int = 0): Unit = {
-    println(node.attribute)
-
-    node.leafs.foreach { l =>
-      println("\t" * (levelOfDepth + 1) + "[Leaf] " + l.arc + " arc to " + l.to + " probability: " + l.probability)
-    }
-
-    node.nodes.foreach {
-      n => print("\t" * (levelOfDepth + 1) + "[Node] " + n.arc + " arc to "); prettyPrinter(n.to, levelOfDepth + 1)
-    }
-  }
-
   val result = Id3(
     Dataset[String, String]("Transportation",
       List[String]("Bus", "Bus", "Train", "Bus", "Bus", "Train", "Train", "Car", "Car", "Car")),
@@ -30,7 +18,7 @@ object Main extends App {
   )
 
   //println(result)
-  result.foreach(n => prettyPrinter(n))
+  result.foreach(n => Id3.prettyPrinter(n))
 
   println("\n\nClassifying")
 
