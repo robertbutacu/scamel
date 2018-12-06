@@ -1,4 +1,4 @@
-package Hierarchical.Agglomerative.clustering.dimensions
+package hierarchical.agglomerative.clustering.dimensions
 
 trait DistanceType
 

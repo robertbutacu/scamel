@@ -1,6 +1,6 @@
-package Hierarchical.Agglomerative.clustering.types
+package hierarchical.agglomerative.clustering.types
 
-import Hierarchical.Agglomerative.Cluster
+import hierarchical.agglomerative.Cluster
 
 import scala.language.higherKinds
 

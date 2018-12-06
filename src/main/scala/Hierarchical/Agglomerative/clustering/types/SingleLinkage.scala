@@ -1,8 +1,8 @@
-package Hierarchical.Agglomerative.clustering.types
+package hierarchical.agglomerative.clustering.types
 
-import Hierarchical.Agglomerative.Cluster
-import Hierarchical.Agglomerative.clustering.dimensions.Distance
-import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
+import hierarchical.agglomerative.Cluster
+import hierarchical.agglomerative.clustering.dimensions.Distance
+import hierarchical.agglomerative.clustering.dimensions.clusters.ClusterCentroid
 
 case object SingleLinkage extends Method {
   override def formCluster[A, P[_], D](clusters: List[Cluster[A, P]], distanceType: D)

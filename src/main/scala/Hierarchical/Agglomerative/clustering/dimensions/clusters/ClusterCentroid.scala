@@ -1,6 +1,6 @@
-package Hierarchical.Agglomerative.clustering.dimensions.clusters
+package hierarchical.agglomerative.clustering.dimensions.clusters
 
-import Hierarchical.Agglomerative.Cluster
+import hierarchical.agglomerative.Cluster
 import common.data.{BidimensionalPoint, TridimensionalPoint, UnidimensionalPoint}
 
 import scala.language.higherKinds
@@ -9,6 +9,7 @@ trait ClusterCentroid[A, P[_]] {
   def computeCentroid(cluster: Cluster[A, P]): P[A]
 }
 
+//test
 object ClusterCentroid {
   implicit def unidimensionalPointsCentroid: ClusterCentroid[Double, UnidimensionalPoint] =
     (cluster: Cluster[Double, UnidimensionalPoint]) => {

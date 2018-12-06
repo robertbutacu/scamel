@@ -1,8 +1,8 @@
-package Hierarchical.Agglomerative.clustering.types
+package hierarchical.agglomerative.clustering.types
 
-import Hierarchical.Agglomerative.Cluster
-import Hierarchical.Agglomerative.clustering.dimensions.Distance
-import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
+import hierarchical.agglomerative.Cluster
+import hierarchical.agglomerative.clustering.dimensions.Distance
+import hierarchical.agglomerative.clustering.dimensions.clusters.ClusterCentroid
 
 import scala.language.higherKinds
 

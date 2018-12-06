@@ -1,4 +1,4 @@
-package Hierarchical.Agglomerative.clustering.dimensions.instances
+package hierarchical.agglomerative.clustering.dimensions.instances
 
 import common.data.{BidimensionalPoint, TridimensionalPoint, UnidimensionalPoint}
 

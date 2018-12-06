@@ -1,4 +1,4 @@
-package Hierarchical.Agglomerative
+package hierarchical.agglomerative
 
 import scala.language.higherKinds
 
