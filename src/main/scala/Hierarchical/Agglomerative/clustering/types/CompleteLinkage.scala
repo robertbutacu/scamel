@@ -1,9 +1,8 @@
 package Hierarchical.Agglomerative.clustering.types
 
 import Hierarchical.Agglomerative.Cluster
+import Hierarchical.Agglomerative.clustering.dimensions.Distance
 import Hierarchical.Agglomerative.clustering.dimensions.clusters.ClusterCentroid
-import Hierarchical.Agglomerative.clustering.dimensions.points.Point
-import Hierarchical.Agglomerative.clustering.dimensions.{Distance, DistanceType}
 
 import scala.language.higherKinds
 
@@ -25,7 +24,7 @@ case object CompleteLinkage extends Method {
       val distancesBetweenAllPoints = for {
         currentPoint <- current.points
         otherPoint   <- other.points
-      } yield distance.computeDistance(currentPoint, otherPoint, distanceType)
+      } yield distance.computeDistance(currentPoint, otherPoint)
 
       distancesBetweenAllPoints.max
     }

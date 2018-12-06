@@ -18,7 +18,7 @@ case object AverageLinkage extends Method {
     def computeDistance(from: (Cluster[A, P], P[A]),
                         to: (Cluster[A, P], P[A]))
                        (implicit distance: Distance[A, P, D]): A =
-      distance.computeDistance(from._2, to._2, distanceType)
+      distance.computeDistance(from._2, to._2)
 
     val clustersWithCentroids = clusters zip (clusters map createCentroid)
 

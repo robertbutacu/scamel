@@ -1,11 +1,11 @@
 package kmeans.structures
 
-case class DistanceToCentroid(point: Point, centroid: Centroid, distance: Double)
+import Hierarchical.Agglomerative.clustering.dimensions.{Distance, EuclideanDistance}
+
+case class DistanceToCentroid[P[_], A](point: P[A], centroid: Centroid[P, A], distance: A)
 
 object DistanceToCentroid {
-  def apply(p: Point, c: Centroid): DistanceToCentroid = {
-    def computeDistance = Math.sqrt(Math.pow(p.X - c.X, 2) + Math.pow(p.Y - c.Y, 2))
-
-    DistanceToCentroid(p, c, computeDistance)
+  def createCentroid[P[_], A](p: P[A], c: Centroid[P, A])(implicit distance: Distance[A, P, EuclideanDistance.type]): DistanceToCentroid[P, A] = {
+    DistanceToCentroid(p, c, distance.computeDistance(p, c.point))
   }
 }

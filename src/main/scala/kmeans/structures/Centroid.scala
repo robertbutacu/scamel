@@ -1,3 +1,3 @@
 package kmeans.structures
 
-case class Centroid(name: String, X: Double, Y: Double)
+case class Centroid[P[_], A](name: String, point: P[A])
