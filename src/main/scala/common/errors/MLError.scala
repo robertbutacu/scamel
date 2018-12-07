@@ -1,4 +1,4 @@
-package errors
+package common.errors
 
 trait MLError
 
