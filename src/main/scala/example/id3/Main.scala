@@ -23,7 +23,7 @@ object Main extends App {
 
   println("\n\nClassifying")
 
-  result.foreach(n => println(Id3Classifier.classify(n, Map(
+  result.foreach(n => println(Id3Classifier.apply(n, Map(
     "Gender" -> "Male",
     "Car ownership" -> "0",
     "Income Level" -> "High",

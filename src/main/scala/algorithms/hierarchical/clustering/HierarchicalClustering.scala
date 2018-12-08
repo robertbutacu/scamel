@@ -7,12 +7,12 @@ import data.hierarchical.clustering.types.Method
 import scala.annotation.tailrec
 import scala.language.higherKinds
 
-object ClusteringAlgorithm {
-  def clusterize[A, P[_], D](clusters: List[Cluster[A, P]],
-                             distanceType: D, method: Method)
-                            (implicit distance: Distance[A, P, D],
-                             centroidCalculator: ClusterCentroid[A, P],
-                             ord: Ordering[A]): Cluster[A, P] = {
+object HierarchicalClustering {
+  def apply[A, P[_], D](clusters: List[Cluster[A, P]],
+                        distanceType: D, method: Method)
+                       (implicit distance: Distance[A, P, D],
+                        centroidCalculator: ClusterCentroid[A, P],
+                        ord: Ordering[A]): Cluster[A, P] = {
     @tailrec
     def go(clusters: List[Cluster[A, P]],
            method: Method,

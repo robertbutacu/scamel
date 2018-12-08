@@ -1,8 +1,8 @@
 package algorithms.id3
 
+import common.errors.{DatasetEmpty, MLError}
 import data.id3.tree.{Leaf, LeafConnection, Node, NodeConnection}
 import data.id3.{BestAttribute, Dataset, Subset}
-import errors.{DatasetEmpty, MLError}
 
 object Id3 {
   def apply[A: Ordering, B](conclusion: Dataset[A, B],
