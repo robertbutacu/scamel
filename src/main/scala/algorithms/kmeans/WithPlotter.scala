@@ -21,12 +21,24 @@ case class WithPlotter(path: String, projectName: String) {
       data
     }
 
+    val centroidsPoints = currClusters.foldLeft((Seq.empty[Double], Seq.empty[Double])){
+      (acc, curr) =>
+        (acc._1 :+ curr.centroid.point.X, acc._2 :+ curr.centroid.point.Y)
+    }
+
+    val centroidSeries = new MemXYSeries(centroidsPoints._1, centroidsPoints._2, "Centroids")
+    centroidSeries.color = Color.Black
+    centroidSeries.pointType = Option(PointType.+)
+    centroidSeries.plotStyle = XYPlotStyle.Points
+    centroidSeries.pointSize = Option(2.5)
+
     val data = new XYData()
 
-    dataSets.foldLeft(()){(_, c) =>
+    dataSets.foreach { c =>
       data += c
-      ()
     }
+
+    data += centroidSeries
 
     val chart = new XYChart(projectName, data)
 
