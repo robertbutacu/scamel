@@ -13,7 +13,6 @@ object KMeansExample extends App {
     val randomPoints = (0 to 30000).map(_ => BidimensionalPoint(UUID.randomUUID().toString,Math.abs(Random.nextDouble()), Math.abs(Random.nextDouble()))).toList
     val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](5, randomPoints)(CentroidInitializer.bidimensionalRandomInitializer)
 
-    result.foreach(c => println(c.centroid))
     WithPlotter("docs/img/", "Kmeanstest").plot(result, 0)
   }
 
@@ -26,7 +25,6 @@ object KMeansExample extends App {
 
     val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](3, points)(CentroidInitializer.bidimensionalRandomInitializer)
 
-    result.foreach(c => println(c.centroid))
     WithPlotter("docs/img/", "GroupedPoints").plot(result, 0)
   }
 
