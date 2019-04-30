@@ -1,16 +1,19 @@
 package algorithms.kmeans
 
-import data.hierarchical.clustering.distance.{Distance, EuclideanDistance}
+import data.hierarchical.clustering.distance.{Distance, DistanceType, EuclideanDistance}
 import data.kmeans.structures.{Centroid, Cluster, DistanceToCentroid}
 
 import scala.annotation.tailrec
+import scala.language.higherKinds
 
 object KMeans {
   type DistancesToCentroids[P[_], A] = List[DistanceToCentroid[P, A]]
   case class Coordinate[A](X: A, Y: A)
 
-  def findClusters[P[_], A](numberOfClusters: Int, points: List[P[A]])(initialization: CentroidInitializer[P])
-                           (implicit distance: Distance[A, P, EuclideanDistance.type], frac: Fractional[A]): List[Cluster[P, A]] = {
+  def findClusters[P[_], A](numberOfClusters: Int,
+                            points          : List[P[A]])(initialization: CentroidInitializer[P])
+                           (implicit distance: Distance[A, P, DistanceType],
+                            frac             : Fractional[A]): List[Cluster[P, A]] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     //TODO special case when a centroid is passed around between 2 values
@@ -34,7 +37,7 @@ object KMeans {
 
   private def createClusters[P[_], A](points: List[P[A]],
                                       centroids: List[Centroid[P, A]])
-                                     (implicit distance: Distance[A, P, EuclideanDistance.type],
+                                     (implicit distance: Distance[A, P, DistanceType],
                                       frac: Fractional[A]): List[Cluster[P, A]] = {
     //compute , for each point, the distance to each centroid
     val distancesToCentroids = for {
