@@ -8,6 +8,7 @@ import org.sameersingh.scalaplot.gnuplot.GnuplotPlotter
 import org.sameersingh.scalaplot.{MemXYSeries, XYChart, XYData, XYPlotStyle}
 
 import scala.language.higherKinds
+import scala.util.Random
 
 case class WithPlotter(path: String, projectName: String) {
   def plot(currClusters: List[Cluster[BidimensionalPoint, Double]], stepCount: Int): Unit = {
@@ -17,20 +18,21 @@ case class WithPlotter(path: String, projectName: String) {
     val pointsX = currClusters.flatMap(c => c.points.map(_.X))
     val pointsY = currClusters.flatMap(c => c.points.map(_.Y))
 
-    val centroidsPoints = new MemXYSeries(centroidsX, centroidsY, "Centroids")
-    val points          = new MemXYSeries(pointsX, pointsY, "Points")
 
-    centroidsPoints.plotStyle = XYPlotStyle.Dots
-    points.plotStyle          = XYPlotStyle.Dots
+    val dataSets = currClusters.map{ c =>
+      val data = new MemXYSeries(c.points.map(_.X), c.points.map(_.Y), c.centroid.name)
+      data.color = Color.values.toList(Random.nextInt(Color.values.size))
+      data.pointType = Option(PointType.+)
+      data.plotStyle = XYPlotStyle.Dots
 
-    centroidsPoints.pointType = Option(PointType.+)
-    points.pointType          = Option(PointType.+)
+      data
+    }
+    val data = new XYData()
 
-    centroidsPoints.color = Color.Red
-    points.color          = Color.Blue
-
-    val data = new XYData(points)
-    data += centroidsPoints
+    dataSets.foldLeft(()){(_, c) =>
+      data += c
+      ()
+    }
 
     val chart = new XYChart(projectName, data)
 

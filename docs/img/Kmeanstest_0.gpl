@@ -1,0 +1,30 @@
+# Chart settings
+set title "Kmeanstest"
+unset key
+set terminal png enhanced 
+
+set terminal png enhanced 
+set output "Kmeanstest_0.png"
+# XYChart settings
+set nologscale
+set xr [*:*] noreverse
+set yr [*:*] noreverse
+set xlabel ""
+set ylabel ""
+# XYData Plotting
+plot \
+'Kmeanstest_0-Centroid 8.dat'  using 1:2 title "Centroid 8" with dots linecolor rgbcolor "dark-grey" pointtype 1 , \
+'Kmeanstest_0-Centroid 4.dat'  using 1:2 title "Centroid 4" with dots linecolor rgbcolor "goldenrod" pointtype 1 , \
+'Kmeanstest_0-Centroid 3.dat'  using 1:2 title "Centroid 3" with dots linecolor rgbcolor "red" pointtype 1 , \
+'Kmeanstest_0-Centroid 5.dat'  using 1:2 title "Centroid 5" with dots linecolor rgbcolor "royalblue" pointtype 1 , \
+'Kmeanstest_0-Centroid 7.dat'  using 1:2 title "Centroid 7" with dots linecolor rgbcolor "dark-cyan" pointtype 1 , \
+'Kmeanstest_0-Centroid 6.dat'  using 1:2 title "Centroid 6" with dots linecolor rgbcolor "dark-spring-green" pointtype 1 , \
+'Kmeanstest_0-Centroid 1.dat'  using 1:2 title "Centroid 1" with dots linecolor rgbcolor "dark-orange" pointtype 1 , \
+'Kmeanstest_0-Centroid 10.dat'  using 1:2 title "Centroid 10" with dots linecolor rgbcolor "red" pointtype 1 , \
+'Kmeanstest_0-Centroid 9.dat'  using 1:2 title "Centroid 9" with dots linecolor rgbcolor "dark-grey" pointtype 1 , \
+'Kmeanstest_0-Centroid 2.dat'  using 1:2 title "Centroid 2" with dots linecolor rgbcolor "dark-grey" pointtype 1 
+
+unset output
+# Wrapup
+set terminal dumb
+refresh
