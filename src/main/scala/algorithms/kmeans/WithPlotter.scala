@@ -12,13 +12,6 @@ import scala.util.Random
 
 case class WithPlotter(path: String, projectName: String) {
   def plot(currClusters: List[Cluster[BidimensionalPoint, Double]], stepCount: Int): Unit = {
-    val centroidsX = currClusters.map(c => c.centroid.point.X)
-    val centroidsY = currClusters.map(c => c.centroid.point.Y)
-
-    val pointsX = currClusters.flatMap(c => c.points.map(_.X))
-    val pointsY = currClusters.flatMap(c => c.points.map(_.Y))
-
-
     val dataSets = currClusters.map{ c =>
       val data = new MemXYSeries(c.points.map(_.X), c.points.map(_.Y), c.centroid.name)
       data.color = Color.values.toList(Random.nextInt(Color.values.size))
@@ -27,6 +20,7 @@ case class WithPlotter(path: String, projectName: String) {
 
       data
     }
+
     val data = new XYData()
 
     dataSets.foldLeft(()){(_, c) =>
