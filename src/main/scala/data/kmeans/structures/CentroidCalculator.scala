@@ -5,9 +5,9 @@ import scala.language.higherKinds
 import cats.Monoid
 
 trait CentroidCalculator[P[_]] {
-  def repositionCentroid[A](cluster: Cluster[P, A])
+  def repositionCentroid[A](cluster   : Cluster[P, A])
                            (implicit F: Fractional[A],
-                            Monoid: Monoid[P[A]]): Centroid[P, A]
+                            Monoid    : Monoid[P[A]]): Centroid[P, A]
 }
 
 object CentroidCalculator {

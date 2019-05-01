@@ -2,10 +2,10 @@ package data.hierarchical.clustering.clusters
 
 import scala.language.higherKinds
 
-case class Cluster[A, P[_]](points: List[P[A]],
-                   creationIndex: Int = 0,
-                   leftCluster: Option[Cluster[A, P]] = None,
-                   rightCluster: Option[Cluster[A, P]] = None) {
+case class Cluster[A, P[_]](points       : List[P[A]],
+                            creationIndex: Int = 0,
+                            leftCluster  : Option[Cluster[A, P]] = None,
+                            rightCluster : Option[Cluster[A, P]] = None) {
   val name: String = points.foldLeft("")((res, p) => res + " " + p)
 
   def prettyPrinter(): Unit = {
