@@ -1,7 +1,9 @@
 package data.hierarchical.clustering.types
 
+import cats.Monoid
 import data.hierarchical.clustering.clusters.{Cluster, ClusterCentroid, NewCluster}
 import data.hierarchical.clustering.distance.Distance
+
 import scala.language.higherKinds
 
 /*
@@ -14,6 +16,7 @@ import scala.language.higherKinds
 case object CompleteLinkage extends Method {
   override def formCluster[A, P[_], D](clusters          : List[Cluster[A, P]])
                                       (implicit ord      : Ordering[A],
+                                       Monoid            : Monoid[P[A]],
                                        distance          : Distance[A, P, D],
                                        centroidCalculator: ClusterCentroid[A, P]): NewCluster[A, P] = {
     def shortestDistance(current: Cluster[A, P], other: Cluster[A, P]): A = {

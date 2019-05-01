@@ -15,21 +15,36 @@ object Distance {
       Sqrt of sum by i ( Math.pow(Ai - Bi, 2))
    */
 
-  implicit def euclidean1D: Distance[Double, UnidimensionalPoint, EuclideanDistance.type] = new Distance[Double, UnidimensionalPoint, EuclideanDistance.type] {
-    override def computeDistance(from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double]): Double = {
-      Math.sqrt(Math.pow(from.X - to.X, 2))
+  implicit def euclidean1D[D](implicit F: Fractional[D]): Distance[D, UnidimensionalPoint, EuclideanDistance.type] = new Distance[D, UnidimensionalPoint, EuclideanDistance.type] {
+    override def computeDistance(from: UnidimensionalPoint[D], to: UnidimensionalPoint[D]): D = {
+      val diff = F.minus(from.X, to.X)
+      F.times(diff, diff)
     }
   }
 
-  implicit def euclidean2D: Distance[Double, BidimensionalPoint, EuclideanDistance.type] = new Distance[Double, BidimensionalPoint, EuclideanDistance.type] {
-    override def computeDistance(from: BidimensionalPoint[Double], to: BidimensionalPoint[Double]): Double = {
-      Math.sqrt(Math.pow(from.X - to.X, 2) + Math.pow(from.Y - to.Y, 2))
+  implicit def euclidean2D[D](implicit F: Fractional[D]): Distance[D, BidimensionalPoint, EuclideanDistance.type] = new Distance[D, BidimensionalPoint, EuclideanDistance.type] {
+    override def computeDistance(from: BidimensionalPoint[D], to: BidimensionalPoint[D]): D = {
+      val Xdiff = F.minus(from.X, to.X)
+      val Ydiff = F.minus(from.Y, to.Y)
+
+      val xTimes = F.times(Xdiff, Xdiff)
+      val yTimes = F.times(Ydiff, Ydiff)
+
+      F.plus(xTimes, yTimes)
     }
   }
 
-  implicit def euclidean3D: Distance[Double, TridimensionalPoint, EuclideanDistance.type] = new Distance[Double, TridimensionalPoint, EuclideanDistance.type] {
-    override def computeDistance(from: TridimensionalPoint[Double], to: TridimensionalPoint[Double]): Double = {
-      Math.sqrt(Math.pow(from.X - to.X, 2) + Math.pow(from.Y - to.Y, 2) + Math.pow(from.Z - to.Z, 2))
+  implicit def euclidean3D[D](implicit F: Fractional[D]): Distance[D, TridimensionalPoint, EuclideanDistance.type] = new Distance[D, TridimensionalPoint, EuclideanDistance.type] {
+    override def computeDistance(from: TridimensionalPoint[D], to: TridimensionalPoint[D]): D = {
+      val Xdiff = F.minus(from.X, to.X)
+      val Ydiff = F.minus(from.Y, to.Y)
+      val Zdiff = F.minus(from.Z, to.Z)
+
+      val xTimes = F.times(Xdiff, Xdiff)
+      val yTimes = F.times(Ydiff, Ydiff)
+      val zTimes = F.times(Zdiff, Zdiff)
+
+      F.plus(zTimes, F.plus(xTimes, yTimes))
     }
   }
 
@@ -38,23 +53,28 @@ object Distance {
     Sum by i in Abs(Ai - Bi)
     */
 
-  implicit def manhattan1D: Distance[Double, UnidimensionalPoint, ManhattanDistance.type] = new Distance[Double, UnidimensionalPoint, ManhattanDistance.type] {
-    override def computeDistance(from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double]): Double = {
-      Math.abs(from.X - to.X)
-
+  implicit def manhattan1D[D](implicit F: Fractional[D]): Distance[D, UnidimensionalPoint, ManhattanDistance.type] = new Distance[D, UnidimensionalPoint, ManhattanDistance.type] {
+    override def computeDistance(from: UnidimensionalPoint[D], to: UnidimensionalPoint[D]): D = {
+      F.abs(F.minus(from.X, to.X))
     }
   }
 
-  implicit def manhattan2D: Distance[Double, BidimensionalPoint, ManhattanDistance.type] = new Distance[Double, BidimensionalPoint, ManhattanDistance.type] {
-    override def computeDistance(from: BidimensionalPoint[Double], to: BidimensionalPoint[Double]): Double = {
-      Math.abs(from.X - to.X) + Math.abs(from.Y - to.Y)
+  implicit def manhattan2D[D](implicit F: Fractional[D]): Distance[D, BidimensionalPoint, ManhattanDistance.type] = new Distance[D, BidimensionalPoint, ManhattanDistance.type] {
+    override def computeDistance(from: BidimensionalPoint[D], to: BidimensionalPoint[D]): D = {
+      val xSum = F.abs(F.minus(from.X, to.X))
+      val ySum = F.abs(F.minus(from.Y, to.Y))
 
+      F.plus(xSum, ySum)
     }
   }
 
-  implicit def manhattan3D: Distance[Double, TridimensionalPoint, ManhattanDistance.type] = new Distance[Double, TridimensionalPoint, ManhattanDistance.type] {
-    override def computeDistance(from: TridimensionalPoint[Double], to: TridimensionalPoint[Double]): Double = {
-      Math.abs(from.X - to.Y) + Math.abs(from.Y - to.Y) + Math.abs(from.Z - to.Z)
+  implicit def manhattan3D[D](implicit F: Fractional[D]): Distance[D, TridimensionalPoint, ManhattanDistance.type] = new Distance[D, TridimensionalPoint, ManhattanDistance.type] {
+    override def computeDistance(from: TridimensionalPoint[D], to: TridimensionalPoint[D]): D = {
+      val xSum = F.abs(F.minus(from.X, to.X))
+      val ySum = F.abs(F.minus(from.Y, to.Y))
+      val zSum = F.abs(F.minus(from.Z, to.Z))
+
+      F.plus(zSum, F.plus(xSum, ySum))
     }
   }
 
@@ -63,21 +83,28 @@ object Distance {
       Max from | Ai - Bi |
     */
 
-  implicit def chebyshev1D: Distance[Double, UnidimensionalPoint, ChebyshevDistance.type] = new Distance[Double, UnidimensionalPoint, ChebyshevDistance.type] {
-    override def computeDistance(from: UnidimensionalPoint[Double], to: UnidimensionalPoint[Double]): Double = {
-      Math.abs(from.X - to.X)
+  implicit def chebyshev1D[D](implicit F: Fractional[D]): Distance[D, UnidimensionalPoint, ChebyshevDistance.type] = new Distance[D, UnidimensionalPoint, ChebyshevDistance.type] {
+    override def computeDistance(from: UnidimensionalPoint[D], to: UnidimensionalPoint[D]): D = {
+      F.abs(F.minus(from.X, to.X))
     }
   }
 
-  implicit def chebyshev2D: Distance[Double, BidimensionalPoint, ChebyshevDistance.type] = new Distance[Double, BidimensionalPoint, ChebyshevDistance.type] {
-    override def computeDistance(from: BidimensionalPoint[Double], to: BidimensionalPoint[Double]): Double = {
-      Math.max(Math.abs(from.X - to.X), Math.abs(from.Y - to.Y))
+  implicit def chebyshev2D[D](implicit F: Fractional[D]): Distance[D, BidimensionalPoint, ChebyshevDistance.type] = new Distance[D, BidimensionalPoint, ChebyshevDistance.type] {
+    override def computeDistance(from: BidimensionalPoint[D], to: BidimensionalPoint[D]): D = {
+      val xDiff = F.abs(F.minus(from.X, to.X))
+      val yDiff = F.abs(F.minus(from.Y, to.Y))
+
+      F.max(xDiff, yDiff)
     }
   }
 
-  implicit def chebyshev3D: Distance[Double, TridimensionalPoint, ChebyshevDistance.type] = new Distance[Double, TridimensionalPoint, ChebyshevDistance.type] {
-    override def computeDistance(from: TridimensionalPoint[Double], to: TridimensionalPoint[Double]): Double = {
-      List(Math.abs(from.X - to.X), Math.abs(from.Y - to.Y), Math.abs(from.Z - to.Z)).max
+  implicit def chebyshev3D[D](implicit F: Fractional[D]): Distance[D, TridimensionalPoint, ChebyshevDistance.type] = new Distance[D, TridimensionalPoint, ChebyshevDistance.type] {
+    override def computeDistance(from: TridimensionalPoint[D], to: TridimensionalPoint[D]): D = {
+      val xDiff = F.abs(F.minus(from.X, to.X))
+      val yDiff = F.abs(F.minus(from.Y, to.Y))
+      val zDiff = F.abs(F.minus(from.Z, to.Z))
+
+      F.max(zDiff, F.max(xDiff, yDiff))
     }
   }
 }
