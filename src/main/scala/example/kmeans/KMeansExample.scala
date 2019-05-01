@@ -28,6 +28,6 @@ object KMeansExample extends App {
     WithPlotter("docs/img/", "GroupedPoints").plot(result, 0)
   }
 
-  //groupedPoints()
-  randomPoints()
+  groupedPoints()
+  //randomPoints()
 }

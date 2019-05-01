@@ -147,13 +147,13 @@ object NaiveBayes {
                       classDataProbabilities: List[(Boolean, Double)]): List[Double] = {
     val probabilities = for {
       //list of Attributes( think weather ) and their respective Data value ( think Sunny )
-      (_, data)      <- input.data.toList
+      (_, data)           <- input.data.toList
 
       // probability of each Data value to happen (ie: Weather Sunny True 0.5, except a list )
-      individualProb <- individualProbabilities
+      individualProb      <- individualProbabilities
 
       // each individual element of that list from above
-      probability <- individualProb.probabilities.toList
+      probability         <- individualProb.probabilities.toList
 
       // match Data value and Boolean value
       if probability.data == data && probability.isHappening == isHappening
@@ -177,9 +177,9 @@ object NaiveBayes {
     // Evidence is represented by the count of input.data(x) divided by the length rows in the table
     // aka probability of data Y to appear in a random selection.
     val appearancesOfData = for {
-      (_, data) <- input.data.toList // for each (Attribute, Data)
-      td <- trainingData // look through training data
-      probabilities <- td.data // in their respective data list
+      (_, data)        <- input.data.toList // for each (Attribute, Data)
+      td               <- trainingData // look through training data
+      probabilities    <- td.data // in their respective data list
       if probabilities == data // for the appearance of the Data value from the tuple above
     } yield data // only interested in the value of Data, used later for count to apply the formula described above
 
