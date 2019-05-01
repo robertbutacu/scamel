@@ -5,32 +5,40 @@ import common.data.{BidimensionalPoint, TridimensionalPoint, UnidimensionalPoint
 
 import scala.language.higherKinds
 
-trait ClusterCentroid[A, P[_]] {
-  def computeCentroid(cluster: Cluster[A, P])(implicit Monoid: Monoid[P[A]]): P[A]
+trait ClusterCentroid[P[_]] {
+  def computeCentroid[A](cluster: Cluster[A, P])(implicit F: Fractional[A],
+                                                 Monoid    : Monoid[P[A]]): P[A]
 }
 
 object ClusterCentroid {
-  implicit def unidimensionalPointsCentroid[A](implicit F: Fractional[A]): ClusterCentroid[A, UnidimensionalPoint] = new ClusterCentroid[A, UnidimensionalPoint] {
-    override def computeCentroid(cluster: Cluster[A, UnidimensionalPoint])(implicit Monoid: Monoid[UnidimensionalPoint[A]]): UnidimensionalPoint[A] = {
+  implicit def unidimensionalPointsCentroid: ClusterCentroid[UnidimensionalPoint] = new ClusterCentroid[UnidimensionalPoint] {
+    override def computeCentroid[A](cluster   : Cluster[A, UnidimensionalPoint])
+                                   (implicit F: Fractional[A],
+                                    Monoid    : Monoid[UnidimensionalPoint[A]]): UnidimensionalPoint[A] = {
       val sum = Monoid.combineAll(cluster.points)
 
       UnidimensionalPoint("Point " + cluster.name, F.div(sum.X, F.fromInt(cluster.points.length)))
     }
   }
 
-  implicit def bidimensionalPointsCentroid[A](implicit F: Fractional[A]): ClusterCentroid[A, BidimensionalPoint] = new ClusterCentroid[A, BidimensionalPoint] {
-    override def computeCentroid(cluster: Cluster[A, BidimensionalPoint])(implicit Monoid: Monoid[BidimensionalPoint[A]]): BidimensionalPoint[A] = {
+  implicit def bidimensionalPointsCentroid: ClusterCentroid[BidimensionalPoint] = new ClusterCentroid[BidimensionalPoint] {
+    override def computeCentroid[A](cluster   : Cluster[A, BidimensionalPoint])
+                                   (implicit F: Fractional[A],
+                                    Monoid    : Monoid[BidimensionalPoint[A]]): BidimensionalPoint[A] = {
       val sum = Monoid.combineAll(cluster.points)
 
       val numberOfPoints = cluster.points.length
+
       BidimensionalPoint("Point " + cluster.name,
         F.div(sum.X, F.fromInt(numberOfPoints)),
         F.div(sum.Y, F.fromInt(numberOfPoints)))
     }
   }
 
-  implicit def tridimensionalPointsCentroid[A](implicit F: Fractional[A]): ClusterCentroid[A, TridimensionalPoint] = new ClusterCentroid[A, TridimensionalPoint] {
-    override def computeCentroid(cluster: Cluster[A, TridimensionalPoint])(implicit Monoid: Monoid[TridimensionalPoint[A]]): TridimensionalPoint[A] = {
+  implicit def tridimensionalPointsCentroid: ClusterCentroid[TridimensionalPoint] = new ClusterCentroid[TridimensionalPoint] {
+    override def computeCentroid[A](cluster   : Cluster[A, TridimensionalPoint])
+                                   (implicit F: Fractional[A],
+                                    Monoid    : Monoid[TridimensionalPoint[A]]): TridimensionalPoint[A] = {
       val sum = Monoid.combineAll(cluster.points)
 
       val numberOfPoints = cluster.points.length
