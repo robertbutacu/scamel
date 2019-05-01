@@ -1,5 +1,6 @@
 package example.kmeans
 
+import java.time.Instant
 import java.util.UUID
 
 import algorithms.kmeans.{CentroidInitializer, KMeans, WithPlotter}
@@ -10,10 +11,11 @@ import scala.util.Random
 
 object KMeansExample extends App {
   def randomPoints() = {
-    val randomPoints = (0 to 10000).map(_ => BidimensionalPoint(UUID.randomUUID().toString,Math.abs(Random.nextDouble()), Math.abs(Random.nextDouble()))).toList
-    val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](5, randomPoints)(CentroidInitializer.bidimensionalRandomInitializer)
+    val randomPoints = (0 to 20000).map(_ => BidimensionalPoint(UUID.randomUUID().toString,Math.abs(Random.nextDouble()), Math.abs(Random.nextDouble()))).toList
+    val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](15, randomPoints)(CentroidInitializer.bidimensionalRandomInitializer)
 
-    WithPlotter("docs/img/", "Kmeanstest").plot(result, 0)
+    println(s"[${Instant.now}] Finished Kmeans algorithm for randomPoints")
+    result.previousIterations.zipWithIndex.foreach(c => WithPlotter("docs/img/randompoints/", "Kmeanstest").plot(c._1, c._2))
   }
 
   def groupedPoints() = {
@@ -25,7 +27,8 @@ object KMeansExample extends App {
 
     val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](3, points)(CentroidInitializer.bidimensionalRandomInitializer)
 
-    WithPlotter("docs/img/", "GroupedPoints").plot(result, 0)
+    println(s"[${Instant.now}] Finished Kmeans algorithm for groupedPoints")
+    result.previousIterations.zipWithIndex.foreach(c => WithPlotter("docs/img/groupedpoints/", "GroupedPoints").plot(c._1, c._2))
   }
 
   def example3() = {
@@ -41,10 +44,16 @@ object KMeansExample extends App {
         BidimensionalPoint("H", 4.0, 9.0)
       ))(CentroidInitializer.bidimensionalRandomInitializer)
 
-    WithPlotter("docs/img/", "class").plot(result, 0)
+    println(s"[${Instant.now}] Finished Kmeans algorithm for example3")
+    result.previousIterations.zipWithIndex.foreach(c => WithPlotter("docs/img/example3/", "class").plot(c._1, c._2))
   }
 
-  groupedPoints()
-  //randomPoints()
+  println(s"[${Instant.now}] Starting groupedPoints")
+  //groupedPoints()
+
+  println(s"[${Instant.now}] Starting randomPoints")
+  randomPoints()
+
+  println(s"[${Instant.now}] Starting example3")
   //example3()
 }

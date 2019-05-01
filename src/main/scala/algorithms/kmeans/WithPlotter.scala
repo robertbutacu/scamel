@@ -15,7 +15,7 @@ case class WithPlotter(path: String, projectName: String) {
     val dataSets = currClusters.map{ c =>
       val data = new MemXYSeries(c.points.map(_.X), c.points.map(_.Y), c.centroid.name)
       data.color = Color.values.toList(Random.nextInt(Color.values.size))
-      data.pointType = Option(PointType.+)
+      data.pointType = Option(PointType.Dot)
       data.pointSize = Option(2.0)
       data.plotStyle = XYPlotStyle.Points
 

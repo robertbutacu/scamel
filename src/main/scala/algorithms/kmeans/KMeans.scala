@@ -10,17 +10,20 @@ object KMeans {
   type DistancesToCentroids[P[_], A] = List[DistanceToCentroid[P, A]]
   case class Coordinate[A](X: A, Y: A)
 
+  case class Result[P[_], A](previousIterations: List[List[Cluster[P, A]]], result: List[Cluster[P, A]])
+
   def findClusters[P[_], A, DT](numberOfClusters: Int,
                             points              : List[P[A]])(initialization: CentroidInitializer[P])
                            (implicit distance   : Distance[A, P, DT],
                             frac                : Fractional[A],
-                            centroidCalculator  : CentroidCalculator[P]): List[Cluster[P, A]] = {
+                            centroidCalculator  : CentroidCalculator[P]): Result[P, A] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     //TODO special case when a centroid is passed around between 2 values
     @tailrec
-    def go(currClusters: List[Cluster[P, A]], previousStateCentroids: List[Centroid[P, A]]): List[Cluster[P, A]] = {
-      println("****")
+    def go(currClusters          : List[Cluster[P, A]],
+           previousStateCentroids: List[Centroid[P, A]],
+           previousIterations    : List[List[Cluster[P, A]]]): Result[P, A] = {
       val currentCentroids = currClusters map (_.centroid)
 
       val updatedClusters = createClusters(points, currentCentroids).map(c => c.copy(centroid = centroidCalculator.repositionCentroid(c.centroid, c.points)))
@@ -28,14 +31,14 @@ object KMeans {
       val updatedCentroids = updatedClusters map (_.centroid)
 
       //the clusters stay the same, so check that each cluster has the same points still assigned to it
-      if (currentCentroids == updatedCentroids) currClusters
-      else                                      go(updatedClusters, updatedCentroids)
+      if (currentCentroids == updatedCentroids) Result(previousIterations, currClusters)
+      else                                      go(updatedClusters, updatedCentroids, previousIterations :+ updatedClusters)
     }
 
     val initialCentroids = initialization.initialize(points, numberOfClusters)
     val initialClusters = createClusters(points, initialCentroids)
 
-    go(initialClusters, List.empty)
+    go(initialClusters, List.empty, List(initialClusters))
   }
 
   private def createClusters[P[_], A, DP](points: List[P[A]],
