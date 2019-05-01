@@ -16,10 +16,11 @@ object KMeans {
   def findClusters[P[_], A, DT](numberOfClusters: Int,
                                 points          : List[P[A]])
                                (initialization  : CentroidInitializer[P])
-                               (implicit distance  : Distance[A, P, DT],
-                                F                  : Fractional[A],
-                                centroidCalculator : CentroidCalculator[P],
-                                monoid             : Monoid[P[A]]): Result[P, A] = {
+                               (implicit F         : Fractional[A],
+                                monoid             : Monoid[P[A]],
+                                distance           : Distance[A, P, DT],
+                                centroidCalculator : CentroidCalculator[P]
+                                ): Result[P, A] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     //TODO special case when a centroid is passed around between 2 values
