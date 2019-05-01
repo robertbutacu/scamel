@@ -172,8 +172,7 @@ object NaiveBayes {
     *         -> used to compute the outcome of a single row from input
     */
   private def getEvidence(trainingData: List[Dataset],
-                          input: Input,
-                         ): List[Double] = {
+                          input: Input): List[Double] = {
     // Evidence is represented by the count of input.data(x) divided by the length rows in the table
     // aka probability of data Y to appear in a random selection.
     val appearancesOfData = for {

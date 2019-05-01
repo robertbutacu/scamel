@@ -1,5 +1,6 @@
 package algorithms.kmeans
 
+import cats.Monoid
 import data.hierarchical.clustering.distance.Distance
 import data.kmeans.structures.{Centroid, CentroidCalculator, Cluster, DistanceToCentroid}
 
@@ -13,10 +14,12 @@ object KMeans {
   case class Result[P[_], A](previousIterations: List[List[Cluster[P, A]]], result: List[Cluster[P, A]])
 
   def findClusters[P[_], A, DT](numberOfClusters: Int,
-                            points              : List[P[A]])(initialization: CentroidInitializer[P])
-                           (implicit distance   : Distance[A, P, DT],
-                            frac                : Fractional[A],
-                            centroidCalculator  : CentroidCalculator[P]): Result[P, A] = {
+                                points          : List[P[A]])
+                               (initialization  : CentroidInitializer[P])
+                               (implicit distance  : Distance[A, P, DT],
+                                F                  : Fractional[A],
+                                centroidCalculator : CentroidCalculator[P],
+                                monoid             : Monoid[P[A]]): Result[P, A] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     //TODO special case when a centroid is passed around between 2 values
@@ -26,7 +29,8 @@ object KMeans {
            previousIterations    : List[List[Cluster[P, A]]]): Result[P, A] = {
       val currentCentroids = currClusters map (_.centroid)
 
-      val updatedClusters = createClusters(points, currentCentroids).map(c => c.copy(centroid = centroidCalculator.repositionCentroid(c.centroid, c.points)))
+      val updatedClusters = createClusters(points, currentCentroids) // creating new clusters
+        .map(c => c.copy(centroid = centroidCalculator.repositionCentroid(c))) // updating the centroid
 
       val updatedCentroids = updatedClusters map (_.centroid)
 

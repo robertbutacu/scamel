@@ -12,7 +12,7 @@ import scala.util.Random
 
 object KMeansExample extends App {
   def randomPoints() = {
-    val randomPoints = (0 to 20000).map(_ => BidimensionalPoint(UUID.randomUUID().toString,Math.abs(Random.nextDouble()), Math.abs(Random.nextDouble()))).toList
+    val randomPoints = (0 to 5000).map(_ => BidimensionalPoint(UUID.randomUUID().toString,Math.abs(Random.nextDouble()), Math.abs(Random.nextDouble()))).toList
     val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](15, randomPoints)(CentroidInitializer.bidimensionalRandomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for randomPoints")
