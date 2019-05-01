@@ -1,4 +1,4 @@
-package algorithms.kmeans
+package algorithms.plotters.kmeans
 
 import common.data.BidimensionalPoint
 import data.kmeans.structures.Cluster
@@ -10,7 +10,7 @@ import org.sameersingh.scalaplot.{MemXYSeries, XYChart, XYData, XYPlotStyle}
 import scala.language.higherKinds
 import scala.util.Random
 
-case class WithPlotter(path: String, projectName: String) {
+case class BidimensionalSpacePlotter(path: String, projectName: String) {
   def plot(currClusters: List[Cluster[BidimensionalPoint, Double]], stepCount: Int): Unit = {
     val dataSets = currClusters.map{ c =>
       val data = new MemXYSeries(c.points.map(_.X), c.points.map(_.Y), c.centroid.name)

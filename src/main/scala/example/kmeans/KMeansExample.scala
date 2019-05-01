@@ -3,7 +3,8 @@ package example.kmeans
 import java.time.Instant
 import java.util.UUID
 
-import algorithms.kmeans.{CentroidInitializer, KMeans, WithPlotter}
+import algorithms.kmeans.{CentroidInitializer, KMeans}
+import algorithms.plotters.kmeans.BidimensionalSpacePlotter
 import common.data.BidimensionalPoint
 import data.hierarchical.clustering.distance.EuclideanDistance
 
@@ -15,7 +16,7 @@ object KMeansExample extends App {
     val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](15, randomPoints)(CentroidInitializer.bidimensionalRandomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for randomPoints")
-    result.previousIterations.zipWithIndex.foreach(c => WithPlotter("docs/img/randompoints/", "Kmeanstest").plot(c._1, c._2))
+    result.previousIterations.zipWithIndex.foreach(c => BidimensionalSpacePlotter("docs/img/randompoints/", "Kmeanstest").plot(c._1, c._2))
   }
 
   def groupedPoints() = {
@@ -28,7 +29,7 @@ object KMeansExample extends App {
     val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](3, points)(CentroidInitializer.bidimensionalRandomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for groupedPoints")
-    result.previousIterations.zipWithIndex.foreach(c => WithPlotter("docs/img/groupedpoints/", "GroupedPoints").plot(c._1, c._2))
+    result.previousIterations.zipWithIndex.foreach(c => BidimensionalSpacePlotter("docs/img/groupedpoints/", "GroupedPoints").plot(c._1, c._2))
   }
 
   def example3() = {
@@ -45,7 +46,7 @@ object KMeansExample extends App {
       ))(CentroidInitializer.bidimensionalRandomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for example3")
-    result.previousIterations.zipWithIndex.foreach(c => WithPlotter("docs/img/example3/", "class").plot(c._1, c._2))
+    result.previousIterations.zipWithIndex.foreach(c => BidimensionalSpacePlotter("docs/img/example3/", "class").plot(c._1, c._2))
   }
 
   println(s"[${Instant.now}] Starting groupedPoints")
