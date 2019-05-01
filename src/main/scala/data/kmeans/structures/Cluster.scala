@@ -12,6 +12,9 @@ object Cluster {
 
   def apply[P[_], A](distancesToCentroids: DistancesToCentroids[P, A]): Cluster[P, A] = {
     require(distancesToCentroids.headOption.nonEmpty)
-    Cluster(distancesToCentroids.head.centroid, distancesToCentroids.map(o => o.point))
+    // each point has the same centroid, it doesn't matter which one it is picked
+    val cluster = Cluster(distancesToCentroids.head.centroid, distancesToCentroids.map(o => o.point))
+
+    cluster
   }
 }

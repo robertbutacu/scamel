@@ -20,10 +20,11 @@ object CentroidInitializer {
 
       (1 to number)
         .map { p =>
-        /*  Centroid("Centroid " + p,
+         /* println(frac.toInt(frac.plus(frac.minus(max.X, min.X), min.X)))
+         Centroid("Centroid " + p,
             //TODO this is shit -> maybe write an own typeclass which converts to A ?
             BidimensionalPoint("Point " + p,
-              frac.fromInt(Random.nextInt(frac.toInt(frac.plus(frac.minus(max.X, min.X), min.X)))),
+              frac.fromInt(Random.nextDouble(frac.toDouble(frac.plus(frac.minus(max.X, min.X), min.X)))),
               frac.fromInt(Random.nextInt(frac.toInt(frac.plus(frac.minus(max.Y, min.Y), min.Y))))
             ))*/
          Centroid("Centroid " + p, points(Random.nextInt(points.length)))

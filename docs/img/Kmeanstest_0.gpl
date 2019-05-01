@@ -13,18 +13,18 @@ set xlabel ""
 set ylabel ""
 # XYData Plotting
 plot \
-'Kmeanstest_0-Centroid 2.dat'  using 1:2 title "Centroid 2" with dots linecolor rgbcolor "dark-yellow" pointtype 1 , \
-'Kmeanstest_0-Centroid 3.dat'  using 1:2 title "Centroid 3" with dots linecolor rgbcolor "dark-magenta" pointtype 1 , \
-'Kmeanstest_0-Centroid 5.dat'  using 1:2 title "Centroid 5" with dots linecolor rgbcolor "dark-orange" pointtype 1 , \
-'Kmeanstest_0-Centroid 1.dat'  using 1:2 title "Centroid 1" with dots linecolor rgbcolor "steelblue" pointtype 1 , \
-'Kmeanstest_0-Centroid 4.dat'  using 1:2 title "Centroid 4" with dots linecolor rgbcolor "web-blue" pointtype 1 , \
+'Kmeanstest_0-Centroid 2.dat'  using 1:2 title "Centroid 2" with points linecolor rgbcolor "web-green" pointsize 2.000000 pointtype 1 , \
+'Kmeanstest_0-Centroid 1.dat'  using 1:2 title "Centroid 1" with points linecolor rgbcolor "dark-cyan" pointsize 2.000000 pointtype 1 , \
+'Kmeanstest_0-Centroid 5.dat'  using 1:2 title "Centroid 5" with points linecolor rgbcolor "dark-grey" pointsize 2.000000 pointtype 1 , \
+'Kmeanstest_0-Centroid 4.dat'  using 1:2 title "Centroid 4" with points linecolor rgbcolor "dark-spring-green" pointsize 2.000000 pointtype 1 , \
+'Kmeanstest_0-Centroid 3.dat'  using 1:2 title "Centroid 3" with points linecolor rgbcolor "purple" pointsize 2.000000 pointtype 1 , \
 '-'  using 1:2 title "Centroids" with points linecolor rgbcolor "black" pointsize 2.500000 pointtype 1 
 # Centroids
-0.20117961990618594	0.4625635915648856
-0.5139838100890795	0.24765098189379986
-0.5419343303345844	0.043712460725732205
-0.4852804716753706	0.5419541085850679
-0.9939540538595947	0.41625873882806386
+0.24893792706617757	0.7664817836977994
+0.49720918521425994	0.2786697548021694
+0.7546732072038423	0.7565282548951425
+0.16278400196123805	0.26371592046557296
+0.8321521198076969	0.25139369916905335
 end
 
 unset output

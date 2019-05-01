@@ -1,0 +1,39 @@
+# Chart settings
+set title "class"
+unset key
+set terminal png enhanced 
+
+set terminal png enhanced 
+set output "class_0.png"
+# XYChart settings
+set nologscale
+set xr [*:*] noreverse
+set yr [*:*] noreverse
+set xlabel ""
+set ylabel ""
+# XYData Plotting
+plot \
+'-'  using 1:2 title "Centroid 1" with points linecolor rgbcolor "royalblue" pointsize 2.000000 pointtype 1 , \
+'-'  using 1:2 title "Centroid 2" with points linecolor rgbcolor "black" pointsize 2.000000 pointtype 1 , \
+'-'  using 1:2 title "Centroids" with points linecolor rgbcolor "black" pointsize 2.500000 pointtype 1 
+# Centroid 1
+4.0	9.0
+2.0	5.0
+2.0	10.0
+5.0	8.0
+end
+# Centroid 2
+8.0	4.0
+7.0	5.0
+1.0	2.0
+6.0	4.0
+end
+# Centroids
+3.25	8.0
+5.5	3.75
+end
+
+unset output
+# Wrapup
+set terminal dumb
+refresh

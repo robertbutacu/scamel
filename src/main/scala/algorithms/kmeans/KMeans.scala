@@ -1,7 +1,7 @@
 package algorithms.kmeans
 
-import data.hierarchical.clustering.distance.{Distance, DistanceType}
-import data.kmeans.structures.{Centroid, Cluster, DistanceToCentroid}
+import data.hierarchical.clustering.distance.Distance
+import data.kmeans.structures.{Centroid, CentroidCalculator, Cluster, DistanceToCentroid}
 
 import scala.annotation.tailrec
 import scala.language.higherKinds
@@ -11,20 +11,23 @@ object KMeans {
   case class Coordinate[A](X: A, Y: A)
 
   def findClusters[P[_], A, DT](numberOfClusters: Int,
-                            points          : List[P[A]])(initialization: CentroidInitializer[P])
-                           (implicit distance: Distance[A, P, DT],
-                            frac             : Fractional[A]): List[Cluster[P, A]] = {
+                            points              : List[P[A]])(initialization: CentroidInitializer[P])
+                           (implicit distance   : Distance[A, P, DT],
+                            frac                : Fractional[A],
+                            centroidCalculator  : CentroidCalculator[P]): List[Cluster[P, A]] = {
     require(numberOfClusters > 0 && points.nonEmpty)
 
     //TODO special case when a centroid is passed around between 2 values
     @tailrec
     def go(currClusters: List[Cluster[P, A]], previousStateCentroids: List[Centroid[P, A]]): List[Cluster[P, A]] = {
+      println("****")
       val currentCentroids = currClusters map (_.centroid)
 
-      val updatedClusters = createClusters(points, currentCentroids)
+      val updatedClusters = createClusters(points, currentCentroids).map(c => c.copy(centroid = centroidCalculator.repositionCentroid(c.centroid, c.points)))
 
       val updatedCentroids = updatedClusters map (_.centroid)
 
+      //the clusters stay the same, so check that each cluster has the same points still assigned to it
       if (currentCentroids == updatedCentroids) currClusters
       else                                      go(updatedClusters, updatedCentroids)
     }
@@ -58,13 +61,21 @@ object KMeans {
       will become 2 clusters
      */
     //TODO some centroids are left behind
-    splitIntoClusters(minDistances).map { d: DistancesToCentroids[P, A] => Cluster(d) }
+    val newClusters = splitIntoClusters(minDistances)
+
+    newClusters.map { d: DistancesToCentroids[P, A] => Cluster(d) }
   }
 
 
-  private def splitIntoClusters[P[_], A](input: DistancesToCentroids[P, A]): List[DistancesToCentroids[P, A]] =
-    (input groupBy (_.centroid)).values.toList
+  private def splitIntoClusters[P[_], A](input: DistancesToCentroids[P, A]): List[DistancesToCentroids[P, A]] = {
+    val result = (input groupBy (_.centroid)).values.toList
 
-  private def splitPoints[P[_], A](input: DistancesToCentroids[P, A]): List[DistancesToCentroids[P, A]] =
-    (input groupBy (_.point)).values.toList
+    result
+  }
+
+  private def splitPoints[P[_], A](input: DistancesToCentroids[P, A]): List[DistancesToCentroids[P, A]] = {
+    val result = (input groupBy (_.point)).values.toList
+
+    result
+  }
 }
