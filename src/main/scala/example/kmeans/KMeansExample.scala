@@ -13,7 +13,7 @@ import scala.util.Random
 object KMeansExample extends App {
   def randomPoints() = {
     val randomPoints = (0 to 5000).map(_ => BidimensionalPoint(UUID.randomUUID().toString,Math.abs(Random.nextDouble()), Math.abs(Random.nextDouble()))).toList
-    val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](15, randomPoints)(CentroidInitializer.bidimensionalRandomInitializer)
+    val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](15, randomPoints)(CentroidInitializer.randomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for randomPoints")
     result.previousIterations.zipWithIndex.foreach(c => BidimensionalSpacePlotter("docs/img/randompoints/", "Kmeanstest").plot(c._1, c._2))
@@ -26,7 +26,7 @@ object KMeansExample extends App {
 
     val points = group1 ::: group2 ::: group3
 
-    val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](3, points)(CentroidInitializer.bidimensionalRandomInitializer)
+    val result = KMeans.findClusters[BidimensionalPoint, Double, EuclideanDistance.type](3, points)(CentroidInitializer.randomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for groupedPoints")
     result.previousIterations.zipWithIndex.foreach(c => BidimensionalSpacePlotter("docs/img/groupedpoints/", "GroupedPoints").plot(c._1, c._2))
@@ -43,7 +43,7 @@ object KMeansExample extends App {
         BidimensionalPoint("F", 6.0, 4.0),
         BidimensionalPoint("G", 1.0, 2.0),
         BidimensionalPoint("H", 4.0, 9.0)
-      ))(CentroidInitializer.bidimensionalRandomInitializer)
+      ))(CentroidInitializer.randomInitializer)
 
     println(s"[${Instant.now}] Finished Kmeans algorithm for example3")
     result.previousIterations.zipWithIndex.foreach(c => BidimensionalSpacePlotter("docs/img/example3/", "class").plot(c._1, c._2))
